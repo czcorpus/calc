@@ -1,0 +1,13 @@
+/* Depending on the Shiny theme, some of its global styles might have
+ * to be overridden for parts of the toolbar in order for it to render
+ * properly.
+ */
+
+#cnc-toolbar-logo {
+  box-sizing: content-box;
+}
+
+#localizedUI {
+  top: 40px;
+  position: relative;
+}
