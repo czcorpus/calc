@@ -55,8 +55,8 @@
       {"cs": "Schématické znázornění", "en": "Illustrative plot"},
       {"cs": "Studentovo rozdělení", "en": "Student's distribution"},
       {"cs": "Normální rozdělení", "en": "Normal distribution"},
-      {"cs": "Průměr - SD model", "en": "Mean - SD model"},
-      {"cs": "Medián - IQR model", "en": "Median - IQR model"},
+      {"cs": "Průměr – SD model", "en": "Mean – SD model"},
+      {"cs": "Medián – IQR model", "en": "Median – IQR model"},
       {"cs": "Vypočítané zTTR", "en": "Calculated zTTR"},
       {"cs": "Vypočítané zqTTR", "en": "Calculated zqTTR"},
       {"cs": "Naměřené TTR", "en": "Observed TTR"},
@@ -96,6 +96,10 @@
       {"cs": "Psaný - beletrie", "en": "Written - fiction"},
       {"cs": "Psaný - oborová literatura", "en": "Written - non-fiction"},
       {"cs": "Psaný - publicistika", "en": "Written - newspapers"},
-      {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"}
+      {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"},
+      {"cs": "Chi2 test", "en": "Chi2 test"},
+      {"cs": "Fisherův exaktní test", "en": "Fisher's exact test"},
+      {"cs": "Binomický test", "en": "Exact Binomial Test"},
+      {"cs": "Log-likelihood test", "en": "Log-likelihood test"}
     ]
 }

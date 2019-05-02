@@ -59,13 +59,13 @@ localizedUI <- function(i18n) {
                       h3(i18n$t("Zadání")),
                       wellPanel(
                         fluidRow(column(6,
-                          numericInput("TwOcF1", i18n$t("Slovo 1"), 15, min = 0)
+                          numericInput("TwOcF1", i18n$t("Slovo 1"), 2000, min = 0)
                         ),
                         column(6,
-                          numericInput("TwOcF2", i18n$t("Slovo 2"), 10, min = 0)
+                          numericInput("TwOcF2", i18n$t("Slovo 2"), 1880, min = 0)
                         )),
                         fluidRow(column(12,
-                          numericInput("TwOcN", i18n$t("Velikost korpusu"), 1000, min = 1)
+                          numericInput("TwOcN", i18n$t("Velikost korpusu"), 1000000, min = 1)
                         )),
                         sliderInput(
                           "TwOcAlpha",
@@ -79,19 +79,18 @@ localizedUI <- function(i18n) {
                       ),
                column(width = 5, offset = 1,
                  h3(i18n$t("Signifikance a effect size")),
-                 selectInput(
-                   "TwOcTesttype",
-                   i18n$t("Statistický test:"),
-                   choices = list(
-                     "Chi2 test" = 1,
-                     "Fisher test" = 2,
-                     "Binom test" = 3,
-                     "Log-likelihood test" = 4
-                   )
-                 ),
+                 selectInput("TwOcTesttype",
+                             i18n$t("Statistický test:"),
+                             choices = {
+                               choices <- 1:4
+                               names(choices) <- sapply(c("Chi2 test",
+                                                          "Fisherův exaktní test",
+                                                          "Binomický test",
+                                                          "Log-likelihood test"), i18n$t)
+                               choices
+                             }),
                  htmlOutput("TwOcTest"),
                  htmlOutput("TwOcEffectsize"),
-
                  h3(i18n$t("Konfidenční intervaly")),
                  plotOutput("TwOcIpmCI")
                )
@@ -103,16 +102,16 @@ localizedUI <- function(i18n) {
                       h3(i18n$t("Zadání")),
                       wellPanel(
                         fluidRow(column(6,
-                          numericInput("TwTcF1", i18n$t("Slovo 1"), 10, min = 0)
+                          numericInput("TwTcF1", i18n$t("Slovo 1"), 1000, min = 0)
                         ),
                         column(6,
-                          numericInput("TwTcF2", i18n$t("Slovo 2"), 10, min = 0)
+                          numericInput("TwTcF2", i18n$t("Slovo 2"), 1200, min = 0)
                         )),
                         fluidRow(column(6,
-                          numericInput("TwTcN1", i18n$t("Korpus A"), 1000, min = 1)
+                          numericInput("TwTcN1", i18n$t("Korpus A"), 1000000, min = 1)
                         ),
                         column(6,
-                          numericInput("TwTcN2", i18n$t("Korpus B"), 1500, min = 1)
+                          numericInput("TwTcN2", i18n$t("Korpus B"), 1500000, min = 1)
                         )),
                         sliderInput(
                           "TwTcAlpha",
@@ -126,16 +125,16 @@ localizedUI <- function(i18n) {
                       ),
                column(width = 5, offset = 1,
                  h3(i18n$t("Signifikance a effect size")),
-                 selectInput(
-                   "TwTcTesttype",
-                   i18n$t("Statistický test:"),
-                   choices = list(
-                     "Chi2 test" = 1,
-                     "Fisher test" = 2,
-                     "Binom test" = 3,
-                     "Log-likelihood test" = 4
-                   )
-                 ),
+                 selectInput("TwTcTesttype",
+                             i18n$t("Statistický test:"),
+                             choices = {
+                               choices <- 1:4
+                               names(choices) <- sapply(c("Chi2 test",
+                                                          "Fisherův exaktní test",
+                                                          "Binomický test",
+                                                          "Log-likelihood test"), i18n$t)
+                               choices
+                             }),
                  htmlOutput("TwTcTest"),
                  htmlOutput("TwTcEffectsize"),
                  h3(i18n$t("Konfidenční intervaly")),
@@ -163,7 +162,7 @@ localizedUI <- function(i18n) {
                             textAreaInput(
                               "SaReMereni",
                               i18n$t("Výsledky z analýzy vzorků"),
-                              "20, 21, 19, 20, 21, 20",
+                              "63, 61, 59, 58, 62, 60, 61",
                               rows = 3
                             ),
                             helpText(i18n$t(

@@ -42,19 +42,18 @@ helpTwOc <- tags$p(
   )
 
 helpTwOc_beza <- tags$p(
-  "Tento modul",
-  HTML("slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název)
-       v jednom korpusu a příp. potvrzení jejich odlišnosti. K takovému srovnání lze využít 
-       jednak statistické testy (implentovány jsou ty nejpoužívanější), které se interpretují 
-       především na základě tzv. <em>p-value</em>. Nejen v lingvistice se ovšem čím dál častěji 
-       upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se 
-       dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> 
-       (implementovány jsou opět pouze některé používané míry). 
-       Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních 
-       intervalů (srov. s"),
-  actionLink("linkToOwOc", "prvním modulem"),
-  ")."
-  )
+  HTML("Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název)
+  v jednom korpusu a příp. potvrzení jejich odlišnosti. K takovému srovnání lze využít 
+  jednak statistické testy (implentovány jsou ty nejpoužívanější), které se interpretují 
+  především na základě tzv. <em>p-value</em>. Nejen v lingvistice se ovšem čím dál častěji 
+  upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se 
+  dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> 
+  (implementovány jsou opět pouze některé používané míry). 
+  Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních 
+  intervalů"),
+  pack_punctuation( span("(srov. s", actionLink("linkToOwOc", "prvním modulem"), ").") )
+)
+
 
 helpTwTc <- tags$p(
   "V modulu",
@@ -97,7 +96,7 @@ helpSaRe_beza <- tags$p(
        Modul nabízí informaci o tom, jak se s postupným přidáváním vzorků zpřesňuje náš odhad (zužuje se 
        <em>konfidenční interval</em>) frekvence sledovaného jevu. Na základě tohoto intervalu můžeme rozhodnout, 
        zda nám taková přesnost stačí, či zda raději prozkoumáme další vzorky, abychom odhad ještě víc zpřesnili.
-       Aplikace nabízí dva způsoby jak výpočet provádět: pomocí <em>t</em> (též studentova) a <em>normálního</em> rozdělení,
+       Aplikace nabízí dva způsoby jak výpočet provádět: pomocí <em>t</em> (též <em>studentova</em>) a <em>normálního</em> rozdělení,
        přičemž první z nich poskytuje většinou menší rozsah konfidenčního intervalu, zatímco druhý odhad bývá konzervativnější.")
   )
 
@@ -125,10 +124,11 @@ helpzTTR_beza <- tags$p(
        <a href='https://link.springer.com/article/10.1007/s11185-015-9151-8'>(Cvrček – Chlumská 2015)</a>, 
        který zadané hodnoty konkrétního textu (tokeny a typy) porovnává s hodnotami referenčními, tedy s hodnotami, které 
        jsou pro text dané délky a daného typu obvyklé.<br/>
-       Původní návrh indexu <em>zTTR</em> porovnával zadané hodnoty s průměrem a směrodatnou odchylkou referenčních dat
-       (viz <em>Průměr – SD model</em>), novější modifikovaná verze počítá s neparametrickými hodnotami 
-       mediánu a mezikvartilového rozpětí (tzv. <em>Medián – IQR model</em>), který lze považovat za adekvátnější
-       vzhledem k charakteru jazykových dat.")
+       Původní návrh indexu <em>zTTR</em> porovnával zadané hodnoty s průměrem a směrodatnou odchylkou referenčních dat",
+       pack_punctuation( span("(viz", actionLink("LinkTozTTRMeanSDPanel", "Průměr – SD model"), ")," ) ), 
+       "novější modifikovaná verze počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí", 
+       pack_punctuation( span("(tzv.", actionLink("LinkTozTTRMedianIQRPanel", "Medián – IQR model"), "),") ), 
+       "který lze považovat za adekvátnější vzhledem k charakteru jazykových dat.")
   )
 
 helpThanks <- HTML("Poděkování za pomoc při přípravě této aplikace patří...")

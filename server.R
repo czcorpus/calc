@@ -120,8 +120,8 @@ shinyServer(function(input, output, session) {
      if (data["Fq"] < (sloupce + 1)) { freqs = seq(1, (2 * sloupce) + 1, by = 1) }
 
      cis <- data.frame(fq = freqs)
-     lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method="exact")[2] * data["N"]) )
-     upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method="exact")[3] * data["N"]) )
+     lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"]) )
+     upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
      cis$lower <- lower
      cis$upper <- upper
 
@@ -138,8 +138,8 @@ shinyServer(function(input, output, session) {
 
    output$OwOcCIs <- renderText({
      data <- OwOc.data()
-     ci.l = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method="exact")[2] * data["N"])
-     ci.u = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method="exact")[3] * data["N"])
+     ci.l = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[2] * data["N"])
+     ci.u = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[3] * data["N"])
      paste0(i18n$t("Spodní mez konfidenčního intervalu"), ": ", strong(ci.l), br(), i18n$t("Horní mez konfidenčního intervalu"), ": ", strong(ci.u))
    })
 
@@ -147,8 +147,8 @@ shinyServer(function(input, output, session) {
      data <- OwOc.data()
      min = qbinom(0.0001, data["N"], data["Fq"] / data["N"])
      max = qbinom(0.9999, data["N"], data["Fq"] / data["N"])
-     ci.l = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method="exact")[2] * data["N"])
-     ci.u = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method="exact")[3] * data["N"])
+     ci.l = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"])
+     ci.u = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"])
      graphdata <- data.frame(fq = min:max, p = dbinom(min:max, data["N"], data["Fq"]/data["N"]))
 
      gh <- ggplot(data = graphdata, aes(x = fq, y = p)) +
@@ -191,9 +191,15 @@ shinyServer(function(input, output, session) {
      data <- TwOc.data()
      if (data["N"] != 0) {
        graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
+       if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {
+         graphlimits = c( min(graphdata$ipm) - 4 * max(graphdata$ci),  max(graphdata$ipm) + max(graphdata$ci) )
+       } else {
+         graphlimits <- c()
+       }
        ggplot(data = graphdata, aes(x = x, y = ipm)) +
          geom_bar(stat="identity", fill = cnk_color_vector[2]) +
          geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
+         coord_cartesian(ylim = graphlimits) +
          labs(x = "", y = "i.p.m.") +
          theme_minimal()
      } else {
@@ -236,9 +242,15 @@ shinyServer(function(input, output, session) {
       data <- TwTc.data()
       if (data["N1"] != 0 & data["N2"] != 0) {
         graphdata <-  getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
+        if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {
+          graphlimits = c( min(graphdata$ipm) - 4 * max(graphdata$ci),  max(graphdata$ipm) + max(graphdata$ci) )
+        } else {
+          graphlimits <- c()
+        }
         ggplot(data = graphdata, aes(x = x, y = ipm)) +
           geom_bar(stat="identity", fill = cnk_color_vector[2]) +
           geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
+          coord_cartesian(ylim = graphlimits) +
           labs(x = "", y = "i.p.m.") +
           theme_minimal()
       } else {
@@ -477,5 +489,13 @@ shinyServer(function(input, output, session) {
     observeEvent(input$linkTozTTR, {
       updateNavlistPanel(session, "navigace", selected = "zTTR")
     })
+    
+    observeEvent(input$LinkTozTTRMeanSDPanel, {
+      updateCollapse(session, "zTTRModel", open = "zTTRMeanSDPanel")
+    })
+    observeEvent(input$LinkTozTTRMedianIQRPanel, {
+      updateCollapse(session, "zTTRModel", open = "zTTRMedianIQRPanel")
+    })
+    
 })
 

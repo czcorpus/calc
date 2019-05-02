@@ -6,6 +6,7 @@ library(Hmisc)
 appName <- "KoKS"
 appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
+binomMethod = "exact"  # wilson
 
 # ============== log-likelihood methods =============
 
@@ -121,6 +122,12 @@ panel2html <- function(panelClass = "panel-primary", panelTitle = "myTitle", pan
   return(out)
 }
 
+pack_punctuation <- function(tag_list) {
+  html <- gsub(">\\s*(\\p{P})", ">\\1", tag_list, perl = TRUE)
+  HTML(html)
+}
+# pack_punctuation(tags$p("foo", actionLink("bar", "baz"), actionLink("baz", "qux"), "."))
+
 # ============== Colours =============
 
 #Barvy: magenta, cyan, green, orange, seda 3x
@@ -218,9 +225,9 @@ countOR <- function(f1, f2, n1, n2) {
 # ============== CI bar charts =============
 
 getgraphdata <- function(f1, f2, n1, n2, Alpha = 0.05, i18n) {
-  cis <- binconf(f1, n1, f1/n1, method = "exact", alpha=Alpha)
+  cis <- binconf(f1, n1, f1/n1, method = binomMethod, alpha=Alpha)
   ci1 <- (cis[2] - cis[3]) * 1000000
-  cis <- binconf(f2, n2, f2/n2, method = "exact", alpha=Alpha)
+  cis <- binconf(f2, n2, f2/n2, method = binomMethod, alpha=Alpha)
   ci2 <- (cis[2] - cis[3]) * 1000000
   graphdata <- data.frame( x = c(i18n$t("Slovo 1"), i18n$t("Slovo 2")),
                            ipm = c( toipm(f1, n1), toipm(f2, n2) ),
