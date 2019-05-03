@@ -1,7 +1,7 @@
 
-helptextUvod <- tags$p("Tato kalkulačka by měla poskytnout korpusovým lingvistům rychlou pomoc
-    při počítání základních statistických úloh, s nimiž se v rámci výzkumu běžně setkávají. Kalkulačka
-    je rozdělena do několika modulů, které odpovídají různým výzkumným situacím.")
+helptextUvod <- tags$p("Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc
+    při počítání základních statistických úloh, s nimiž se v rámci výzkumu běžně setkávaj. Kalkulačka
+    je rozdělena do několika modulů, které odpovídaj různým výzkumným situacím.")
 
 helpOwOc <- tags$p(
   "V modulu",
@@ -17,13 +17,13 @@ helpOwOc <- tags$p(
   )
 
 helpOwOc_beza <- tags$p(
-  HTML("V tomto modulu lze najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty
+  HTML("V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty
        občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v jazyce.
        Vzhledem ke všudypřítomné variabilitě vyvolané mnoha faktory souvisejícími s vytvářením korpusu, jeho zpracováním 
        i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo 
        s naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli
        v&nbsp;<em>konfidenčním intervalu</em>). Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci 
-       (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní 
+       (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní 
        funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikujíácí přijatelnou míru omylu) za daným intervalem.")
   )
 
@@ -133,6 +133,21 @@ helpzTTR_beza <- tags$p(
 
 helpThanks <- HTML("Poděkování za pomoc při přípravě této aplikace patří...")
 
+aboutText <- tags$ul(
+  tags$li("První modul", actionLink("linkToOwOc2", "1 slovo v 1 korpusu"),
+          "vlastně nepočítá žádný statistický test a slouží jako pomůcka pro adekvátní interpretaci frekevencí. Typicky odpovídá na otázku:",
+          em("Co to přesně znamená, když jev, který mě zajímá, má v korpusu frekvenci X výskytů?")),
+  tags$li("Modul", actionLink("linkToTwOc2", "2 slova v 1 korpusu"), 
+          "porovnává dvě frekvence (např. dvě konkurenční varianty v jednom korpusu) a zjišťuje, jak významný je jejich rozdíl a jestli třeba za tím není jenom náhodná variabilita."),
+  tags$li("Typickým příkladem využití modulu", actionLink("linkToTwTc", "2 slova ve 2 korpusech"), 
+          "je identifikace", em("klíčových slov"), "- jednotek, které jsou v jednom korpusu významně častějc než v jiném (při zohlednění velikosti použitých korpusů).",
+          "Využít ho můžem ale v jakémkoli srovnávání frekvencí jednotek napříč korpusy."),
+  tags$li(actionLink("linkToSaRe", "Čtvrtý modul"), 
+          "pomáhá s určením míry přesnosti a spolehlivosti analýzy provedené na náhodných vzorcích. Pokud v něm vychází rozpětí pro hledaný jev jako příliš velké, bude nejspíš třeba pro zpřesnění přidat další vzorky."),
+  tags$li("Pátý modul nazvaný", actionLink("linkTozTTR", "zTTR"), 
+          "je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu", 
+          em("zTTR"), "je porovnatelná i mezi texty nestejné délky.")
+)
 
 helptext <- tagList(
   helptextUvod,

@@ -470,14 +470,25 @@ shinyServer(function(input, output, session) {
 
 # ================= Napoveda =====================
     
-    output$napoveda <- renderUI({
-      helptext
+    output$about <- renderUI({
+      tagList(
+        h3("Vítejte"),
+        helptextUvod,
+        aboutText,
+        helpThanks
+        )
     })
     
     observeEvent(input$linkToOwOc, {
       updateNavlistPanel(session, "navigace", selected = "OwOc")
     })
+    observeEvent(input$linkToOwOc2, {
+      updateNavlistPanel(session, "navigace", selected = "OwOc")
+    })
     observeEvent(input$linkToTwOc, {
+      updateNavlistPanel(session, "navigace", selected = "TwOc")
+    })
+    observeEvent(input$linkToTwOc2, {
       updateNavlistPanel(session, "navigace", selected = "TwOc")
     })
     observeEvent(input$linkToTwTc, {

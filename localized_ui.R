@@ -4,7 +4,7 @@ localizedUI <- function(i18n) {
   tagList(
   titlePanel(i18n$t("KOKS: Korpusová kalkulačka spolehlivosti")),
   
-  navlistPanel(id = "navigace",
+  navlistPanel(id = "navigace", selected = "about",
     widths = c(2, 10),
     well = FALSE,
     # ====================================================== OwOc ====
@@ -262,9 +262,9 @@ localizedUI <- function(i18n) {
                )
              )),
     # ================= HELP ===========================
-    tabPanel(i18n$t("Nápověda"), value = "help",
+    tabPanel(i18n$t("O aplikaci"), value = "about",
              fluidRow(column(8,
-      uiOutput("napoveda")
+      uiOutput("about")
     )))
   ),
   # ========================== POPOVERS & TOOLTIPS ======================
