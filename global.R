@@ -4,7 +4,7 @@ library(tidyverse)
 library(Hmisc)
 
 appName <- "KoKS"
-appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
+#appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
 binomMethod = "exact"  # wilson
 

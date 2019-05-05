@@ -1,14 +1,11 @@
 library(shiny)
 library(shinythemes)
+library(shinyCNC)
 
-shinyUI(fluidPage(
-  #shinythemes::themeSelector(),
-  theme = shinytheme("yeti"),
-  tags$head(
-    tags$script(src="toolbar-adapter.js"),
-    tags$link(href="toolbar-adapter.css", rel="stylesheet")
-  ),
-  uiOutput("toolbarAssets"),
-  uiOutput("toolbar"),
-  uiOutput("localizedUI")
+shinyUI(
+  bootstrapPage(
+    shiny_cnc_UI(),
+    #shinythemes::themeSelector(),
+    theme = shinytheme("yeti"),
+    uiOutput("localizedUI")
 ))

@@ -3,101 +3,18 @@ library(shinyBS)
 library(tidyverse)
 library(Hmisc)
 library(shiny.i18n)
+library(shinyCNC)
 source("data/helptext.R")
 source("localized_ui.R")
 
-get_cookie_value <- function(key, cookie) {
-  if (is.null(cookie)) {
-    cookie <- ""
-  }
-  regex <- paste0(key, "=([^;]*)")
-  match <- regexec(regex, cookie, perl=TRUE)
-  value <- regmatches(cookie, match)[[1]][2]
-  if (key == "cnc_toolbar_lang" && !value %in% c("cs", "en")) {
-    "cs"
-  } else if (is.na(value)) {
-    NULL
-  } else {
-    value
-  }
-}
-
-get_cnc_cookies <- function(cookie) {
-  keys <- c("sid", "lang", "at", "rmme")
-  ans <- lapply(keys, function(k) get_cookie_value(paste0("cnc_toolbar_", k), cookie))
-  names(ans) <- keys
-  ans
-}
-
-get_toolbar_and_lang <- function(req) {
-  cnc <- get_cnc_cookies(req$HTTP_COOKIE)
-  # TODO: continue by šlo inteligentněji / univerzálněji / bez nutnosti
-  # natvrdo nastavovat appRoot udělat pomocí session$clientData(), jenže
-  # to lze použít pouze v reaktivním kontextu, tzn. všechny navazující
-  # věci (toolbar, i18n) by taky musely být reaktivní. Ale pokud bychom
-  # do budoucna chtěli předávat přesné hodnoty URL path / query stringu
-  # / fragment identifieru (#...), tak se bez toho stejně neobejdeme.
-  # Jinak req je v tomto případě session$request, tj. request, který
-  # inicioval websocket connection, takže req$SERVER_NAME,
-  # req$SERVER_PORT, req$PATH_INFO ani req$QUERY_STRING neobsahují
-  # relevantní informace. Ty se můžou totiž dynamicky měnit, proto je
-  # potřeba je získávat v reaktivním kontextu pomocí session$clientData.
-  query <- list(
-    sid=cnc$sid,
-    current=appName,
-    lang=cnc$lang,
-    continue=appRoot,
-    at=cnc$at,
-    rmme=cnc$rmme
-  )
-  resp <- httr::GET(
-    "https://korpus.cz/",
-    path="toolbar/toolbar",
-    query=query
-  )
-  list(toolbar=httr::content(resp, "parsed"), lang=cnc$lang)
-}
-
-toolbar_assets <- function(toolbar) {
-  redirect <- if (!is.null(toolbar$redirect)) {
-    tags$head(
-      tags$script(paste0("window.location = '", toolbar$redirect, "';"))
-    )
-  }
-  styles <- lapply(toolbar$styles, function(style) tags$link(href=style$url, rel="stylesheet"))
-  scripts <- lapply(
-    # jquery is already loaded, loading it a second time as a toolbar
-    # dependency breaks stuff → don't do it
-    Filter(function(dep) !grepl("jquery", dep$url), toolbar$scripts$depends),
-    function(dep) tags$script(src=dep$url)
-  )
-  main_src <- toolbar$scripts$main
-  # ToolbarMain is the script tag created in toolbar-adapter.js, with
-  # an onload callback which calls Toolbar.init()
-  main_loader <- tags$script(paste0("ToolbarMain.src = '", main_src, "';"))
-  tags$head(
-    styles,
-    redirect,
-    scripts,
-    main_loader
-  )
-}
-
-toolbar_html <- function(toolbar) {
-  if (is.null(toolbar$redirect)) {
-    HTML(toolbar$html)
-  }
-}
-
 shinyServer(function(input, output, session) {
   
-  ans <- get_toolbar_and_lang(session$request)
-  toolbar <- ans$toolbar
-  i18n <- Translator$new(translation_json_path = "data/translation.json")
-  i18n$set_translation_language(ans$lang)
+  init_shiny_cnc(appName)
   
-  output$toolbarAssets <- renderUI(toolbar_assets(toolbar))
-  output$toolbar <- renderUI(toolbar_html(toolbar))
+  lang <- get_lang(session)
+  i18n <- Translator$new(translation_json_path = "data/translation.json")
+  i18n$set_translation_language(lang)
+  
   output$localizedUI <- renderUI(localizedUI(i18n))
   
 # ================= 1 slovo 1 korpus (OwOc) =====================
