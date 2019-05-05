@@ -1,0 +1,77 @@
+/* 
+ * Redefining Yeti stylesheet
+ */
+
+/* links */
+a {
+  color: #009ee0;
+}
+a:focus {
+  color: #009ee0;
+}
+
+a:hover {
+  color: #009ee0;
+}
+
+/* navigation */
+.nav-pills > li.active > a:focus {
+  background-color: #009ee0;
+}
+
+.nav-pills > li.active > a:hover {
+  background-color: #009ee0;
+}
+
+.nav-pills > li.active > a {
+  background-color: #009ee0;
+}
+
+/* sliders */
+.irs-bar {
+border-top: 1px solid #0088c1 !important;
+border-bottom: 1px solid #0088c1 !important;
+background: #0088c1 !important;
+}
+
+.irs-bar-edge {
+border: 1px solid #0088c1 !important;
+background: #0088c1 !important;
+}
+
+.irs-single {
+background: #0088c1 !important;
+}
+
+/* color boxes */
+.alert-warning {
+background-color: #ea670c; /*orange*/
+border-color: #ff6e0a;
+}
+
+.alert-info {
+background-color: #009ee0; /*blue*/
+border-color: #0088c1;
+}
+
+.alert-success {
+background-color: #57aB27; /*green*/
+border-color: #4B9123;
+}
+
+/*SaRe*/
+.has-error .form-control {
+border-color: #e2007a; /*magenta*/
+}
+
+.label-danger {
+background-color: #e2007a; /*magenta*/
+}
+
+.has-success .form-control {
+border-color: #57aB27; /*green*/  
+}
+
+.label-success {
+background-color: #57aB27; /*green*/  
+}

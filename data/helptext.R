@@ -98,8 +98,11 @@ helpSaRe_beza <- tags$p(
        Modul nabízí informaci o tom, jak se s postupným přidáváním vzorků zpřesňuje náš odhad (zužuje se 
        <em>konfidenční interval</em>) frekvence sledovaného jevu. Na základě tohoto intervalu můžeme rozhodnout, 
        zda nám taková přesnost stačí, či zda raději prozkoumáme další vzorky, abychom odhad ještě víc zpřesnili.
-       Aplikace nabízí dva způsoby jak výpočet provádět: pomocí <em>t</em> (též <em>studentova</em>) a <em>normálního</em> rozdělení,
-       přičemž první z nich poskytuje většinou menší rozsah konfidenčního intervalu, zatímco druhý odhad bývá konzervativnější.")
+       Aplikace nabízí dva způsoby jak výpočet provádět: pomocí"),
+       actionLink("LinkToSaReStudPanel", "studentova"), 
+       "a", 
+       actionLink("LinkToSaReNormPanel", "normálního"),
+      "rozdělení, přičemž první z nich poskytuje většinou menší rozsah konfidenčního intervalu, zatímco druhý odhad bývá konzervativnější."
   )
 
 helpzTTR <- tags$p(

@@ -50,7 +50,7 @@ shinyServer(function(input, output, session) {
        geom_errorbar(data = filter(cis, fq == data["Fq"]),
                      aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], width=0.5) +
        labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
-       theme_minimal()
+       theme_minimal(base_size = graphBaseSizeFont)
    })
 
    output$OwOcCIs <- renderText({
@@ -71,7 +71,7 @@ shinyServer(function(input, output, session) {
      gh <- ggplot(data = graphdata, aes(x = fq, y = p)) +
        geom_col(fill = cnk_color_vector[7]) +
        labs(x = i18n$t("Frekvence"), y = i18n$t("Pravděpodobnost")) +
-       theme_minimal()
+       theme_minimal(base_size = graphBaseSizeFont)
      gh <- gh + geom_col(data = filter(graphdata, fq < (ci.l - 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
      gh <- gh + geom_col(data = filter(graphdata, fq > (ci.u + 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
      gh <- gh + geom_col(data = filter(graphdata, fq == data["Fq"]), aes(x = fq, y = p), fill = cnk_color_vector[2])
@@ -114,11 +114,11 @@ shinyServer(function(input, output, session) {
          graphlimits <- c()
        }
        ggplot(data = graphdata, aes(x = x, y = ipm)) +
-         geom_bar(stat="identity", fill = cnk_color_vector[2]) +
+         geom_bar(stat="identity", fill = cnk_color_vector[2], alpha = 0.75) +
          geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
          coord_cartesian(ylim = graphlimits) +
          labs(x = "", y = "i.p.m.") +
-         theme_minimal()
+         theme_minimal(base_size = graphBaseSizeFont)
      } else {
        showModal(
          modalDialog(
@@ -165,11 +165,11 @@ shinyServer(function(input, output, session) {
           graphlimits <- c()
         }
         ggplot(data = graphdata, aes(x = x, y = ipm)) +
-          geom_bar(stat="identity", fill = cnk_color_vector[2]) +
+          geom_bar(stat="identity", fill = cnk_color_vector[2], alpha = 0.75) +
           geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
           coord_cartesian(ylim = graphlimits) +
           labs(x = "", y = "i.p.m.") +
-          theme_minimal()
+          theme_minimal(base_size = graphBaseSizeFont)
       } else {
         showModal(modalDialog(title = i18n$t("Nekorektní zadání"),
           i18n$t("Velikost korpusu nemůže být nulová."),
@@ -270,7 +270,7 @@ shinyServer(function(input, output, session) {
         scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
         scale_linetype_manual("", values = c(2,1), guide = FALSE) +
         labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
-        theme_minimal() +
+        theme_minimal(base_size = graphBaseSizeFont) +
         theme(legend.justification=c(1,0.8), legend.position=c(1,1))
     })
 
@@ -290,7 +290,7 @@ shinyServer(function(input, output, session) {
         scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
         scale_linetype_manual("", values = c(2,1), guide = FALSE) +
         labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
-        theme_minimal() +
+        theme_minimal(base_size = graphBaseSizeFont) +
         theme(legend.justification=c(1,0.8), legend.position=c(1,1))
     })
 
@@ -355,7 +355,7 @@ shinyServer(function(input, output, session) {
         scale_colour_manual("", values = cnk_color_vector) +
         scale_fill_manual("", values = cnk_color_vector) +
         labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
-        theme_minimal() +
+        theme_minimal(base_size = graphBaseSizeFont) +
         theme(legend.justification=c(1,1), legend.position=c(1,1))
     })
 
@@ -381,7 +381,7 @@ shinyServer(function(input, output, session) {
         scale_colour_manual("", values = cnk_color_vector) +
         scale_fill_manual("", values = cnk_color_vector) +
         labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
-        theme_minimal() +
+        theme_minimal(base_size = graphBaseSizeFont) +
         theme(legend.justification=c(1,1), legend.position=c(1,1))
     })
 
@@ -418,12 +418,18 @@ shinyServer(function(input, output, session) {
       updateNavlistPanel(session, "navigace", selected = "zTTR")
     })
     
+    observeEvent(input$LinkToSaReStudPanel, {
+      updateCollapse(session, "SaReDist", open = "SaReStudPanel")
+    })
+    observeEvent(input$LinkToSaReNormPanel, {
+      updateCollapse(session, "SaReDist", open = "SaReNormPanel")
+    })
+    
     observeEvent(input$LinkTozTTRMeanSDPanel, {
       updateCollapse(session, "zTTRModel", open = "zTTRMeanSDPanel")
     })
     observeEvent(input$LinkTozTTRMedianIQRPanel, {
       updateCollapse(session, "zTTRModel", open = "zTTRMedianIQRPanel")
     })
-    
 })
 

@@ -65,7 +65,7 @@ localizedUI <- function(i18n) {
                 )),
             sliderInput("TwOcAlpha",
               i18n$t("Hladina významnosti (α):"),
-              min = 0.001,
+              min = 0.0001,
               max = 0.1,
               value = 0.05
               )
@@ -111,7 +111,7 @@ localizedUI <- function(i18n) {
                 )),
             sliderInput("TwTcAlpha",
               i18n$t("Hladina významnosti (α):"),
-              min = 0.001,
+              min = 0.0001,
               max = 0.1,
               value = 0.05
               )
@@ -162,7 +162,7 @@ localizedUI <- function(i18n) {
               ),
             sliderInput("SaReAlpha",
               i18n$t("Hladina významnosti (α):"),
-              min = 0.001,
+              min = 0.0001,
               max = 0.1,
               value = 0.05
               )

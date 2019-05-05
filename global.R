@@ -3,10 +3,13 @@ library(shiny.i18n)
 library(tidyverse)
 library(Hmisc)
 
+# ============== general parameters =================
+
 appName <- "KoKS"
 #appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
 binomMethod = "exact"  # wilson
+graphBaseSizeFont = 14
 
 # ============== log-likelihood methods =============
 
@@ -132,6 +135,9 @@ pack_punctuation <- function(tag_list) {
 
 #Barvy: magenta, cyan, green, orange, seda 3x
 cnk_color_vector <- c("#e2007a", "#009ee0", "#57aB27", "#ea670C", "gray40", "gray60", "gray80")
+
+# Svetlejsi odstiny: magenta, cyan, green, orange
+cnk_lighter_color_vector <- c("#FFDCEF", "#AEE7FF", "#CAF6B0", "#FFD7BA")
 
 
 # ============== Significance tests =============
