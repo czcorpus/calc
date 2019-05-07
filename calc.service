@@ -17,9 +17,9 @@ User=nobody
 # on the same server
 Environment=SHINY_APP_PORT=9001
 # write out absolute path to your run.R wrapper...
-ExecStart=/opt/calc/run.R
+ExecStart=/home/cvrcek/other/kalkulačka/calc/run.R
 # ... and your app's parent dir
-WorkingDirectory=/opt/calc
+WorkingDirectory=/home/cvrcek/other/kalkulačka/calc
 Restart=on-failure
 RestartSec=3
 
