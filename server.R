@@ -19,7 +19,6 @@ shinyServer(function(input, output, session) {
   
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
-
      n <- switch(input$OwOcCorpus,
                  "1" = 1e6,
                  "2" = 1e8,
@@ -184,14 +183,14 @@ shinyServer(function(input, output, session) {
       vec <- unlist(strsplit(input$SaReMereni, split = "[,; ]+"))
       vec <- as.numeric(vec)
       if (sum(is.na(vec)) > 0) {
-        showModal(modalDialog(title = "No, super!",
-                              "Tak teď jste to rozbili. Fakt dík! Možná kdybyste nezadávali blbosti, udělali byste líp.",
+        showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
+                              i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
                               easyClose = TRUE
         ))
       }
       if (length(vec) * input$SaReVzorek > input$SaRePopulace) {
-        showModal(modalDialog(title = "Problém v zadání?",
-                              "Součet velikostí vzorků přesahuje velikost základního souboru.",
+        showModal(modalDialog(title = i18n$t("Problém v zadání?"),
+                              i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."),
                               easyClose = TRUE
         ))
       }
@@ -318,7 +317,7 @@ shinyServer(function(input, output, session) {
     output$zTTRvalue <- renderText({
       data <- zTTRdata()
       out <- countzttr(data, model = "mean-sd")
-      paste0("<p class='zTTRvalue'><span class='label label-success'>Výsledek</span> ", 
+      paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
              i18n$t("Vypočítané zTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
     })
 
@@ -334,7 +333,7 @@ shinyServer(function(input, output, session) {
     output$zqTTRvalue <- renderText({
       data <- zTTRdata()
       out <- countzttr(data, model = "median-iqr")
-      paste0("<p class='zTTRvalue'><span class='label label-success'>Výsledek</span> ", 
+      paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
              i18n$t("Vypočítané zqTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
     })
 
@@ -403,10 +402,29 @@ shinyServer(function(input, output, session) {
     
     output$about <- renderUI({
       tagList(
-        h3("Vítejte"),
-        helptextUvod,
-        aboutText,
-        helpThanks
+        h3(i18n$t("Vítejte")),
+        tags$p(i18n$t(helptextUvod)),
+        tags$ul(
+          tags$li(i18n$t("První modul"),
+            actionLink("linkToOwOc2", i18n$t("1 slovo v 1 korpusu")),
+            HTML(i18n$t("vlastně nepočítá žádný statistický test a slouží jako pomůcka pro adekvátní interpretaci frekevencí. Měl by pomoct s odpovědí na otázku: <em>Co to přesně znamená, když jev, který mě zajímá, má v korpusu frekvenci X výskytů?</em>"))
+          ),
+          tags$li(actionLink("linkToTwOc2", i18n$t("Druhý modul")),
+            i18n$t("porovnává dvě frekvence (např. dvě konkurenční varianty v jednom korpusu) a zjišťuje, jak významný je jejich rozdíl a jestli třeba za tím není jenom náhodná variabilita.")
+          ),
+          tags$li(i18n$t("Typickým příkladem využití modulu"),
+            actionLink("linkToTwTc", i18n$t("2 slova ve 2 korpusech")),
+            HTML(i18n$t("je identifikace <em>klíčových slov</em> – jednotek, které jsou v jednom korpusu významně častějc než v jiném (při zohlednění velikosti použitých korpusů). Využít ho můžem ale v jakémkoli srovnávání frekvencí jednotek napříč korpusy."))
+          ),
+          tags$li(actionLink("linkToSaRe", i18n$t("Čtvrtý modul")),
+            i18n$t("pomáhá s určením míry přesnosti a spolehlivosti analýzy provedené na náhodných vzorcích. Pokud v něm vychází rozpětí pro hledaný jev jako příliš velké, bude nejspíš třeba pro zpřesnění přidat další vzorky.")
+          ),
+          tags$li(i18n$t("Pátý modul nazvaný"),
+            actionLink("linkTozTTR", "zTTR"),
+            HTML(i18n$t("je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky."))
+          )
+        ),
+        tags$p(i18n$t(helpThanks))
         )
     })
     

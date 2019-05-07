@@ -175,7 +175,13 @@ localizedUI <- function(i18n) {
               value = 0.05
               )
             ),
-          helpSaRe_beza
+          tags$p(HTML(i18n$t(helpSaRe_beza1)),
+                 actionLink("LinkToSaReStudPanel", i18n$t("studentova")),
+                 i18n$t("a"),
+                 actionLink("LinkToSaReNormPanel", i18n$t("normálního")),
+                 HTML(i18n$t(helpSaRe_beza2))
+                 )
+          
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Výsledky")),
@@ -230,7 +236,12 @@ localizedUI <- function(i18n) {
                   )
                 ))
             ),
-          helpzTTR_beza
+          tags$p(HTML(i18n$t(helpzTTR_beza1)),
+                 pack_punctuation( span(i18n$t("(viz"), actionLink("LinkTozTTRMeanSDPanel", i18n$t("Průměr – SD model")), ")," ) ),
+                 HTML(i18n$t(helpzTTR_beza2)),
+                 pack_punctuation( span(i18n$t("(tzv."), actionLink("LinkTozTTRMedianIQRPanel", i18n$t("Medián – IQR model")), "),") ), 
+                 HTML(i18n$t(helpzTTR_beza3))
+                 )
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Výsledky")),
@@ -239,14 +250,14 @@ localizedUI <- function(i18n) {
               htmlOutput("zqTTRvalue"),
               h5(i18n$t("Schématické znázornění")),
               plotOutput("zqTTRscheme"),
-              h5(i18n$t("Referenční a vstupní hodnoty")),
+              h5(i18n$t("Vstupní a referenční hodnoty")),
               tableOutput("zqTTRvalueRefs")
               ),
             bsCollapsePanel(title = i18n$t("Průměr – SD model"), value = "zTTRMeanSDPanel",
               htmlOutput("zTTRvalue"),
               h5(i18n$t("Schématické znázornění")),
               plotOutput("zTTRscheme"),
-              h5(i18n$t("Referenční a vstupní hodnoty")),
+              h5(i18n$t("Vstupní a referenční hodnoty")),
               tableOutput("zTTRvalueRefs")
               )
             )
@@ -289,26 +300,26 @@ localizedUI <- function(i18n) {
   ),
   bsPopover(
     "SaReStudentplot",
-    "Konfidenční interval a klouzavý průměr",
-    "Čteme-li graf zleva doprava, vidíme, jak se přidáváním vzorků mění odhad frekvence zkoumaného jevu a spolu s tím, jak se zmenšuje konfidenční interval (zvyšeje se přesnost odhadu).",
+    i18n$t("Konfidenční interval a vývoj průměru"),
+    i18n$t("Čteme-li graf zleva doprava, vidíme, jak se přidáváním vzorků mění odhad frekvence zkoumaného jevu a spolu s tím, jak se zmenšuje konfidenční interval (zvyšuje se přesnost odhadu)."),
     placement = "left"
   ),
   bsPopover(
     "SaReNormalplot",
-    "Konfidenční interval a klouzavý průměr",
-    "Čteme-li graf zleva doprava, vidíme, jak se přidáváním vzorků mění odhad frekvence zkoumaného jevu a spolu s tím, jak se zmenšuje konfidenční interval (zvyšeje se přesnost odhadu).",
+    i18n$t("Konfidenční interval a vývoj průměru"),
+    i18n$t("Čteme-li graf zleva doprava, vidíme, jak se přidáváním vzorků mění odhad frekvence zkoumaného jevu a spolu s tím, jak se zmenšuje konfidenční interval (zvyšuje se přesnost odhadu)."),
     placement = "left"
   ),
   bsPopover(
     "zqTTRscheme",
-    "Naměřená a referenční hodnota",
-    "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.",
+    i18n$t("Naměřená a referenční hodnota"),
+    i18n$t("Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná."),
     placement = "left"
   ),
   bsPopover(
     "zTTRscheme",
-    "Naměřená a referenční hodnota",
-    "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.",
+    i18n$t("Naměřená a referenční hodnota"),
+    i18n$t("Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná."),
     placement = "left"
   ),
   bsTooltip("SaReMereni", i18n$t("Frekvence zkoumaného jevu v jednotlivých vzorcích")),
@@ -319,7 +330,7 @@ localizedUI <- function(i18n) {
   # ========================== FOOTER ==================================
   tags$hr(),
   tags$p(
-    tags$small( HTML("&copy; <a href='https://www.korpus.cz'>Czech National Corpus</a> 2019, Václav Cvrček") )
+    tags$small( HTML("&copy; <a href='https://www.korpus.cz'>"), i18n$t("Český národní korpus"), HTML("</a> 2019, Václav Cvrček") )
     )
   )
   )
