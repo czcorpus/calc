@@ -1,0 +1,10 @@
+[Unit]
+# change description to match your app
+Description=Restart KOKS: Korpusová kalkulačka spolehlivosti
+
+[Service]
+Type=oneshot
+# change last argument to match the service you want to restart
+ExecStart=/bin/systemctl restart calc
+
+# vim: set ft=systemd:

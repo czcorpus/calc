@@ -1,0 +1,54 @@
+[Unit]
+# change description to match your app
+Description=KOKS: Korpusová kalkulačka spolehlivosti
+After=network-online.target
+# remove the following line if you're not sure a notify-failed@ service is
+# available (or if you don't want to send out notifications when your app
+# crashes)
+OnFailure=notify-failed@%n
+StartLimitInterval=10s
+StartLimitBurst=3
+
+[Service]
+User=nobody
+# need access to files shared by a group?
+# Group=www-data
+# pick a unique port which is not in conflict with ports used by other services
+# on the same server
+Environment=SHINY_APP_PORT=9001
+# write out absolute path to your run.R wrapper...
+ExecStart=/opt/calc/run.R
+# ... and your app's parent dir
+WorkingDirectory=/opt/calc
+Restart=on-failure
+RestartSec=3
+
+# NOTE:  When the service fails to start, this is what happens: there will be
+# automatic restart attempts every RestartSec seconds, until systemd notices
+# *strictly more* than StartLimitBurst attempts have occurred within
+# StartLimitInterval, at which point restart attempts cease.
+#
+# For the default values of StartLimitInterval=10s, StartLimitBurst=3 and
+# RestartSec=3, this means the following happens on failure:
+#
+#                                                    |
+#             time: 0s ---- 3s ---- 6s ---- 9s - 10s |------------------>
+# restart attempts: ^ 1st   ^ 2nd   ^ 3rd   ^ 4th    |
+#
+# After the 4th attempt, more than 3 restart attempts have been made in the last
+# 10s, so at this point systemd stops trying. This is generally reasonable
+# because this probably means that there's a persistent problem which must be
+# resolved manually. Also, if you have failure notifications enabled (cf.
+# OnFailure above), the sysadmin's inbox won't be flooded with the same failure
+# notification over and over.
+#
+# Notice that this mechanism depends on mutually compatible settings of
+# StartLimitInterval, StartLimitBurst and RestartSec. E.g. if you decrease
+# StartLimitInterval to 5s and leave the other parameters unchanged, then there
+# will never be more than 3 restart attempts within StartLimitInterval, and
+# systemd will keep trying to restart the service indefinitely.
+
+[Install]
+WantedBy=multi-user.target
+
+# vim: set ft=systemd:
