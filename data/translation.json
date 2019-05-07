@@ -3,38 +3,114 @@
   "languages": ["cs", "en"],
   "translation": [
       {"cs": "KOKS: Korpusová kalkulačka spolehlivosti", "en": "CCCO: Corpus confidence calculator online"},
+      {"cs": "1 slovo v 1 korpusu", "en": "1 word in 1 corpus"},
+      {"cs": "Zadání", "en": "Input"},
       {"cs": "Zjištěná frekvence", "en": "Observed frequency"},
       {"cs": "Velikost korpusu", "en": "Corpus size"},
-      {"cs": "1 slovo v 1 korpusu", "en": "1 word in 1 corpus"},
-      {"cs": "2 slova v 1 korpusu", "en": "2 words in 1 corpus"},
-      {"cs": "2 slova ve 2 korpusech", "en": "2 words in 2 corpora"},
-      {"cs": "Lexikální bohatost (zTTR)", "en": "Lexical richness (zTTR)"},
-      {"cs": "Spolehlivost vzorků", "en": "Samples reliability"},
-      {"cs": "Zadání", "en": "Input"},
       {
         "cs": "Poznámka: Není důležité, s jakým korpusem jste přesně pracovali, jde o jeho přibližný rozsah.",
         "en": "Note: It doesn't really matter which corpus you're working with, it's the approximate size we're after here."
       },
       {"cs": "Hladina významnosti (α):", "en": "Significance level (α):"},
-      {"cs": "Slovo 1", "en": "Word 1"},
-      {"cs": "Slovo 2", "en": "Word 2"},
-      {"cs": "Korpus A", "en": "Corpus A"},
-      {"cs": "Korpus B", "en": "Corpus B"},
-      {"cs": "Signifikance a effect size", "en": "Significance and effect size"},
+      {"cs": "α = přijatelná pravděpodobnost omylu", "en": "α = acceptable level of error"},
       {"cs": "Konfidenční intervaly", "en": "Confidence intervals"},
       {"cs": "Konfidenční interval", "en": "Confidence interval"},
+      {"cs": "Frekvence", "en": "Frequency"},
       {"cs": "Spodní mez konfidenčního intervalu", "en": "Confidence interval - lower limit"},
       {"cs": "Horní mez konfidenčního intervalu", "en": "Confidence interval - upper limit"},
       {"cs": "Pravděpodobnostní funkce", "en": "Probability function"},
+      {"cs": "Pravděpodobnost", "en": "Probability"},
+      {
+        "cs": "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem.",
+        "en": "...bla bla bla in English..."
+      },
+      {"cs": "Frekvence a jejich intervaly", "en": "Frequencies and their intervals"},
+      {
+        "cs": "Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná), okolo něhož je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu.", 
+        "en": "...bla bla bla..."
+      },
+      {"cs": "Konfidenční interval a extrémy", "en": "Confidence intervals and extremes"},
+      {
+        "cs": "Pravděpodobnostní funkce ukazuje rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).", 
+        "en": "bla bla bla"
+      },
+
+      
+      {"cs": "2 slova v 1 korpusu", "en": "2 words in 1 corpus"},
+      {"cs": "Slovo 1", "en": "Word 1"},
+      {"cs": "Slovo 2", "en": "Word 2"},
+      {"cs": "Statistická signifikance", "en": "Statistical significance"},
+      {"cs": "Statistický test:", "en": "Statistical test:"},
+      {"cs": "Chi2 test", "en": "Chi2 test"},
+      {"cs": "Fisherův exaktní test", "en": "Fisher's exact test"},
+      {"cs": "Binomický test", "en": "Exact Binomial Test"},
+      {"cs": "Log-likelihood test", "en": "Log-likelihood test"},
       {"cs": "Testová statistika:", "en": "Test statistic:"},
+      {
+        "cs": "Rozdíl <strong>není</strong> na zvolené hladině významnosti",
+        "en": "The difference <strong>is not</strong> statistically significant on the"
+      },
+      {
+        "cs": "statisticky signifikantní.",
+        "en": "level of significance."
+      },
+      {
+        "cs": "Rozdíl <strong>je</strong> na zvolené hladině významnosti",
+        "en": "The difference <strong>is</strong> statistically significant on the"
+      },
+      {"cs": "Effect size", "en": "Effect size"},
+      {
+        "cs": "Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název) v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em> (viz horní část výsledkového sloupce).<br/> Nejen v lingvistice se ovšem čím dál častěji upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> (implementovány jsou opět pouze některé používané míry). Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních intervalů",
+        "en": ".... bla bla bla Ondřeji?..."
+      },
+      {"cs": "(srov. s", "en": "(cf."},
+      {"cs": "prvním modulem", "en": "first module"},
+      {"cs": "Porovnání konfidenčních intervalů", "en": "xyx"},
+      {
+        "cs": "Sloupce naznačují frekvence jevů (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným hodnotám) ve skutečnosti o stejně frekventované jevy.", 
+        "en": "xxx"
+      },
+      
+      
+      {"cs": "2 slova ve 2 korpusech", "en": "2 words in 2 corpora"},
+      {
+        "cs": "Pokud potřebujem porovnat frekvence <em>dvou jevů ve dvou různých korpusech</em>, lze využít tento modul, který je zobecněným případem modulu", 
+        "en": "Bla bla..."
+      },
+      {
+        "cs": "představeným výše. Sdílí s&nbsp;ním nejen způsob vyhodnocení (testy statistické signifikance i způsoby výpočtu effect size), ale i grafické znázornění.", 
+        "en": "...bla bla"
+      },
+      
+      
+      {"cs": "Lexikální bohatost (zTTR)", "en": "Lexical richness (zTTR)"},
+      {"cs": "", "en": ""},
+      {"cs": "Spolehlivost vzorků", "en": "Samples reliability"},
+      {"cs": "O aplikaci", "en": "About"},
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      {"cs": "Korpus A", "en": "Corpus A"},
+      {"cs": "Korpus B", "en": "Corpus B"},
+      {"cs": "Signifikance a effect size", "en": "Significance and effect size"},
+      
+      
+      
       {"cs": "Počet tokenů", "en": "Number of tokens"},
       {"cs": "Počet typů", "en": "Number of types"},
       {"cs": "Druh textu", "en": "Type of text"},
-      {"cs": "Frekvence", "en": "Frequency"},
-      {"cs": "Pravděpodobnost", "en": "Probability"},
+      
+      
       {"cs": "Průměr hodnot", "en": "Mean"},
       {"cs": "Hodnoty měření", "en": "Observed values"},
-      {"cs": "Statistický test:", "en": "Statistical test:"},
+      
       {"cs": "Nekorektní zadání", "en": "Incorrect input"},
       {"cs": "Velikost korpusu nemůže být nulová.", "en": "It is impossible to have a zero size of the corpus"},
       {"cs": "Standardní odchylka", "en": "Standard deviation"},
@@ -76,19 +152,8 @@
         "cs": "Výpočet statistické signifikance nelze s tímto zadáním provést.",
         "en": "Statistical significance cannot be calculated"
       },
-      {
-        "cs": "Rozdíl <strong>není</strong> na zvolené hladině významnosti",
-        "en": "The difference <strong>is not</strong> statistically significant on the"
-      },
-      {
-        "cs": "statisticky signifikantní.",
-        "en": "level of significance."
-      },
-      {
-        "cs": "Rozdíl <strong>je</strong> na zvolené hladině významnosti",
-        "en": "The difference <strong>is</strong> statistically significant on the"
-      },
-      {"cs": "O aplikaci", "en": "About"},
+      
+      
       {"cs": "1 mil.", "en": "1m"},
       {"cs": "100 mil.", "en": "100m"},
       {"cs": "1 mld.", "en": "1bn"},
@@ -96,10 +161,7 @@
       {"cs": "Psaný - beletrie", "en": "Written - fiction"},
       {"cs": "Psaný - oborová literatura", "en": "Written - non-fiction"},
       {"cs": "Psaný - publicistika", "en": "Written - newspapers"},
-      {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"},
-      {"cs": "Chi2 test", "en": "Chi2 test"},
-      {"cs": "Fisherův exaktní test", "en": "Fisher's exact test"},
-      {"cs": "Binomický test", "en": "Exact Binomial Test"},
-      {"cs": "Log-likelihood test", "en": "Log-likelihood test"}
+      {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"}
+      
     ]
 }

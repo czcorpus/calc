@@ -35,7 +35,7 @@ localizedUI <- function(i18n) {
               value = 0.05
               )
             ),
-          helpOwOc_beza
+          tags$p(HTML(i18n$t(helpOwOc_beza)))
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
@@ -70,10 +70,12 @@ localizedUI <- function(i18n) {
               value = 0.05
               )
             ),
-          helpTwOc_beza
+          tags$p(HTML(i18n$t(helpTwOc_beza)),
+                 pack_punctuation( span(i18n$t("(srov. s"), actionLink("linkToOwOc", i18n$t("prvním modulem")), ").") )
+                 )
           ),
         column(width = 5, offset = 1,
-          h3(i18n$t("Signifikance a effect size")),
+          h3(i18n$t("Statistická signifikance")),
           selectInput("TwOcTesttype",
             i18n$t("Statistický test:"),
             choices = {
@@ -83,6 +85,7 @@ localizedUI <- function(i18n) {
               choices
               }),
           htmlOutput("TwOcTest"),
+          h3(i18n$t("Effect size")),
           htmlOutput("TwOcEffectsize"),
           h3(i18n$t("Konfidenční intervaly")),
           plotOutput("TwOcIpmCI")
@@ -116,18 +119,23 @@ localizedUI <- function(i18n) {
               value = 0.05
               )
             ),
-          helpTwTc_beza
+          tags$p(HTML(i18n$t(helpTwTc_beza1)),
+                 actionLink("linkToTwOc", i18n$t("2 slova v 1 korpusu")),
+                 HTML(i18n$t(helpTwTc_beza2)))
           ),
         column(width = 5, offset = 1,
-          h3(i18n$t("Signifikance a effect size")),
+          h3(i18n$t("Statistická signifikance")),
           selectInput("TwTcTesttype",
             i18n$t("Statistický test:"),
             choices = {
               choices <- 1:4
-              names(choices) <- sapply( c("Chi2 test", "Fisherův exaktní test", "Binomický test", "Log-likelihood test"), i18n$t )
+              names(choices) <- sapply(
+                c("Chi2 test", "Fisherův exaktní test", "Binomický test", "Log-likelihood test"), 
+                i18n$t)
               choices
               }),
           htmlOutput("TwTcTest"),
+          h3(i18n$t("Effect size")),
           htmlOutput("TwTcEffectsize"),
           h3(i18n$t("Konfidenční intervaly")),
           plotOutput("TwTcIpmCI")
@@ -228,14 +236,18 @@ localizedUI <- function(i18n) {
           h3(i18n$t("Výsledky")),
           bsCollapse(id = "zTTRModel", open = "zTTRMedianIQRPanel",
             bsCollapsePanel(title = i18n$t("Medián – IQR model"), value = "zTTRMedianIQRPanel",
-              tableOutput("zqTTRvalue"),
+              htmlOutput("zqTTRvalue"),
               h5(i18n$t("Schématické znázornění")),
-              plotOutput("zqTTRscheme")
+              plotOutput("zqTTRscheme"),
+              h5(i18n$t("Referenční a vstupní hodnoty")),
+              tableOutput("zqTTRvalueRefs")
               ),
             bsCollapsePanel(title = i18n$t("Průměr – SD model"), value = "zTTRMeanSDPanel",
-              tableOutput("zTTRvalue"),
+              htmlOutput("zTTRvalue"),
               h5(i18n$t("Schématické znázornění")),
-              plotOutput("zTTRscheme")
+              plotOutput("zTTRscheme"),
+              h5(i18n$t("Referenční a vstupní hodnoty")),
+              tableOutput("zTTRvalueRefs")
               )
             )
           )
@@ -253,26 +265,26 @@ localizedUI <- function(i18n) {
   # ========================== POPOVERS & TOOLTIPS ======================
   bsPopover(
     "OwOcChart",
-    "Frekvence a jejich intervaly",
-    "Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná), okolo něhož je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu.",
+    i18n$t("Frekvence a jejich intervaly"),
+    i18n$t("Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná), okolo něhož je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu."),
     placement = "left"
   ),
   bsPopover(
     "OwOcHist",
-    "Konfidenční interval a extrémy",
-    "Pravděpodobnostní funkce ukazuje rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).",
+    i18n$t("Konfidenční interval a extrémy"),
+    i18n$t("Pravděpodobnostní funkce ukazuje rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy)."),
     placement = "left"
   ),
   bsPopover(
     "TwOcIpmCI",
-    "Porovnání konfidenčních intervalů",
-    "Sloupce naznačují frekvence zadaných hodnot (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným frekvencím) ve skutečnosti o stejně frekventované jevy.",
+    i18n$t("Porovnání konfidenčních intervalů"),
+    i18n$t("Sloupce naznačují frekvence jevů (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným hodnotám) ve skutečnosti o stejně frekventované jevy."),
     placement = "left"
   ),
   bsPopover(
     "TwTcIpmCI",
-    "Porovnání konfidenčních intervalů",
-    "Sloupce naznačují frekvence zadaných hodnot (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným frekvencím) ve skutečnosti o stejně frekventované jevy.",
+    i18n$t("Porovnání konfidenčních intervalů"),
+    i18n$t("Sloupce naznačují frekvence jevů (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným hodnotám) ve skutečnosti o stejně frekventované jevy."),
     placement = "left"
   ),
   bsPopover(
@@ -299,11 +311,11 @@ localizedUI <- function(i18n) {
     "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.",
     placement = "left"
   ),
-  bsTooltip("SaReMereni", "Frekvence zkoumaného jevu v jednotlivých vzorcích"),
-  bsTooltip("OwOcAlpha", "Přijatelná pravděpodobnost omylu"),
-  bsTooltip("TwOcAlpha", "Přijatelná pravděpodobnost omylu"),
-  bsTooltip("TwTcAlpha", "Přijatelná pravděpodobnost omylu"),
-  bsTooltip("SaReAlpha", "Přijatelná pravděpodobnost omylu"), 
+  bsTooltip("SaReMereni", i18n$t("Frekvence zkoumaného jevu v jednotlivých vzorcích")),
+  bsTooltip("OwOcAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")),
+  bsTooltip("TwOcAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")),
+  bsTooltip("TwTcAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")),
+  bsTooltip("SaReAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")), 
   # ========================== FOOTER ==================================
   tags$hr(),
   tags$p(

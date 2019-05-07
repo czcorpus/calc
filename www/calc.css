@@ -28,50 +28,57 @@ a:hover {
 }
 
 /* sliders */
-.irs-bar {
-border-top: 1px solid #0088c1 !important;
-border-bottom: 1px solid #0088c1 !important;
-background: #0088c1 !important;
+.irs .irs-bar {
+  border-top: 1px solid #0088c1;
+  border-bottom: 1px solid #0088c1;
+  background: #0088c1;
 }
 
-.irs-bar-edge {
-border: 1px solid #0088c1 !important;
-background: #0088c1 !important;
+.irs .irs-bar-edge {
+  border: 1px solid #0088c1;
+  background: #0088c1;
 }
 
-.irs-single {
-background: #0088c1 !important;
+.irs .irs-single {
+  background: #0088c1;
 }
 
 /* color boxes */
 .alert-warning {
-background-color: #ea670c; /*orange*/
-border-color: #ff6e0a;
+  background-color: #ea670c; /*orange*/
+  border-color: #ff6e0a;
+  font-size: 14px;
 }
 
 .alert-info {
-background-color: #009ee0; /*blue*/
-border-color: #0088c1;
+  background-color: #009ee0; /*blue*/
+  border-color: #0088c1;
+  font-size: 14px;
 }
 
 .alert-success {
-background-color: #57aB27; /*green*/
-border-color: #4B9123;
+  background-color: #57aB27; /*green*/
+  border-color: #4B9123;
+  font-size: 14px
 }
 
 /*SaRe*/
 .has-error .form-control {
-border-color: #e2007a; /*magenta*/
+  border-color: #e2007a; /*magenta*/
 }
 
 .label-danger {
-background-color: #e2007a; /*magenta*/
+  background-color: #e2007a; /*magenta*/
 }
 
 .has-success .form-control {
-border-color: #57aB27; /*green*/  
+  border-color: #57aB27; /*green*/  
 }
 
 .label-success {
-background-color: #57aB27; /*green*/  
+  background-color: #57aB27; /*green*/  
+}
+
+.zTTRvalue {
+  margin-bottom: 2em;
 }

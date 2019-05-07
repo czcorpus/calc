@@ -1,3 +1,4 @@
+library(shiny.i18n)
 
 helptextUvod <- tags$p("Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc
     při počítání základních statistických úloh, s nimiž se v rámci výzkumu běžně setkávaj. Kalkulačka
@@ -16,16 +17,7 @@ helpOwOc <- tags$p(
        funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikujíácí přijatelnou míru omylu) za daným intervalem.")
   )
 
-helpOwOc_beza <- tags$p(
-  HTML("V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty
-       občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce.
-       Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním 
-       i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo 
-       s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli
-       v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci 
-       (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní 
-       funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikujíácí přijatelnou míru omylu) za daným intervalem.")
-  )
+helpOwOc_beza <- "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem."
 
 helpTwOc <- tags$p(
   "Modul",
@@ -41,20 +33,10 @@ helpTwOc <- tags$p(
        intervalů.")
   )
 
-helpTwOc_beza <- tags$p(
-  HTML("Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název)
-  v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít 
-  jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují 
-  především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em>
-  (viz horní část výsledkového sloupce).<br/>
-  Nejen v lingvistice se ovšem čím dál častěji 
-  upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se 
-  dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> 
-  (implementovány jsou opět pouze některé používané míry). 
-  Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních 
-  intervalů"),
-  pack_punctuation( span("(srov. s", actionLink("linkToOwOc", "prvním modulem"), ").") )
-)
+helpTwOc_beza <- "Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název) v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em> (viz horní část výsledkového sloupce).<br/> Nejen v lingvistice se ovšem čím dál častěji upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> (implementovány jsou opět pouze některé používané míry). Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních intervalů"
+
+#pack_punctuation( span("(srov. s", actionLink("linkToOwOc", "prvním modulem"), ").") )
+
 
 
 helpTwTc <- tags$p(
@@ -64,13 +46,10 @@ helpTwTc <- tags$p(
     2 slova v 1 korpusu, s nímž sdílí nejen způsob vyhodnocení, ale i grafické znázornění.")
   )
 
-helpTwTc_beza <- tags$p(
-  HTML("Pokud potřebujem porovnat frekvence <em>dvou jevů ve dvou různých korpusech</em>, lze využít tento modul, který je 
-       zobecněným případem modulu"),
-  actionLink("linkToTwOc", "2 slova v 1 korpusu"),
-  HTML("představeným výše. Sdílí s&nbsp;ním nejen způsob vyhodnocení (testy statistické signifikance i způsoby výpočtu effect 
-       size), ale i grafické znázornění.")
-  )
+helpTwTc_beza1 <- "Pokud potřebujem porovnat frekvence <em>dvou jevů ve dvou různých korpusech</em>, lze využít tento modul, který je zobecněným případem modulu"
+#actionLink("linkToTwOc", "2 slova v 1 korpusu"),
+helpTwTc_beza2 <- "představeným výše. Sdílí s&nbsp;ním nejen způsob vyhodnocení (testy statistické signifikance i způsoby výpočtu effect size), ale i grafické znázornění."
+
 
 helpSaRe <- tags$p(
   "Modul",
@@ -122,16 +101,18 @@ helpzTTR <- tags$p(
   )
 
 helpzTTR_beza <- tags$p(
-  HTML("Modul nazvaný <em>zTTR</em> slouží k určení lexikální bohatosti textu (poměru počtu typů a tokenů, tedy tzv.
-       <em>TTR = type token ratio</em>). Tento ukazatel je obyčejně zatížen tím, že počet typů je vždy závislý 
-       na délce textu (čím delší text, tím víc různých slov obsahuje) a od tohoto vlivu neumí abstrahovat. 
+  HTML("Modul slouží k určení <em>lexikální bohatosti textu</em> na základě poměru počtu typů a tokenů, 
+       tedy tzv. <em>TTR</em> (= <em>type token ratio</em>). Tento ukazatel je sice jednoduchý, ale zároveň je 
+       neuspokojivý v tom, že je vždy závislý na délce textu (čím delší text máme, tím víc různých slov obsahuje).
+       Jelikož od tohoto vlivu neumí nijak abstrahovat, nelze ho použít pro porovnávání textů nestejné délky. 
        Řešením je využití alternativního indexu <em>zTTR</em>
        <a href='https://link.springer.com/article/10.1007/s11185-015-9151-8'>(Cvrček – Chlumská 2015)</a>, 
        který zadané hodnoty konkrétního textu (tokeny a typy) porovnává s hodnotami referenčními, tedy s hodnotami, které 
        jsou pro text dané délky a daného typu obvyklé.<br/>
        Původní návrh indexu <em>zTTR</em> porovnával zadané hodnoty s průměrem a směrodatnou odchylkou referenčních dat",
        pack_punctuation( span("(viz", actionLink("LinkTozTTRMeanSDPanel", "Průměr – SD model"), ")," ) ), 
-       "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí", 
+       "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a 
+       mezikvartilového rozpětí", 
        pack_punctuation( span("(tzv.", actionLink("LinkTozTTRMedianIQRPanel", "Medián – IQR model"), "),") ), 
        "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat.")
   )

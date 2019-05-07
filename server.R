@@ -314,21 +314,35 @@ shinyServer(function(input, output, session) {
       list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
         "corpus" = corp, "register" = reg, "attribute" = att, "case" = case)
     })
-
-    output$zTTRvalue <- renderTable({
+    
+    output$zTTRvalue <- renderText({
       data <- zTTRdata()
       out <- countzttr(data, model = "mean-sd")
-      tabout <- data.frame("Veličina" = c(i18n$t("Vypočítané zTTR"), i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
-                 "Hodnota" = c(out["zttr"], out["ttr"], out["refttr"], out["sdttr"]))
+      paste0("<p class='zTTRvalue'><span class='label label-success'>Výsledek</span> ", 
+             i18n$t("Vypočítané zTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+    })
+
+    output$zTTRvalueRefs <- renderTable({
+      data <- zTTRdata()
+      out <- countzttr(data, model = "mean-sd")
+      tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
+                 "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
       colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
       tabout
     })
-
-    output$zqTTRvalue <- renderTable({
+    
+    output$zqTTRvalue <- renderText({
       data <- zTTRdata()
       out <- countzttr(data, model = "median-iqr")
-      tabout <- data.frame("Veličina" = c(i18n$t("Vypočítané zqTTR"), i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
-                 "Hodnota" = c(out["zttr"], out["ttr"], out["refttr"], out["sdttr"]))
+      paste0("<p class='zTTRvalue'><span class='label label-success'>Výsledek</span> ", 
+             i18n$t("Vypočítané zqTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+    })
+
+    output$zqTTRvalueRefs <- renderTable({
+      data <- zTTRdata()
+      out <- countzttr(data, model = "median-iqr")
+      tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
+                 "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
       colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
       tabout
     })
