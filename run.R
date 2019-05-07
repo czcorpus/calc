@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
-library(shiny)
-
-runApp(port=3737)
+# get port number from env var; if unset, a random available port will
+# be used
+port <- as.numeric(Sys.getenv("SHINY_APP_PORT"))
+port <- if (is.na(port)) NULL else port
+shiny::runApp(port = port)
