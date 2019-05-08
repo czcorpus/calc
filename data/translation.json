@@ -172,8 +172,8 @@
       },
       {"cs": "(tzv.", "en": "(so called"},
       {
-        "cs": "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat.", 
-        "en": ""
+        "cs": "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat. <br/>V současnosti jsou implementovány pouze modely pro češtinu.", 
+        "en": "...bla"
       },
       {"cs": "Naměřená a referenční hodnota", "en": "Observed and expected value"},
       {

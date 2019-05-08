@@ -153,7 +153,7 @@ shinyServer(function(input, output, session) {
            "Odds ratio:", round(or, digits = 4),
            "</div>")
     })
-
+   
     output$TwTcIpmCI <- renderPlot({
       data <- TwTc.data()
       if (data["N1"] != 0 & data["N2"] != 0) {
@@ -176,7 +176,6 @@ shinyServer(function(input, output, session) {
         ))
       }
     })
-
 
 # ================= Vzorky (SaRe) =====================
     nacti <- reactive({

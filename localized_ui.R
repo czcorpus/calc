@@ -103,7 +103,7 @@ localizedUI <- function(i18n) {
                 numericInput("TwTcF1", i18n$t("Slovo 1"), 1000, min = 0)
                 ),
               column(6,
-                numericInput("TwTcF2", i18n$t("Slovo 2"), 1200, min = 0)
+                numericInput("TwTcF2", i18n$t("Slovo 2"), 1350, min = 0)
                 )),
             fluidRow(
               column(6,

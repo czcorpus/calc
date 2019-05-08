@@ -92,7 +92,7 @@ helpzTTR_beza1 <- "Modul slouží k určení <em>lexikální bohatosti textu</em
 #       pack_punctuation( span("(viz", actionLink("LinkTozTTRMeanSDPanel", "Průměr – SD model"), ")," ) ), 
 helpzTTR_beza2 <- "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí"
 #       pack_punctuation( span("(tzv.", actionLink("LinkTozTTRMedianIQRPanel", "Medián – IQR model"), "),") ), 
-helpzTTR_beza3 <- "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat."
+helpzTTR_beza3 <- "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat. <br/>V současnosti jsou implementovány pouze modely pro češtinu."
 
 
 
