@@ -284,13 +284,13 @@ localizedUI <- function(i18n) {
   bsPopover(
     "OwOcChart",
     i18n$t("Frekvence a jejich intervaly"),
-    i18n$t("Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná), okolo něhož je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu."),
+    i18n$t("Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná). Okolo bodu je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu."),
     placement = "left"
   ),
   bsPopover(
     "OwOcHist",
     i18n$t("Konfidenční interval a extrémy"),
-    i18n$t("Pravděpodobnostní funkce ukazuje rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy)."),
+    i18n$t("Pravděpodobnostní funkce ukazuje binomické rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy)."),
     placement = "left"
   ),
   bsPopover(
@@ -320,7 +320,7 @@ localizedUI <- function(i18n) {
   bsPopover(
     "zqTTRscheme",
     i18n$t("Naměřená a referenční hodnota"),
-    i18n$t("Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná."),
+    i18n$t("Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zqTTR záporná, je-li naopak vyšší, je hodnota zqTTR kladná."),
     placement = "left"
   ),
   bsPopover(

@@ -2,7 +2,7 @@
   "cultural_date_format": "%d-%m-%Y",
   "languages": ["cs", "en"],
   "translation": [
-      {"cs": "KOKS: Korpusová kalkulačka spolehlivosti", "en": "CCCO: Corpus confidence calculator online"},
+      {"cs": "KOKS: Korpusová kalkulačka spolehlivosti", "en": "C3O: Corpus confidence calculator online"},
       {"cs": "1 slovo v 1 korpusu", "en": "1 word in 1 corpus"},
       {"cs": "Zadání", "en": "Input"},
       {"cs": "Zjištěná frekvence", "en": "Observed frequency"},
@@ -30,13 +30,13 @@
       },
       {"cs": "Frekvence a jejich intervaly", "en": "Frequencies and their intervals"},
       {
-        "cs": "Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná), okolo něhož je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu.", 
+        "cs": "Každý bod v reprezentuje jednu frekvenci (zvýrazněná je frekvence zadaná). Okolo bodu je chybovými úsečkami naznačen konfidenční interval. Skutečná frekvence se (s pravděpodobností omylu α) vyskytuje v rámci tohoto intervalu.", 
         "en": "Each point represents one frequency (the input frequency is highlighted) and the error bars around it show the confidence interval. The actual frequency (with the error probability of α) is inside this interval."
       },
       {"cs": "Konfidenční interval a extrémy", "en": "Confidence intervals and extremes"},
       {
-        "cs": "Pravděpodobnostní funkce ukazuje rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).", 
-        "en": "The probability function shows probability distribution inside the confidence interval. The value highlighted in blue corresponds to the input frequency, the frequencies highlighted in orange lie outside the confidence interval (extremes)."
+        "cs": "Pravděpodobnostní funkce ukazuje binomické rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).", 
+        "en": "The probability function shows binomial probability distribution inside the confidence interval. The value highlighted in blue corresponds to the input frequency, the frequencies highlighted in orange lie outside the confidence interval (extremes)."
       },
 
       
@@ -67,14 +67,14 @@
       {"cs": "Effect size", "en": "Effect size"},
       {
         "cs": "Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název) v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em> (viz horní část výsledkového sloupce).<br/> Nejen v lingvistice se ovšem čím dál častěji upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> (implementovány jsou opět pouze některé používané míry). Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních intervalů",
-        "en": "This module can compare frequencies of two features (not only words as the title might suggest) in a single corpus and it can also confirm their difference. Such a comparison may be drawn on the basis of statistical tests (only the most common are implemented) that are interpreted especially on the basis of the <em>statistical significance</em> expressed by the <em>p-value</em> (see the top of the result column). <br/> It has been noted even outside linguistics that this value is not the best indicator of the significance of difference. It is, therefore, often supplemented by the value expressing relevance, i.e. <em>effect size</em> (again only some measures are implemented). The graph allows the comparison of the input frequencies taking account of their confidence intervals. "
+        "en": "This module can compare frequencies of two features (not only words as the title might suggest) in a single corpus and it can also confirm their difference. Such a comparison may be drawn on the basis of statistical tests (only the most common are implemented) that are interpreted especially on the basis of the <em>statistical significance</em> expressed by the <em>p-value</em> (see the top of the result column).<br/> It has been noted even outside linguistics that this value is not the best indicator of the significance of difference. It is, therefore, often supplemented by the value expressing relevance, i.e. <em>effect size</em> (again only some measures are implemented). The graph allows the comparison of the input frequencies taking account of their confidence intervals"
       },
       {"cs": "(srov. s", "en": "(cf."},
       {"cs": "prvním modulem", "en": "first module"},
       {"cs": "Porovnání konfidenčních intervalů", "en": "Confidence interval comparison"},
       {
         "cs": "Sloupce naznačují frekvence jevů (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným hodnotám) ve skutečnosti o stejně frekventované jevy.", 
-        "en": "Columns indicate feature frequencies (in ipm) while the error bar indicates the confidence interval which delimits the frequencies in actual language. Despite the difference in input frequencies, overlapping confidence intervals may indicate the same actual frequency."
+        "en": "Bars indicate feature frequencies (in ipm) while the error bar indicates the confidence interval which delimits the range of frequencies in the whole lamgauge. Despite the difference in input frequencies, overlapping confidence intervals may indicate the sameness of frequencies."
       },
       
       
@@ -124,7 +124,7 @@
       },
       {
         "cs": "Modul <em>Spolehlivost vzorků</em> je určen k vyhodnocování výsledků získaných manuální analýzou různého počtu náhodných vzorků (typicky z rozsáhlé konkordance, kterou nelze celou detailně prozkoumat). Obvyklým problémem takové analýzy je to, že nejsme schopni určit, kolik dílčích vzorků a s jakou velikostí je třeba ručně prozkoumat, aby byl náš odhad spolehlivý. Univerzální odpověď na tuto otázku dát nelze, protože to závisí na mnoha okolnostech (zejm. na frekvenci a rozpýtelnosti analyzovaného jevu), můžeme nicméně na základě tzv. <em>centrálního limitního teorému</em> odhadnout, v jakém intervalu se daný jev v celé konkordanci vyskytuje.<br/> Modul nabízí informaci o tom, jak se s postupným přidáváním vzorků zpřesňuje náš odhad (zužuje se <em>konfidenční interval</em>) frekvence sledovaného jevu. Na základě tohoto intervalu můžeme rozhodnout, zda nám taková přesnost stačí, či zda raději prozkoumáme další vzorky, abychom odhad ještě víc zpřesnili. Aplikace nabízí dva způsoby jak výpočet provádět: pomocí", 
-        "en": "The <em>Sample reliability</em> module is intended to evaluate the results of manual analysis of a number of random samples (typically from an extensive concordance that is impossible to examine in detail). The usual problem of such analysis stems from our inability to determine the number and size of the individual samples necessary for a reliable estimate. There is no universal answer to this problem, because it depends on a number of factors (esp. on the frequency and dispersion of the feature), however, based on the <em>Central limit theorem</em>, we can estimate in what interval of the whole concordance the feature in question appears.<br/>  This module shows that by adding samples, the frequency estimate precision increases (the <em>confidence interval</em> narrows). It is then possible to decide, based on this interval, if a given precision is satisfactory enough, or if more samples should be analysed to increase the precision of the estimate. The app provides two ways to calculate this: using the" 
+        "en": "The <em>Sample reliability</em> module is intended to evaluate the results of manual analysis of a number of random samples (typically from an extensive concordance that is impossible to examine in detail). The usual problem of such analysis stems from our inability to determine the number and size of the individual samples necessary for a reliable estimate. There is no universal answer to this problem, because it depends on a number of factors (esp. on the frequency and dispersion of the feature), however, based on the <em>Central limit theorem</em>, we can estimate in what interval the feature in question appears in the whole concordance.<br/>  This module shows that by adding samples, the frequency estimate precision increases (the <em>confidence interval</em> narrows). It is then possible to decide, based on this interval, if a given precision is satisfactory enough, or if more samples should be analysed to increase the precision of the estimate. The app provides two ways to calculate this: using the" 
       },
       {"cs": "studentova", "en": "Student's"},
       {"cs": "a", "en": "and"},
@@ -173,7 +173,7 @@
       {"cs": "(viz", "en": "(see"},
       {
         "cs": "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí", 
-        "en": "The newer modified version (differentiated by a new name: <em>zqTTR</em>) uses non-parametric values of median and inter-quartile range"
+        "en": "the newer modified version (differentiated by a new name: <em>zqTTR</em>) uses non-parametric values of median and inter-quartile range"
       },
       {"cs": "(tzv.", "en": "(so called"},
       {
@@ -182,12 +182,12 @@
       },
       {"cs": "Naměřená a referenční hodnota", "en": "Observed and expected value"},
       {
-        "cs": "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.", 
-        "en": "The graph is a schematic visualisation of the position of the observed lexical richness in relation to an expected value (median for texts of the same length). If the observed value is lower than the reference value, the resulting zTTR index is negative, if the value is higher, the zTTR index is positive."
+        "cs": "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (medián pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zqTTR záporná, je-li naopak vyšší, je hodnota zqTTR kladná.", 
+        "en": "The graph is a schematic visualisation of the position of the observed lexical richness in relation to an expected value (median for texts of the same length). If the observed value is lower than the reference value, the resulting zqTTR index is negative, if the value is higher, the zqTTR index is positive."
       },
       {
-        "cs": "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.", 
-      "en": "The graph is a schematic visualisation of the position of the observed lexical richness in relation to an expected value (average for texts of the same length). If the observed value is lower than the reference value, the resulting zTTR index is negative, if the value is higher, the zTTR index is positive."
+        "cs": "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.",
+        "en": "The graph is a schematic visualisation of the position of the observed lexical richness in relation to an expected value (average for texts of the same length). If the observed value is lower than the reference value, the resulting zTTR index is negative, if the value is higher, the zTTR index is positive."
       },
       
       
@@ -199,17 +199,17 @@
       {"cs": "První modul", "en": "The first module"},
       {
         "cs": "vlastně nepočítá žádný statistický test a slouží jako pomůcka pro adekvátní interpretaci frekevencí. Měl by pomoct s odpovědí na otázku: <em>Co to přesně znamená, když jev, který mě zajímá, má v korpusu frekvenci X výskytů?</em>", 
-        "en": "does not in fact do any statistical testing as such but serves as a tool for adequate frequency interpretation. It should help you answer the question: <em>What exactly does it mean, when a feature I am interested in has a frequency X in a corpus</em>"
+        "en": "does not in fact do any statistical testing as such but serves as a tool for adequate frequency interpretation. It should help you answer the question: <em>What exactly does it mean, when a feature I am interested in has a frequency X in a corpus?</em>"
       },
       {"cs": "Druhý modul", "en": "The second module"},
       {
         "cs": "porovnává dvě frekvence (např. dvě konkurenční varianty v jednom korpusu) a zjišťuje, jak významný je jejich rozdíl a jestli třeba za tím není jenom náhodná variabilita.", 
         "en": "compares two frequencies (e.g. two competing variants in one corpus) and determines, how significant their difference really is and whether their difference is not just a result of a random variation."
       },
-      {"cs": "Typickým příkladem využití modulu", "en": "The typical use case of this module"},
+      {"cs": "Typickým příkladem využití modulu", "en": "The typical use case of the module"},
       {
         "cs": "je identifikace <em>klíčových slov</em> – jednotek, které jsou v jednom korpusu významně častějc než v jiném (při zohlednění velikosti použitých korpusů). Využít ho můžem ale v jakémkoli srovnávání frekvencí jednotek napříč korpusy.", 
-        "en": "is the identification of <em>keywords</em> - units that are significantly more common in one of two corpora (considering the size of the two corpora). It is, however, useful for any comparison of frequencies across different corpora."
+        "en": "is the identification of <em>keywords</em> – units that are significantly more common in one of two corpora (considering the size of the two corpora). It is, however, useful for any comparison of frequencies across different corpora."
       },
       {"cs": "Čtvrtý modul", "en": "The fourth module"},
       {
