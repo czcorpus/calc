@@ -88,7 +88,7 @@ helpSaRe_beza2 <- "rozdělení, přičemž první z nich poskytuje většinou me
 #        vzhledem k charakteru jazykových dat.")
 #   )
 
-helpzTTR_beza1 <- "Modul slouží k určení <em>lexikální bohatosti textu</em> na základě poměru počtu typů a tokenů, tedy tzv. <em>TTR</em> (= <em>type token ratio</em>). Tento ukazatel je sice jednoduchý, ale zároveň je neuspokojivý v tom, že je vždy závislý na délce textu (čím delší text máme, tím víc různých slov obsahuje). Jelikož od tohoto vlivu neumí nijak abstrahovat, nelze ho použít pro porovnávání textů nestejné délky. Řešením je využití alternativního indexu <em>zTTR</em> <a href='https://link.springer.com/article/10.1007/s11185-015-9151-8'>(Cvrček – Chlumská 2015)</a>, který zadané hodnoty konkrétního textu (tokeny a typy) porovnává s hodnotami referenčními, tedy s hodnotami, které jsou pro text dané délky a daného typu obvyklé.<br/> Původní návrh indexu <em>zTTR</em> porovnával zadané hodnoty s průměrem a směrodatnou odchylkou referenčních dat"
+helpzTTR_beza1 <- "Modul slouží k určení <em>lexikální bohatosti textu</em> na základě poměru počtu typů a tokenů, tedy tzv. <em>TTR</em> (= <em>type token ratio</em>). Tento ukazatel je sice jednoduchý, ale zároveň je neuspokojivý v tom, že je vždy závislý na délce textu (čím delší text máme, tím víc různých slov obsahuje, zároveň platí, že nové typy přibývají pomaleji, jak text narůstá). Jelikož od tohoto vlivu neumí nijak abstrahovat, nelze ho použít pro porovnávání textů nestejné délky. Řešením je využití alternativního indexu <em>zTTR</em> <a href='https://link.springer.com/article/10.1007/s11185-015-9151-8'>(Cvrček – Chlumská 2015)</a>, který zadané hodnoty konkrétního textu (tokeny a typy) porovnává s hodnotami referenčními, tedy s hodnotami, které jsou pro text dané délky a daného typu obvyklé.<br/> Původní návrh indexu <em>zTTR</em> porovnával zadané hodnoty s průměrem a směrodatnou odchylkou referenčních dat"
 #       pack_punctuation( span("(viz", actionLink("LinkTozTTRMeanSDPanel", "Průměr – SD model"), ")," ) ), 
 helpzTTR_beza2 <- "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí"
 #       pack_punctuation( span("(tzv.", actionLink("LinkTozTTRMedianIQRPanel", "Medián – IQR model"), "),") ), 
@@ -96,6 +96,6 @@ helpzTTR_beza3 <- "který můžem považovat za adekvátnější vzhledem k obec
 
 
 
-helpThanks <- "Poděkování za pomoc při přípravě této aplikace patří..."
+helpThanks <- "Poděkování za pomoc při přípravě této aplikace patří D. Lukešovi, O. Tichému, J. Kockovi a J. Miličkovi."
 
 

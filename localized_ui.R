@@ -54,10 +54,10 @@ localizedUI <- function(i18n) {
           wellPanel(
             fluidRow(
               column(6,
-                numericInput("TwOcF1", i18n$t("Slovo 1"), 2000, min = 0)
+                numericInput("TwOcF1", i18n$t("Frekvence slova 1"), 2000, min = 0)
                 ),
                 column(6,
-                  numericInput("TwOcF2", i18n$t("Slovo 2"), 1880, min = 0)
+                  numericInput("TwOcF2", i18n$t("Frekvence slova 2"), 1880, min = 0)
                   )),
             fluidRow(
               column(12,
@@ -100,17 +100,17 @@ localizedUI <- function(i18n) {
           wellPanel(
             fluidRow(
               column(6,
-                numericInput("TwTcF1", i18n$t("Slovo 1"), 1000, min = 0)
+                numericInput("TwTcF1", i18n$t("Frekvence slova 1"), 1000, min = 0)
                 ),
               column(6,
-                numericInput("TwTcF2", i18n$t("Slovo 2"), 1350, min = 0)
+                numericInput("TwTcF2", i18n$t("Frekvence slova 2"), 1350, min = 0)
                 )),
             fluidRow(
               column(6,
-                numericInput("TwTcN1", i18n$t("Korpus A"), 1000000, min = 1)
+                numericInput("TwTcN1", i18n$t("Velikost korpusu A"), 1000000, min = 1)
                 ),
               column(6,
-                numericInput("TwTcN2", i18n$t("Korpus B"), 1500000, min = 1)
+                numericInput("TwTcN2", i18n$t("Velikost korpusu B"), 1500000, min = 1)
                 )),
             sliderInput("TwTcAlpha",
               i18n$t("Hladina významnosti (α):"),
@@ -234,7 +234,14 @@ localizedUI <- function(i18n) {
                     "word (case-sensitive)" = 3
                     )
                   )
-                ))
+                )),
+            shinyjs::useShinyjs(),
+            radioButtons("zTTRlangsel", i18n$t("Analyzovaný jazyk (zatím neimplementováno)"),
+              choices = {
+                choices <- 1:2
+                names(choices) <- sapply( c("čeština", "angličtina"), i18n$t )
+                choices
+              }, inline = T)
             ),
           tags$p(HTML(i18n$t(helpzTTR_beza1)),
                  pack_punctuation( span(i18n$t("(viz"), actionLink("LinkTozTTRMeanSDPanel", i18n$t("Průměr – SD model")), ")," ) ),

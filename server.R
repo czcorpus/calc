@@ -396,6 +396,28 @@ shinyServer(function(input, output, session) {
         theme_minimal(base_size = graphBaseSizeFont) +
         theme(legend.justification=c(1,1), legend.position=c(1,1))
     })
+    
+    observe({
+      shinyjs::disable("zTTRlangsel")
+      x <- input$zTTRlangsel
+      if (is.null(x)) { x = 1 }
+      
+      u.choices = {
+        choices <- 1:4
+        names(choices) <- sapply( c("Psaný - beletrie", "Psaný - oborová literatura", "Psaný - publicistika", "Mluvený - spontánní konverzace"), i18n$t )
+        choices}
+      
+      if (x != 1) {
+        u.choices = {
+          choices <- 1:3
+          names(choices) <- sapply( c("xxx", "yyy", "zzz"), i18n$t )
+          choices }
+      }
+      updateSelectInput(session, "zTTRregister", choices = u.choices)
+    })
+    
+    
+    
 
 # ================= Napoveda =====================
     
