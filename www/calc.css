@@ -50,11 +50,16 @@ a:hover {
   font-size: 14px;
 }
 
+.alert-info a {
+  color: #ffffff;
+}  
+
 .alert-info {
   background-color: #009ee0; /*blue*/
   border-color: #0088c1;
   font-size: 14px;
 }
+
 
 .alert-success {
   background-color: #57aB27; /*green*/

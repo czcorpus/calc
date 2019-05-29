@@ -97,9 +97,10 @@ shinyServer(function(input, output, session) {
      rr <- countRR(data["F1"], data["F2"], data["N"], data["N"])
      or <- countOR(data["F1"], data["F2"], data["N"], data["N"])
      paste("<div id='din' class='alert alert-info'>",
-           "DIN:", round(din, digits = 4), "<br/>",
-           "Risk ratio:", round(rr, digits = 4), "<br/>",
-           "Odds ratio:", round(or, digits = 4),
+           i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"),
+           round(din, digits = 4), "<br/>",
+           "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", round(rr, digits = 4), "<br/>",
+           "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", round(or, digits = 4),
            "</div>")
    })
    
@@ -185,9 +186,10 @@ shinyServer(function(input, output, session) {
      rr <- countRR(data["F1"], data["F2"], data["N1"], data["N2"])
      or <- countOR(data["F1"], data["F2"], data["N1"], data["N2"])
      paste("<div id='din' class='alert alert-info'>",
-           "DIN:", round(din, digits = 4), "<br/>",
-           "Risk ratio:", round(rr, digits = 4), "<br/>",
-           "Odds ratio:", round(or, digits = 4),
+           i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"),
+           round(din, digits = 4), "<br/>",
+           "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", round(rr, digits = 4), "<br/>",
+           "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", round(or, digits = 4),
            "</div>")
     })
    
