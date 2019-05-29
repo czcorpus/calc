@@ -79,16 +79,17 @@ localizedUI <- function(i18n) {
           selectInput("TwOcTesttype",
             i18n$t("Statistický test:"),
             choices = {
-              choices <- 1:4
+              choices <- c(1,2,4)
               names(choices) <-
-                sapply( c("Chi2 test", "Fisherův exaktní test", "Binomický test", "Log-likelihood test"), i18n$t )
+                sapply( c("Chi2 test", "Fisherův exaktní test", "Log-likelihood test"), i18n$t )
               choices
               }),
           htmlOutput("TwOcTest"),
           h3(i18n$t("Effect size")),
           htmlOutput("TwOcEffectsize"),
           h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwOcIpmCI")
+          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
+          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out."))
           )
         )
       ), 
@@ -128,9 +129,9 @@ localizedUI <- function(i18n) {
           selectInput("TwTcTesttype",
             i18n$t("Statistický test:"),
             choices = {
-              choices <- 1:4
+              choices <- c(1,2,4)
               names(choices) <- sapply(
-                c("Chi2 test", "Fisherův exaktní test", "Binomický test", "Log-likelihood test"), 
+                c("Chi2 test", "Fisherův exaktní test", "Log-likelihood test"), 
                 i18n$t)
               choices
               }),
@@ -138,7 +139,8 @@ localizedUI <- function(i18n) {
           h3(i18n$t("Effect size")),
           htmlOutput("TwTcEffectsize"),
           h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwTcIpmCI")
+          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
+          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out."))
           )
         )
       ),

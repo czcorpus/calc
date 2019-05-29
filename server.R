@@ -102,22 +102,59 @@ shinyServer(function(input, output, session) {
            "Odds ratio:", round(or, digits = 4),
            "</div>")
    })
+   
+   graphlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = FALSE, onclick = FALSE)
+   
+   getgraphlimits <- function(graphdata, zoomin) {
+     if (zoomin == TRUE) {   # mam zazoomovat?
+       if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {      # ma smysl provadet zoom
+         MIN = min(graphdata$ipm) - 4 * max(graphdata$ci)
+         MAX = max(graphdata$ipm) + max(graphdata$ci)
+       } else {   # nema smysl provádět zoom
+         MIN = NULL
+         MAX = NULL
+       }
+     } else {
+       MIN = 0
+       MAX = max(graphdata$ipm) + max(graphdata$ci)
+     }
+     return(list(MIN = MIN, MAX = MAX))
+   }
+   
+   observeEvent(input$TwOcIpmCIclick, {
+     data <- TwOc.data()
+     graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
+     if (graphlimits$zoomed == TRUE) {
+       limrange <- getgraphlimits(graphdata, FALSE)
+       graphlimits$zoomed <- FALSE
+     } else {
+       limrange <- getgraphlimits(graphdata, TRUE)
+       graphlimits$zoomed <- TRUE
+     }
+     graphlimits$MAX <- limrange$MAX
+     graphlimits$MIN <- limrange$MIN
+     graphlimits$onclick <- TRUE
+   })
 
    output$TwOcIpmCI <- renderPlot({
      data <- TwOc.data()
      if (data["N"] != 0) {
        graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
-       if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {
-         graphlimits = c( min(graphdata$ipm) - 4 * max(graphdata$ci),  max(graphdata$ipm) + max(graphdata$ci) )
+       if (graphlimits$onclick == FALSE) {
+         limrange <- getgraphlimits(graphdata, graphlimits$zoomed)
+         graphlimits$MAX <- limrange$MAX
+         graphlimits$MIN <- limrange$MIN
        } else {
-         graphlimits <- c()
+         graphlimits$onclick <- FALSE
        }
-       ggplot(data = graphdata, aes(x = x, y = ipm)) +
+       #browser()
+       barchart <- ggplot(data = graphdata, aes(x = x, y = ipm)) +
          geom_bar(stat="identity", fill = cnk_color_vector[2], alpha = 0.75) +
          geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
-         coord_cartesian(ylim = graphlimits) +
+         coord_cartesian(ylim = c(graphlimits$MIN, graphlimits$MAX)) +
          labs(x = "", y = "i.p.m.") +
          theme_minimal(base_size = graphBaseSizeFont)
+       barchart
      } else {
        showModal(
          modalDialog(
@@ -126,7 +163,7 @@ shinyServer(function(input, output, session) {
            easyClose = TRUE
            )
        )
-    }
+     }
    })
 
    # =========== 2 slova 2 korpusy (TwTc) ==========
@@ -154,19 +191,36 @@ shinyServer(function(input, output, session) {
            "</div>")
     })
    
+   observeEvent(input$TwTcIpmCIclick, {
+     data <- TwTc.data()
+     graphdata <- getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
+     if (graphlimits$zoomed == TRUE) {
+       limrange <- getgraphlimits(graphdata, FALSE)
+       graphlimits$zoomed <- FALSE
+     } else {
+       limrange <- getgraphlimits(graphdata, TRUE)
+       graphlimits$zoomed <- TRUE
+     }
+     graphlimits$MAX <- limrange$MAX
+     graphlimits$MIN <- limrange$MIN
+     graphlimits$onclick <- TRUE
+   })
+   
     output$TwTcIpmCI <- renderPlot({
       data <- TwTc.data()
       if (data["N1"] != 0 & data["N2"] != 0) {
         graphdata <-  getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
-        if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {
-          graphlimits = c( min(graphdata$ipm) - 4 * max(graphdata$ci),  max(graphdata$ipm) + max(graphdata$ci) )
+        if (graphlimits$onclick == FALSE) {
+          limrange <- getgraphlimits(graphdata, graphlimits$zoomed)
+          graphlimits$MAX <- limrange$MAX
+          graphlimits$MIN <- limrange$MIN
         } else {
-          graphlimits <- c()
+          graphlimits$onclick <- FALSE
         }
         ggplot(data = graphdata, aes(x = x, y = ipm)) +
           geom_bar(stat="identity", fill = cnk_color_vector[2], alpha = 0.75) +
           geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
-          coord_cartesian(ylim = graphlimits) +
+          coord_cartesian(ylim = c(graphlimits$MIN, graphlimits$MAX)) +
           labs(x = "", y = "i.p.m.") +
           theme_minimal(base_size = graphBaseSizeFont)
       } else {
