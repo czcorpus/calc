@@ -25,8 +25,8 @@
       {"cs": "Pravděpodobnostní funkce", "en": "Probability function"},
       {"cs": "Pravděpodobnost", "en": "Probability"},
       {
-        "cs": "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem.",
-        "en": "This module can help correctly interpreting corpus frequencies. When working with corpus data, we tend to forget that a frequency reported by the corpus is only a <em>point estimate</em> of its actual frequency in actual language. Considering the pervasive variability caused by a number of factors related to the process of corpus composition (its processing and even evaluation of the query), it is more reliable as well as more correct to assume the search term does not occur with the frequency reported, but with a frequency within a certain range (statisticians say in a <em>confidence interval</em>).<br/> This interval is represented in two ways in this module: first, in case of the input frequency (and adjacent frequencies), it is represented by the error bars (shaped like the letter <samp>I</samp>); second, the probability function shows values that, given the selected level of significance (representing the acceptable level of error), are already beyond that interval."
+        "cs": "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem.<br/> V obou případech je pro výpočet konfidenčních intervalů použito <a href='https://cs.wikipedia.org/wiki/Binomické_rozdělen%C3%AD'>binomické rozdělení pravděpodobnosti</a>.",
+        "en": "This module can help correctly interpreting corpus frequencies. When working with corpus data, we tend to forget that a frequency reported by the corpus is only a <em>point estimate</em> of its actual frequency in actual language. Considering the pervasive variability caused by a number of factors related to the process of corpus composition (its processing and even evaluation of the query), it is more reliable as well as more correct to assume the search term does not occur with the frequency reported, but with a frequency within a certain range (statisticians say in a <em>confidence interval</em>).<br/> This interval is represented in two ways in this module: first, in case of the input frequency (and adjacent frequencies), it is represented by the error bars (shaped like the letter <samp>I</samp>); second, the probability function shows values that, given the selected level of significance (representing the acceptable level of error), are already beyond that interval.<br/> In both cases a <a href='https://en.wikipedia.org/wiki/Binomial_distribution'>binomial probability distribution</a> was used."
       },
       {"cs": "Frekvence a jejich intervaly", "en": "Frequencies and their intervals"},
       {
@@ -38,6 +38,7 @@
         "cs": "Pravděpodobnostní funkce ukazuje binomické rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).", 
         "en": "The probability function shows binomial probability distribution inside the confidence interval. The value highlighted in blue corresponds to the input frequency, the frequencies highlighted in orange lie outside the confidence interval (extremes)."
       },
+      {"cs": "Zadaná frekvence přesahuje velikost korpusu.", "en": "Observed frequency is larger than the corpus size."},
 
       
       {"cs": "2 slova v 1 korpusu", "en": "2 words in 1 corpus"},
@@ -81,6 +82,7 @@
         "en": "Bars indicate feature frequencies (in ipm) while the error bar indicates the confidence interval which delimits the range of frequencies in the whole lamgauge. Despite the difference in input frequencies, overlapping confidence intervals may indicate the sameness of frequencies."
       },
       {"cs": "Kliknutím na oblast grafu provedete zoom in/out.", "en": "Zoom in/out by clicking in the graph."},
+      {"cs": "Zadané frekvence přesahujou velikost korpusu.", "en": "Observed frequencies are larger than the corpus size."},
       
       
       {"cs": "2 slova ve 2 korpusech", "en": "2 words in 2 corpora"},
@@ -198,8 +200,8 @@
       
       {"cs": "O aplikaci", "en": "About"},
       {"cs": "Vítejte", "en": "Welcome"},
-      {"cs": "Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc při počítání základních statistických úloh, s nimiž se lze v rámci výzkumu běžně setkat. Kalkulačka je rozdělena do několika modulů, které odpovídaj různým výzkumným situacím.", 
-      "en": "The calculator should provide quick support to corpus users when calculating basic statistical tasks most commonly encountered in research. The calculator is divided into a number of modules reflecting specific research problems."
+      {"cs": "Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc při počítání základních statistických úloh, s nimiž se lze v rámci výzkumu běžně setkat. Aplikace je rozdělena do několika modulů, které odpovídaj různým výzkumným situacím.", 
+      "en": "This calculator should provide quick support to corpus users when calculating basic statistical tasks most commonly encountered in research. The app is divided into a number of modules reflecting specific research problems."
       },
       {"cs": "První modul", "en": "The first module"},
       {

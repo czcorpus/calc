@@ -20,10 +20,18 @@ shinyServer(function(input, output, session) {
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
      n <- switch(input$OwOcCorpus,
-                 "1" = 1e6,
-                 "2" = 1e8,
-                 "3" = 1e9,
-                 "4" = 1e10)
+       "1" = 1e6,
+       "2" = 1e8,
+       "3" = 1e9,
+       "4" = 1e10)
+     if (input$OwOcFq >= n) {
+       showModal(
+         modalDialog(
+           title = i18n$t("Problém v zadání?"),
+           i18n$t("Zadaná frekvence přesahuje velikost korpusu."),
+           easyClose = TRUE
+       ))
+     }
      c("Fq" = input$OwOcFq, "N" = n, "Alpha" = input$OwOcAlpha)
    })
 
@@ -80,7 +88,16 @@ shinyServer(function(input, output, session) {
    # =========== 2 slova 1 korpus (TwOc) ==========
 
    TwOc.data <- reactive({
-     c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
+     data <- c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
+     if ((data["F1"] + data["F2"]) >= data["N"]) {
+       showModal(
+         modalDialog(
+           title = i18n$t("Problém v zadání?"),
+           i18n$t("Zadané frekvence přesahujou velikost korpusu."),
+           easyClose = TRUE
+         ))
+     }
+     data
    })
 
    output$TwOcTest <- renderText({
@@ -169,7 +186,16 @@ shinyServer(function(input, output, session) {
 
    # =========== 2 slova 2 korpusy (TwTc) ==========
    TwTc.data <- reactive({
-     c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
+     data <- c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
+     if ((data["F1"] >= data["N1"]) || (data["F2"] >= data["N2"])) {
+       showModal(
+         modalDialog(
+           title = i18n$t("Problém v zadání?"),
+           i18n$t("Zadané frekvence přesahujou velikost korpusu."),
+           easyClose = TRUE
+        ))
+      }
+     data 
    })
 
    output$TwTcTest <- renderText({
@@ -351,18 +377,18 @@ shinyServer(function(input, output, session) {
 # ================= zTTR =====================
     zTTRdata <- reactive({
       reg <- switch(input$zTTRregister,
-                  "1" = "FIC",
-                  "2" = "NFC",
-                  "3" = "NMG",
-                  "4" = "SPO")
+        "1" = "FIC",
+        "2" = "NFC",
+        "3" = "NMG",
+        "4" = "SPO")
       att <- switch(input$zTTRattribute,
-                    "1" = "lemma",
-                    "2" = "word",
-                    "3" = "word")
+        "1" = "lemma",
+        "2" = "word",
+        "3" = "word")
       case <- switch(input$zTTRattribute,
-                     "1" = "ci",
-                     "2" = "ci",
-                     "3" = "cs")
+        "1" = "ci",
+        "2" = "ci",
+        "3" = "cs")
       if (reg == "SPO") { corp = "Oral" }
       else { corp = "SYN2015" }
       list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
@@ -501,7 +527,8 @@ shinyServer(function(input, output, session) {
             HTML(i18n$t("je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky."))
           )
         ),
-        tags$p(i18n$t(helpThanks))
+        tags$br(),
+        tags$p(em(i18n$t(helpThanks)))
         )
     })
     

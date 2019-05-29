@@ -1,6 +1,6 @@
 library(shiny.i18n)
 
-helptextUvod <- "Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc při počítání základních statistických úloh, s nimiž se lze v rámci výzkumu běžně setkat. Kalkulačka je rozdělena do několika modulů, které odpovídaj různým výzkumným situacím."
+helptextUvod <- "Tato kalkulačka by měla poskytnout uživatelům korpusů rychlou pomoc při počítání základních statistických úloh, s nimiž se lze v rámci výzkumu běžně setkat. Aplikace je rozdělena do několika modulů, které odpovídaj různým výzkumným situacím."
 
 
 # helpOwOc <- tags$p(
@@ -16,7 +16,7 @@ helptextUvod <- "Tato kalkulačka by měla poskytnout uživatelům korpusů rych
 #        funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikujíácí přijatelnou míru omylu) za daným intervalem.")
 #   )
 
-helpOwOc_beza <- "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem."
+helpOwOc_beza <- "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem.<br/> V obou případech je pro výpočet konfidenčních intervalů použito <a href='https://cs.wikipedia.org/wiki/Binomické_rozdělen%C3%AD'>binomické rozdělení pravděpodobnosti</a>."
 
 # helpTwOc <- tags$p(
 #   "Modul",
