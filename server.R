@@ -95,7 +95,7 @@ shinyServer(function(input, output, session) {
        geom_point(data = filter(cis, fq == data["Fq"]),
                   aes(x = as.factor(fq), y = fq), shape = 1, size = 3, color = cnk_color_vector[2]) +
        geom_errorbar(data = filter(cis, fq == data["Fq"]),
-                     aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.5, width=0.5) +
+                     aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.1, width=0.5) +
        labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
        coord_cartesian(ylim = c(chartlimits$MIN, chartlimits$MAX)) +
        theme_minimal(base_size = graphBaseSizeFont)
@@ -156,13 +156,13 @@ shinyServer(function(input, output, session) {
      orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
      paste0("<div id='din' class='alert alert-info'>",
        "<table><tr>",
-       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"), "</td>",
+       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", "</td>",
+       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
        "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
        ")</td></tr>",
-       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", "</td>",
+       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
        "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
        ")</td></tr>",
@@ -173,8 +173,8 @@ shinyServer(function(input, output, session) {
    
    getgraphlimits <- function(graphdata, zoomin) {
      if (zoomin == TRUE) {   # mam zazoomovat?
-       if ( min(graphdata$ipm) - 4 * max(graphdata$ci) > 0 ) {      # ma smysl provadet zoom
-         MIN = min(graphdata$ipm) - 4 * max(graphdata$ci)
+       if ( min(graphdata$ipm) - 2 * max(graphdata$ci) > 0 ) {      # ma smysl provadet zoom
+         MIN = min(graphdata$ipm) - 2 * max(graphdata$ci)
          MAX = max(graphdata$ipm) + max(graphdata$ci)
        } else {   # nema smysl provádět zoom
          MIN = NULL
@@ -261,13 +261,13 @@ shinyServer(function(input, output, session) {
      orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
      paste0("<div id='din' class='alert alert-info'>",
        "<table><tr>",
-       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"), "</td>",
+       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", "</td>",
+       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
        "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
        ")</td></tr>",
-       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", "</td>",
+       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
        "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
        ")</td></tr>",

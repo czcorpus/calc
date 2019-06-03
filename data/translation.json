@@ -68,8 +68,8 @@
       },
       {"cs": "Effect size", "en": "Effect size"},
       {
-        "cs": "<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:", 
-        "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works'>DIN</a>:"
+        "cs": "<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:", 
+        "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works'><b>DIN</b></a>:"
       },
       {"cs": "bodový odhad", "en": "point estimate"},
       {
