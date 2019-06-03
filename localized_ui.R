@@ -31,7 +31,7 @@ localizedUI <- function(i18n) {
             helpText( i18n$t("Poznámka: Není důležité, s jakým korpusem jste přesně pracovali, jde o jeho přibližný rozsah.") ),
             sliderInput("OwOcAlpha", label = i18n$t("Hladina významnosti (α):"),
               min = 0.0001,
-              max = 0.1,
+              max = 0.05,
               value = 0.05
               )
             ),
@@ -66,7 +66,7 @@ localizedUI <- function(i18n) {
             sliderInput("TwOcAlpha",
               i18n$t("Hladina významnosti (α):"),
               min = 0.0001,
-              max = 0.1,
+              max = 0.05,
               value = 0.05
               )
             ),
@@ -75,6 +75,11 @@ localizedUI <- function(i18n) {
                  )
           ),
         column(width = 5, offset = 1,
+          h3(i18n$t("Konfidenční intervaly")),
+          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
+          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
+          h3(i18n$t("Effect size")),
+          htmlOutput("TwOcEffectsize"),
           h3(i18n$t("Statistická signifikance")),
           selectInput("TwOcTesttype",
             i18n$t("Statistický test:"),
@@ -84,12 +89,7 @@ localizedUI <- function(i18n) {
                 sapply( c("Chi2 test", "Fisherův exaktní test", "Log-likelihood test"), i18n$t )
               choices
               }),
-          htmlOutput("TwOcTest"),
-          h3(i18n$t("Effect size")),
-          htmlOutput("TwOcEffectsize"),
-          h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
-          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out."))
+          htmlOutput("TwOcTest")
           )
         )
       ), 
@@ -116,7 +116,7 @@ localizedUI <- function(i18n) {
             sliderInput("TwTcAlpha",
               i18n$t("Hladina významnosti (α):"),
               min = 0.0001,
-              max = 0.1,
+              max = 0.05,
               value = 0.05
               )
             ),
@@ -124,7 +124,13 @@ localizedUI <- function(i18n) {
                  actionLink("linkToTwOc", i18n$t("2 slova v 1 korpusu")),
                  HTML(i18n$t(helpTwTc_beza2)))
           ),
-        column(width = 5, offset = 1,
+        column(
+          width = 5, offset = 1,
+          h3(i18n$t("Konfidenční intervaly")),
+          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
+          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
+          h3(i18n$t("Effect size")),
+          htmlOutput("TwTcEffectsize"),
           h3(i18n$t("Statistická signifikance")),
           selectInput("TwTcTesttype",
             i18n$t("Statistický test:"),
@@ -135,12 +141,7 @@ localizedUI <- function(i18n) {
                 i18n$t)
               choices
               }),
-          htmlOutput("TwTcTest"),
-          h3(i18n$t("Effect size")),
-          htmlOutput("TwTcEffectsize"),
-          h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
-          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out."))
+          htmlOutput("TwTcTest")
           )
         )
       ),
@@ -173,7 +174,7 @@ localizedUI <- function(i18n) {
             sliderInput("SaReAlpha",
               i18n$t("Hladina významnosti (α):"),
               min = 0.0001,
-              max = 0.1,
+              max = 0.05,
               value = 0.05
               )
             ),

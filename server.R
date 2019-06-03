@@ -37,7 +37,7 @@ shinyServer(function(input, output, session) {
 
    output$OwOcChart <- renderPlot({
      data <- OwOc.data()
-     sloupce = 5
+     sloupce = 2
      multiplikator = 1
      if (data["Fq"] > 999) { multiplikator = 10^(floor(log10(data["Fq"]) - 2)) }
      freqs = seq(data["Fq"] - sloupce * multiplikator, data["Fq"] + sloupce * multiplikator, by = multiplikator)
@@ -48,15 +48,16 @@ shinyServer(function(input, output, session) {
      upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
      cis$lower <- lower
      cis$upper <- upper
-
+     
      ggplot(data = cis, aes(x = as.factor(fq), y = fq, ymin = lower, ymax = upper)) +
        geom_point(shape = 1, size = 3, alpha = 0.7) +
        geom_errorbar(color = cnk_color_vector[6], width=0.5) +
        geom_point(data = filter(cis, fq == data["Fq"]),
-                  aes(x = as.factor(fq), y = fq), shape = 1, color = cnk_color_vector[2]) +
+                  aes(x = as.factor(fq), y = fq), shape = 1, size = 3, color = cnk_color_vector[2]) +
        geom_errorbar(data = filter(cis, fq == data["Fq"]),
-                     aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], width=0.5) +
+                     aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.5, width=0.5) +
        labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
+       #coord_cartesian(ylim = c(0, 120)) +
        theme_minimal(base_size = graphBaseSizeFont)
    })
 
@@ -111,9 +112,7 @@ shinyServer(function(input, output, session) {
    output$TwOcEffectsize <- renderText({
      data <- TwOc.data()
      din <- countdin(data["F1"], data["F2"], data["N"], data["N"])
-     #rr <- countRR(data["F1"], data["F2"], data["N"], data["N"])
      rrci <- RRCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
-     #or <- countOR(data["F1"], data["F2"], data["N"], data["N"])
      orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
      paste0("<div id='din' class='alert alert-info'>",
        "<table><tr>",
