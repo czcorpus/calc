@@ -34,21 +34,61 @@ shinyServer(function(input, output, session) {
      }
      c("Fq" = input$OwOcFq, "N" = n, "Alpha" = input$OwOcAlpha)
    })
+  
+  getchartdata <- reactive({
+    data <- OwOc.data()
+    sloupce = 2
+    multiplikator = 1
+    if (data["Fq"] > 999) { multiplikator = 10^(floor(log10(data["Fq"]) - 2)) }
+    freqs = seq(data["Fq"] - sloupce * multiplikator, data["Fq"] + sloupce * multiplikator, by = multiplikator)
+    if (data["Fq"] < (sloupce + 1)) { freqs = seq(1, (2 * sloupce) + 1, by = 1) }
+    cis <- data.frame(fq = freqs)
+    lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"]) )
+    upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
+    cis$lower <- lower
+    cis$upper <- upper
+    cis
+  })
+  
+  chartlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = TRUE, onclick = FALSE)
+  
+  getchartlimits <- function(chartdata, zoomin) {
+    if (zoomin == TRUE) {   # mam zazoomovat?
+      MIN = min(chartdata$lower)
+      MAX = max(chartdata$upper)
+    } else {
+      MIN = 0
+      MAX = max(chartdata$upper)
+    }
+    return(list(MIN = MIN, MAX = MAX))
+  }
+  
+  observeEvent(input$OwOcChartclick, {
+    #data <- OwOc.data()
+    chartdata <- getchartdata()
+    if (chartlimits$zoomed == TRUE) {
+      limrange <- getchartlimits(chartdata, FALSE)
+      chartlimits$zoomed <- FALSE
+    } else {
+      limrange <- getchartlimits(chartdata, TRUE)
+      chartlimits$zoomed <- TRUE
+    }
+    chartlimits$MAX <- limrange$MAX
+    chartlimits$MIN <- limrange$MIN
+    chartlimits$onclick <- TRUE
+  })
 
    output$OwOcChart <- renderPlot({
      data <- OwOc.data()
-     sloupce = 2
-     multiplikator = 1
-     if (data["Fq"] > 999) { multiplikator = 10^(floor(log10(data["Fq"]) - 2)) }
-     freqs = seq(data["Fq"] - sloupce * multiplikator, data["Fq"] + sloupce * multiplikator, by = multiplikator)
-     if (data["Fq"] < (sloupce + 1)) { freqs = seq(1, (2 * sloupce) + 1, by = 1) }
-
-     cis <- data.frame(fq = freqs)
-     lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"]) )
-     upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
-     cis$lower <- lower
-     cis$upper <- upper
-     
+     cis <- getchartdata()
+     #browser()
+     if (chartlimits$onclick == FALSE) {
+       limrange <- getchartlimits(cis, chartlimits$zoomed)
+       chartlimits$MAX <- limrange$MAX
+       chartlimits$MIN <- limrange$MIN
+     } else {
+       chartlimits$onclick <- FALSE
+     }
      ggplot(data = cis, aes(x = as.factor(fq), y = fq, ymin = lower, ymax = upper)) +
        geom_point(shape = 1, size = 3, alpha = 0.7) +
        geom_errorbar(color = cnk_color_vector[6], width=0.5) +
@@ -57,7 +97,7 @@ shinyServer(function(input, output, session) {
        geom_errorbar(data = filter(cis, fq == data["Fq"]),
                      aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.5, width=0.5) +
        labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
-       #coord_cartesian(ylim = c(0, 120)) +
+       coord_cartesian(ylim = c(chartlimits$MIN, chartlimits$MAX)) +
        theme_minimal(base_size = graphBaseSizeFont)
    })
 

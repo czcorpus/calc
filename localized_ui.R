@@ -39,7 +39,8 @@ localizedUI <- function(i18n) {
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("OwOcChart"),
+          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
+          plotOutput("OwOcChart", click = "OwOcChartclick"),
           htmlOutput("OwOcCIs"),
           h3(i18n$t("Pravděpodobnostní funkce")),
           plotOutput("OwOcHist")
