@@ -222,10 +222,31 @@ countRR <- function(f1, f2, n1, n2) {
   return( (f1 / n1) / (f2 / n2) )
 }
 
+RRCI <- function(f1, f2, n1, n2, alfa) {
+  rr <- (f1 / (f1 + f2)) / ((n1 - f1) / (n1 - f1 + n2 - f2))
+  z <- qnorm(1 - alfa/2)
+  se <- sqrt(1/f1 + 1/(n1 - f1) - 1/(f1 + f2) - 1/(n1 - f1 + n2 - f2))
+  lci <- exp( log(rr) - z * se)
+  uci <- exp( log(rr) + z * se)
+  list(rr = rr, lci = lci, uci = uci)
+}  
+
 countOR <- function(f1, f2, n1, n2) {
   h1 <- n1 - f1
   h2 <- n2 - f2
   return( (f1 / h1) / (f2 / h2) )
+}
+
+ORCI <- function(f1, f2, n1, n2, alfa) {
+  h1 <- n1 - f1
+  h2 <- n2 - f2
+  or <- (f1 / h1) / (f2 / h2)
+  z <- qnorm(1 - alfa/2)
+  #or <- countOR(f1, f2, n1, n2)
+  se <- sqrt(1/f1 + 1/f2 + 1/h1 + 1/h2)
+  lci <- exp( log(or) - z * se)
+  uci <- exp( log(or) + z * se)
+  list(or = or, lci = lci, uci = uci)
 }
 
 # ============== CI bar charts =============

@@ -111,14 +111,23 @@ shinyServer(function(input, output, session) {
    output$TwOcEffectsize <- renderText({
      data <- TwOc.data()
      din <- countdin(data["F1"], data["F2"], data["N"], data["N"])
-     rr <- countRR(data["F1"], data["F2"], data["N"], data["N"])
-     or <- countOR(data["F1"], data["F2"], data["N"], data["N"])
-     paste("<div id='din' class='alert alert-info'>",
-           i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"),
-           round(din, digits = 4), "<br/>",
-           "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", round(rr, digits = 4), "<br/>",
-           "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", round(or, digits = 4),
-           "</div>")
+     #rr <- countRR(data["F1"], data["F2"], data["N"], data["N"])
+     rrci <- RRCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
+     #or <- countOR(data["F1"], data["F2"], data["N"], data["N"])
+     orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
+     paste0("<div id='din' class='alert alert-info'>",
+       "<table><tr>",
+       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"), "</td>",
+       "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", "</td>",
+       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
+       ")</td></tr>",
+       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", "</td>",
+       "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
+       ")</td></tr>",
+       "</table></div>")
    })
    
    graphlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = FALSE, onclick = FALSE)
@@ -209,14 +218,21 @@ shinyServer(function(input, output, session) {
    output$TwTcEffectsize <- renderText({
      data <- TwTc.data()
      din <- countdin(data["F1"], data["F2"], data["N1"], data["N2"])
-     rr <- countRR(data["F1"], data["F2"], data["N1"], data["N2"])
-     or <- countOR(data["F1"], data["F2"], data["N1"], data["N2"])
-     paste("<div id='din' class='alert alert-info'>",
-           i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"),
-           round(din, digits = 4), "<br/>",
-           "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", round(rr, digits = 4), "<br/>",
-           "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", round(or, digits = 4),
-           "</div>")
+     rrci <- RRCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
+     orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
+     paste0("<div id='din' class='alert alert-info'>",
+       "<table><tr>",
+       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'>DIN</a>:"), "</td>",
+       "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'>Risk ratio</a>:", "</td>",
+       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
+       ")</td></tr>",
+       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'>Odds ratio</a>:", "</td>",
+       "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
+       ")</td></tr>",
+       "</table></div>")
     })
    
    observeEvent(input$TwTcIpmCIclick, {
