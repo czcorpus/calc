@@ -64,7 +64,7 @@ localizedUI <- function(i18n) {
                   )),
             fluidRow(
               column(12,
-                numericInput("TwOcN", i18n$t("Velikost korpusu"), 5368000, min = 1)
+                numericInput("TwOcN", i18n$t("Velikost korpusu (slova nebo pozice)"), 5368000, min = 1)
                 )),
             sliderInput("TwOcAlpha",
               i18n$t("Hladina významnosti (α):"),
@@ -113,10 +113,10 @@ localizedUI <- function(i18n) {
                 )),
             fluidRow(
               column(6,
-                numericInput("TwTcN1", i18n$t("Velikost korpusu A"), 217000, min = 1)
+                numericInput("TwTcN1", i18n$t("Velikost korpusu A (slova nebo pozice)"), 217000, min = 1)
                 ),
               column(6,
-                numericInput("TwTcN2", i18n$t("Velikost korpusu B"), 5368000, min = 1)
+                numericInput("TwTcN2", i18n$t("Velikost korpusu B (slova nebo pozice)"), 5368000, min = 1)
                 )),
             sliderInput("TwTcAlpha",
               i18n$t("Hladina významnosti (α):"),
@@ -162,7 +162,7 @@ localizedUI <- function(i18n) {
               column(5,
                 tags$div(class = "has-error",
                   numericInput("SaRePopulace",
-                    i18n$t("Velikost základního souboru"), 3890, min = 1
+                    i18n$t("Velikost základního souboru (populace)"), 3890, min = 1
                     )),
                 tags$div(class = "has-success", 
                   numericInput("SaReVzorek",

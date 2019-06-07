@@ -422,7 +422,6 @@ shinyServer(function(input, output, session) {
     output$SaReStudentplot <- renderPlot({
       vec <- nacti()
       cidata <- cumulCI(vec, input$SaReVzorek, input$SaReAlpha)
-
       ggplot(data = rownames_to_column(cidata, var="Vzorky") %>%
                select(-nlci, -nuci) %>%
                rename(lower = tlci, upper = tuci) %>%

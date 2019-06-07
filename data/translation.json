@@ -7,6 +7,7 @@
       {"cs": "Zadání", "en": "Input"},
       {"cs": "Zjištěná frekvence", "en": "Observed frequency"},
       {"cs": "Velikost korpusu", "en": "Corpus size"},
+      {"cs": "Velikost korpusu (slova nebo pozice)", "en": "Corpus size (tokens or words)"},
       {"cs": "1 mil.", "en": "1m"},
       {"cs": "100 mil.", "en": "100m"},
       {"cs": "1 mld.", "en": "1bn"},
@@ -90,6 +91,8 @@
       {"cs": "2 slova ve 2 korpusech", "en": "2 words in 2 corpora"},
       {"cs": "Velikost korpusu A", "en": "Corpus A size"},
       {"cs": "Velikost korpusu B", "en": "Corpus B size"},
+      {"cs": "Velikost korpusu A (slova nebo pozice)", "en": "Corpus size A (tokens or words)"},
+      {"cs": "Velikost korpusu B (slova nebo pozice)", "en": "Corpus size B (tokens or words)"},
       {
         "cs": "Pokud potřebujem porovnat frekvence <em>dvou jevů ve dvou různých korpusech</em>, lze využít tento modul, který je zobecněným případem modulu", 
         "en": "If you need to compare frequencies of <em>two features in two different corpora</em>, you can use this module that is a generalised case of the module "
@@ -101,7 +104,7 @@
       
       
       {"cs": "Spolehlivost vzorků", "en": "Samples reliability"},
-      {"cs": "Velikost základního souboru", "en": "Source sample (population) size"},
+      {"cs": "Velikost základního souboru (populace)", "en": "Source sample (population) size"},
       {"cs": "Velikost vzorku", "en": "Sample size"},
       {"cs": "Výsledky z analýzy vzorků", "en": "Results of sample analysis"},
       {"cs": "Hodnoty zadávejte jako celá čísla oddělená čárkou.", "en": "Comma separated values (integers)."},
@@ -243,6 +246,26 @@
         "en": "Statistical significance cannot be calculated."
       },
       {"cs": "Příklad", "en": "Example"},
+      {
+        "cs": "Ve stomilionovém korpusu SYN2015 najdeme slovo <em>čtvrthodinka</em> přesně 100×. Nelze přitom předpokládat, že v jiném korpusu o stejné velikosti a podobném složení dosáhneme zcela identické hodnoty. Důvodem je to, že každý korpus je vzorkem z populace všech textů a jako takový je zatížen nějakou vzorkovací chybou. Přistoupíme-li na to, že přijatelná pravděpodobnost chybného úsudku je 5 %, můžeme místo naměřené hodnoty pracovat s rozsahem hodnot 81–122, v němž se s 95% pravděpobností zkoumané slovo v celé populaci vyskytuje.", 
+        "en": "TBS"
+      },
+      {
+        "cs": "V pětimilionovém korpusu Oral v1 najdeme lemmata <em>šedý</em> 103× a <em>šedivý</em> 85×. Ačkoli se naměřené frekvence na první pohled liší, nemusí to ještě signalizovat skutečný rozdíl. Pokud si okolo každé z frekvencí načrtneme konfidenční interval, zjistíme, že se jejich rozsah značně překrývá. To znamená, že nelze vyloučit (se stanovenou mírou chyby), že se obě slova vyskytují v celé populaci stejně často a rozdíl mězi nimi je daný náhodou.", 
+        "en": "TBS"
+      },
+      {
+        "cs": "Lemma <em>člověk</em> se sice vyskytuje v korpusu projevů SPEECHES jen 571×, zatímco v korpusu Oral v1 celkem 10189×, vezmeme-li nicméně v úvahu nestejné velikosti korpusů, zjistíme, že relativní četnost (ipm nebo ipw) je v prvním případě podstatně vyšší než v druhém. Abychom zjistili, zda nejde o rozdíl pouze náhodný, načrtneme kolem relativních frekvencí konfidenční intervaly. Pokud se intervaly nepřekrývají, můžeme konstatovat (se stanovenou mírou omylu), že v prvním z korpusů je slovo významně častější.", 
+        "en": "TBS"
+      },
+      {
+        "cs": "Potřebujeme zjistit podíl gen. sg. ve výskytech tvaru <em>hřiště</em> (může to být i nom. či ak.), který se celkově v korpusu SYN2015 s frekvencí 3890. Pokud nechceme použít morfologické značkování, musíme se uchýlit k ruční analýze po náhodných vzorcích. Zvolíme si jejich velikost (např. 100 výskytů) a do formuláře zadáváme počet nalezených genitivů v každém ze vzorků (35, 39, 38...). S přidáváním vzorků odhad zpřesňujeme, což se projevuje zužováním konfidenčního intervalu, v němž je (se stanovenou mírou chyby) reálný výsledek v celé konkordanci. Pokud nám přesnost odhadu nevyhovuje, musíme přidat další vzorek.", 
+        "en": "TBS"
+      },
+      {
+        "cs": "Beletristický text o celkové délce 10000 tokenů obsahuje 1500 různých lemmat (typů). Porovnáváme ho s jinými texty o stejné délce a zjišťujeme, že je v tomto srovnání podprůměrný, což reflektuje i záporná hodnota zTTR (příp. zqTTR).", 
+        "en": "TBS"
+      },
       {"cs": "Český národní korpus", "en": "Czech National Corpus"}
     ]
 }
