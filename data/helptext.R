@@ -74,6 +74,7 @@ helpSaRe_beza1 <- "Modul <em>Spolehlivost vzorků</em> je určen k vyhodnocován
 # actionLink("LinkToSaReNormPanel", "normálního"),
 helpSaRe_beza2 <- "rozdělení, přičemž první z nich poskytuje většinou menší rozsah konfidenčního intervalu, zatímco druhý odhad bývá konzervativnější."
 
+helpSaRe_ex <- "Potřebujeme zjistit podíl gen. sg. ve výskytech tvaru <em>hřiště</em> (může to být i nom. či ak.), který se celkově v korpusu SYN2015 s frekvencí 3890. Pokud nechceme použít morfologické značkování, musíme se uchýlit k ruční analýze po náhodných vzorcích. Zvolíme si jejich velikost (např. 100 výskytů) a do formuláře zadáváme počet nalezených genitivů v každém ze vzorků (35, 39, 38...). S přidáváním vzorků odhad zpřesňujeme, což se projevuje zužováním konfidenčního intervalu, v němž je (se stanovenou mírou chyby) reálný výsledek v celé konkordanci. Pokud nám přesnost odhadu nevyhovuje, musíme přidat další vzorek."
 
 # helpzTTR <- tags$p(
 #   "Poslední modul nazvaný",
@@ -95,9 +96,9 @@ helpzTTR_beza1 <- "Modul slouží k určení <em>lexikální bohatosti textu</em
 #       pack_punctuation( span("(viz", actionLink("LinkTozTTRMeanSDPanel", "Průměr – SD model"), ")," ) ), 
 helpzTTR_beza2 <- "novější modifikovaná verze (pro odlišení nazývaná <em>zqTTR</em>) počítá s neparametrickými hodnotami mediánu a mezikvartilového rozpětí"
 #       pack_punctuation( span("(tzv.", actionLink("LinkTozTTRMedianIQRPanel", "Medián – IQR model"), "),") ), 
-helpzTTR_beza3 <- "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat. <br/>V současnosti jsou implementovány pouze modely pro češtinu."
+helpzTTR_beza3 <- "který můžem považovat za adekvátnější vzhledem k obecnému charakteru jazykových dat. <br/>V současnosti jsou implementovány modely pouze pro češtinu."
 
-
+helpzTTR_ex <- "Beletristický text o celkové délce 10000 tokenů obsahuje 1500 různých lemmat (typů). Porovnáváme ho s jinými texty o stejné délce a zjišťujeme, že je v tomto srovnání podprůměrný, což reflektuje i záporná hodnota zTTR (příp. zqTTR)."
 
 helpThanks <- "Poděkování za pomoc při přípravě této aplikace patří D. Lukešovi, O. Tichému, J. Kockovi a J. Miličkovi."
 

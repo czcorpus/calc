@@ -37,7 +37,7 @@ localizedUI <- function(i18n) {
             ),
           tags$p(HTML(i18n$t(helpOwOc_beza))),
           #HTML("<div id='ex' class='alert alert-info'>", "<span class='label label-info'>Příklad</span>",helpOwOc_ex, "</div>")
-          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpOwOc_ex)))
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpOwOc_ex))) )
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
@@ -76,7 +76,7 @@ localizedUI <- function(i18n) {
           tags$p(HTML(i18n$t(helpTwOc_beza)),
                  pack_punctuation( span(i18n$t("(srov. s"), actionLink("linkToOwOc", i18n$t("prvním modulem")), ").") )
                  ),
-          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpTwOc_ex)))
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpTwOc_ex))) )
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
@@ -128,7 +128,7 @@ localizedUI <- function(i18n) {
           tags$p(HTML(i18n$t(helpTwTc_beza1)),
                  actionLink("linkToTwOc", i18n$t("2 slova v 1 korpusu")),
                  HTML(i18n$t(helpTwTc_beza2))),
-          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpTwTc_ex)))
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpTwTc_ex))) )
           ),
         column(
           width = 5, offset = 1,
@@ -162,7 +162,7 @@ localizedUI <- function(i18n) {
               column(5,
                 tags$div(class = "has-error",
                   numericInput("SaRePopulace",
-                    i18n$t("Velikost základního souboru"), 10000, min = 1
+                    i18n$t("Velikost základního souboru"), 3890, min = 1
                     )),
                 tags$div(class = "has-success", 
                   numericInput("SaReVzorek",
@@ -172,7 +172,7 @@ localizedUI <- function(i18n) {
               column(7,
                 textAreaInput("SaReMereni",
                   i18n$t("Výsledky z analýzy vzorků"),
-                  "63, 61, 59, 58, 62, 60, 61",
+                  "35, 39, 38, 36, 38, 37",
                   rows = 3
                   ),
                 helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") )
@@ -190,8 +190,8 @@ localizedUI <- function(i18n) {
                  i18n$t("a"),
                  actionLink("LinkToSaReNormPanel", i18n$t("normálního")),
                  HTML(i18n$t(helpSaRe_beza2))
-                 )
-          
+                 ),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpSaRe_ex))) )
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Výsledky")),
@@ -258,7 +258,8 @@ localizedUI <- function(i18n) {
                  HTML(i18n$t(helpzTTR_beza2)),
                  pack_punctuation( span(i18n$t("(tzv."), actionLink("LinkTozTTRMedianIQRPanel", i18n$t("Medián – IQR model")), "),") ), 
                  HTML(i18n$t(helpzTTR_beza3))
-                 )
+                 ),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpzTTR_ex)) ) )
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Výsledky")),
