@@ -35,7 +35,9 @@ localizedUI <- function(i18n) {
               value = 0.05
               )
             ),
-          tags$p(HTML(i18n$t(helpOwOc_beza)))
+          tags$p(HTML(i18n$t(helpOwOc_beza))),
+          #HTML("<div id='ex' class='alert alert-info'>", "<span class='label label-info'>Příklad</span>",helpOwOc_ex, "</div>")
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpOwOc_ex)))
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
@@ -55,14 +57,14 @@ localizedUI <- function(i18n) {
           wellPanel(
             fluidRow(
               column(6,
-                numericInput("TwOcF1", i18n$t("Frekvence slova 1"), 2000, min = 0)
+                numericInput("TwOcF1", i18n$t("Frekvence slova 1"), 103, min = 0)
                 ),
                 column(6,
-                  numericInput("TwOcF2", i18n$t("Frekvence slova 2"), 1885, min = 0)
+                  numericInput("TwOcF2", i18n$t("Frekvence slova 2"), 85, min = 0)
                   )),
             fluidRow(
               column(12,
-                numericInput("TwOcN", i18n$t("Velikost korpusu"), 1000000, min = 1)
+                numericInput("TwOcN", i18n$t("Velikost korpusu"), 5368000, min = 1)
                 )),
             sliderInput("TwOcAlpha",
               i18n$t("Hladina významnosti (α):"),
@@ -73,12 +75,14 @@ localizedUI <- function(i18n) {
             ),
           tags$p(HTML(i18n$t(helpTwOc_beza)),
                  pack_punctuation( span(i18n$t("(srov. s"), actionLink("linkToOwOc", i18n$t("prvním modulem")), ").") )
-                 )
+                 ),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpTwOc_ex)))
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
           helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
+          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
+          htmlOutput("TwOcIpm"),
           h3(i18n$t("Effect size")),
           htmlOutput("TwOcEffectsize"),
           h3(i18n$t("Statistická signifikance")),
@@ -102,17 +106,17 @@ localizedUI <- function(i18n) {
           wellPanel(
             fluidRow(
               column(6,
-                numericInput("TwTcF1", i18n$t("Frekvence slova 1"), 1000, min = 0)
+                numericInput("TwTcF1", i18n$t("Frekvence slova 1"), 571, min = 0)
                 ),
               column(6,
-                numericInput("TwTcF2", i18n$t("Frekvence slova 2"), 1350, min = 0)
+                numericInput("TwTcF2", i18n$t("Frekvence slova 2"), 10189, min = 0)
                 )),
             fluidRow(
               column(6,
-                numericInput("TwTcN1", i18n$t("Velikost korpusu A"), 1000000, min = 1)
+                numericInput("TwTcN1", i18n$t("Velikost korpusu A"), 217000, min = 1)
                 ),
               column(6,
-                numericInput("TwTcN2", i18n$t("Velikost korpusu B"), 1500000, min = 1)
+                numericInput("TwTcN2", i18n$t("Velikost korpusu B"), 5368000, min = 1)
                 )),
             sliderInput("TwTcAlpha",
               i18n$t("Hladina významnosti (α):"),
@@ -123,13 +127,15 @@ localizedUI <- function(i18n) {
             ),
           tags$p(HTML(i18n$t(helpTwTc_beza1)),
                  actionLink("linkToTwOc", i18n$t("2 slova v 1 korpusu")),
-                 HTML(i18n$t(helpTwTc_beza2)))
+                 HTML(i18n$t(helpTwTc_beza2))),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(helpTwTc_ex)))
           ),
         column(
           width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
           helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
+          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
+          htmlOutput("TwTcIpm"),
           h3(i18n$t("Effect size")),
           htmlOutput("TwTcEffectsize"),
           h3(i18n$t("Statistická signifikance")),

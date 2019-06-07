@@ -14,6 +14,10 @@ a:hover {
   color: #009ee0;
 }
 
+.example-text {
+  font-size: 14px;
+}
+
 /* navigation */
 .nav-pills > li.active > a:focus {
   background-color: #009ee0;
@@ -60,6 +64,12 @@ a:hover {
   font-size: 14px;
 }
 
+#ex {
+  background-color: #ffffff; 
+  border-color: #009ee0;
+  color: black;
+  font-size: 15px;
+}
 
 .alert-success {
   background-color: #57aB27; /*green*/
@@ -74,6 +84,10 @@ a:hover {
 
 .label-danger {
   background-color: #e2007a; /*magenta*/
+}
+
+.label-info {
+  background-color: #009ee0; /*blue*/
 }
 
 .has-success .form-control {

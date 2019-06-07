@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
   
   getchartlimits <- function(chartdata, zoomin) {
     if (zoomin == TRUE) {   # mam zazoomovat?
-      MIN = min(chartdata$lower)
+      MIN = min(chartdata$lower) * 0.999
       MAX = max(chartdata$upper)
     } else {
       MIN = 0
@@ -139,6 +139,21 @@ shinyServer(function(input, output, session) {
          ))
      }
      data
+   })
+   
+   output$TwOcIpm <- renderText({
+     data <- TwOc.data()
+     f1ipm <- toipm(data["F1"], data["N"])
+     f2ipm <- toipm(data["F2"], data["N"])
+     dm1 = 3
+     if (f1ipm < 10) { dm1 = 4 }
+     dm2 = 3
+     if (f2ipm < 10) { dm2 = 4 }
+     paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
+           round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
+           "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
+           round(f2ipm, digits=dm2), 
+           "&nbsp;ipm</td></tr></table>")
    })
 
    output$TwOcTest <- renderText({
@@ -244,6 +259,21 @@ shinyServer(function(input, output, session) {
         ))
       }
      data 
+   })
+   
+   output$TwTcIpm <- renderText({
+     data <- TwTc.data()
+     f1ipm <- toipm(data["F1"], data["N1"])
+     f2ipm <- toipm(data["F2"], data["N2"])
+     dm1 = 3
+     if (f1ipm < 10) { dm1 = 4 }
+     dm2 = 3
+     if (f2ipm < 10) { dm2 = 4 }
+     paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
+            round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
+            "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
+            round(f2ipm, digits=dm2), 
+            "&nbsp;ipm</td></tr></table>")
    })
 
    output$TwTcTest <- renderText({

@@ -18,6 +18,8 @@ helptextUvod <- "Tato kalkulačka by měla poskytnout uživatelům korpusů rych
 
 helpOwOc_beza <- "V tomto modulu můžem najít odpověď na otázku, jak korektně interpretovat frekvence naměřené v&nbsp;korpusu. Při práci s korpusovými daty občas zapomínáme na to, že naměřená frekvence jevu je pouze <em>bodovým odhadem</em> jeho skutečné frekvence v&nbsp;jazyce. Vzhledem ke všudypřítomné variabilitě způsobené mnoha faktory souvisejícími s&nbsp;vytvářením korpusu, jeho zpracováním i se samotným vyhodnocováním dotazu je spolehlivější a korektnější pracovat s tím, že hledaný jev se vyskytuje nikoli přímo s&nbsp;naměřenou frekvencí, ale s frekvencí, která se nechází v nějakém rozsahu (statistici by řekli v&nbsp;<em>konfidenčním intervalu</em>).<br/> Tento interval je v modulu znázorněn dvojím způsobem: jednak je pro zadanou frekvenci (a frekvence okolní) naznačen tzv. chybovými úsečkami ve tvaru písmene <samp>I</samp> a jednak je prostřednictvím pravděpodobnostní funkce znázorněno, jaké hodnoty jsou už na zvolené hladině významnosti (specifikující přijatelnou míru omylu) za daným intervalem.<br/> V obou případech je pro výpočet konfidenčních intervalů použito <a href='https://cs.wikipedia.org/wiki/Binomické_rozdělen%C3%AD'>binomické rozdělení pravděpodobnosti</a>."
 
+helpOwOc_ex <- "Ve stomilionovém korpusu SYN2015 najdeme slovo <em>čtvrthodinka</em> přesně 100×. Nelze přitom předpokládat, že v jiném korpusu o stejné velikosti a podobném složení dosáhneme zcela identické hodnoty. Důvodem je to, že každý korpus je vzorkem z populace všech textů a jako takový je zatížen nějakou vzorkovací chybou. Přistoupíme-li na to, že přijatelná pravděpodobnost chybného úsudku je 5 %, můžeme místo naměřené hodnoty pracovat s rozsahem hodnot 81–122, v němž se s 95% pravděpobností zkoumané slovo v celé populaci vyskytuje."
+
 # helpTwOc <- tags$p(
 #   "Modul",
 #   actionLink("linkToTwOc", "2 slova v 1 korpusu"),
@@ -35,7 +37,7 @@ helpOwOc_beza <- "V tomto modulu můžem najít odpověď na otázku, jak korekt
 helpTwOc_beza <- "Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název) v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em> (viz spodní část výsledkového sloupce).<br/> Nejen v lingvistice se ovšem čím dál častěji upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> (implementovány jsou opět pouze některé používané míry). Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních intervalů"
 #pack_punctuation( span("(srov. s", actionLink("linkToOwOc", "prvním modulem"), ").") )
 
-
+helpTwOc_ex <- "V pětimilionovém korpusu Oral v1 najdeme lemmata <em>šedý</em> 103× a <em>šedivý</em> 85×. Ačkoli se naměřené frekvence na první pohled liší, nemusí to ještě signalizovat skutečný rozdíl. Pokud si okolo každé z frekvencí načrtneme konfidenční interval, zjistíme, že se jejich rozsah značně překrývá. To znamená, že nelze vyloučit (se stanovenou mírou chyby), že se obě slova vyskytují v celé populaci stejně často a rozdíl mězi nimi je daný náhodou."
 
 # helpTwTc <- tags$p(
 #   "V modulu",
@@ -48,6 +50,7 @@ helpTwTc_beza1 <- "Pokud potřebujem porovnat frekvence <em>dvou jevů ve dvou r
 #actionLink("linkToTwOc", "2 slova v 1 korpusu"),
 helpTwTc_beza2 <- "představeným výše. Sdílí s&nbsp;ním nejen způsob vyhodnocení (testy statistické signifikance i způsoby výpočtu effect size), ale i grafické znázornění."
 
+helpTwTc_ex <- "Lemma <em>člověk</em> se sice vyskytuje v korpusu projevů SPEECHES jen 571×, zatímco v korpusu Oral v1 celkem 10189×, vezmeme-li nicméně v úvahu nestejné velikosti korpusů, zjistíme, že relativní četnost (ipm nebo ipw) je v prvním případě podstatně vyšší než v druhém. Abychom zjistili, zda nejde o rozdíl pouze náhodný, načrtneme kolem relativních frekvencí konfidenční intervaly. Pokud se intervaly nepřekrývají, můžeme konstatovat (se stanovenou mírou omylu), že v prvním z korpusů je slovo významně častější."
 
 # helpSaRe <- tags$p(
 #   "Modul",

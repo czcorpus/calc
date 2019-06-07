@@ -242,6 +242,7 @@
         "cs": "Výpočet statistické signifikance nelze s tímto zadáním provést.",
         "en": "Statistical significance cannot be calculated."
       },
+      {"cs": "Příklad", "en": "Example"},
       {"cs": "Český národní korpus", "en": "Czech National Corpus"}
     ]
 }
