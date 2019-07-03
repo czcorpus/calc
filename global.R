@@ -53,8 +53,13 @@ ll <- function(afq, bfq, k1size, k2size) {
 # ============== CI methods (vzorky) =============
 
 tci <- function(data, alfa = 0.05) {
-  t.out <- t.test(data, conf.level = 1-alfa)
-  ci.out <- c( unname(t.out$estimate), t.out$conf.int[1], t.out$conf.int[2] )
+  if (sd(data) == 0) {
+    t.out <- t.test(jitter(data), conf.level = 1-alfa)
+    ci.out <- c( mean(data), t.out$conf.int[1], t.out$conf.int[2] )
+  } else {
+    t.out <- t.test(data, conf.level = 1-alfa)
+    ci.out <- c( unname(t.out$estimate), t.out$conf.int[1], t.out$conf.int[2] )
+  }
   return(ci.out)
 }
 

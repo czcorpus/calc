@@ -74,6 +74,10 @@
       },
       {"cs": "bodový odhad", "en": "point estimate"},
       {
+        "cs": "Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od", 
+        "en": "Ratio between relative frequency of Word 1 and Word 2 ranges from"
+      },
+      {
         "cs": "Tento modul slouží k porovnání frekvencí dvou jevů (tedy ne nutně pouze slov, jak naznačuje název) v jednom korpusu a příp. k potvrzení jejich odlišnosti. K takovému srovnání lze využít jednak statistické testy (implentovány jsou pouze ty nejpoužívanější), které se interpretují především na základě tzv. <em>statistické signifikance</em> vyjádřené pomocí <em>p-value</em> (viz spodní část výsledkového sloupce).<br/> Nejen v lingvistice se ovšem čím dál častěji upozorňuje, že tato hodnota není nejlepším ukazatelem významnosti rozdílu, a proto se dnes už běžně doplňuje o údaj reflektující relevanci, tzv. <em>effect size</em> (implementovány jsou opět pouze některé používané míry). Vizualizace v&nbsp;grafu pak umožňuje srovnat zadané frekvence při zohlednění jejich konfidenčních intervalů",
         "en": "This module can compare frequencies of two features (not only words as the title might suggest) in a single corpus and it can also confirm their difference. Such a comparison may be drawn on the basis of statistical tests (only the most common are implemented) that are interpreted especially on the basis of the <em>statistical significance</em> expressed by the <em>p-value</em> (see the bottom of the result column).<br/> It has been noted even outside linguistics that this value is not the best indicator of the significance of difference. It is, therefore, often supplemented by the value expressing relevance, i.e. <em>effect size</em> (again only some measures are implemented). The graph allows the comparison of the input frequencies taking account of their confidence intervals"
       },

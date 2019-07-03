@@ -168,20 +168,25 @@ shinyServer(function(input, output, session) {
      data <- TwOc.data()
      din <- countdin(data["F1"], data["F2"], data["N"], data["N"])
      rrci <- RRCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
-     orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
+     #orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
      paste0("<div id='din' class='alert alert-info'>",
-       "<table><tr>",
-       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
+       "<table>",
+       "<tr><td style='min-width: 5.3em;'>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
        "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
        ")</td></tr>",
-       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
-       "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
-       ")</td></tr>",
-       "</table></div>")
+       #"</table>",
+       # "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
+       # "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       # "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
+       # ")</td></tr>",
+       "<tr><td></td><td>", 
+       i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
+       round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
+       ".</td></tr></table>",
+       "</div>")
    })
    
    graphlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = FALSE, onclick = FALSE)
@@ -288,20 +293,25 @@ shinyServer(function(input, output, session) {
      data <- TwTc.data()
      din <- countdin(data["F1"], data["F2"], data["N1"], data["N2"])
      rrci <- RRCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
-     orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
+     #orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
      paste0("<div id='din' class='alert alert-info'>",
        "<table><tr>",
-       "<td>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
+       "<td style='min-width: 5.3em;'>", 
+       i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
        "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
        ")</td></tr>",
-       "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
-       "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
-       ")</td></tr>",
-       "</table></div>")
+       # "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
+       # "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+       # "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
+       # ")</td></tr>",
+       "<tr><td></td><td>", 
+       i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
+       round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
+       ".</td></tr></table>",
+       "</div>")
     })
    
    observeEvent(input$TwTcIpmCIclick, {
@@ -380,6 +390,7 @@ shinyServer(function(input, output, session) {
     output$SaReStudent <- renderText({
       vec <- nacti()
       vzorek.tci <- tci(vec, input$SaReAlpha) # prumer, lower-ci, upper-ci
+      #browser()
       pop.est <- ( vzorek.tci[1] / input$SaReVzorek ) * input$SaRePopulace
       pop.lci <- ( vzorek.tci[2] / input$SaReVzorek ) * input$SaRePopulace
       pop.uci <- ( vzorek.tci[3] / input$SaReVzorek ) * input$SaRePopulace
