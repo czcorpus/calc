@@ -13,6 +13,12 @@ Source: CRAN
 Version: 1.0.0
 Hash: 6abedd7919c4457604c0aa44529a6683
 
+Package: DT
+Source: CRAN
+Version: 0.7
+Hash: 13a66adac485cbb401eb931dddd0b31f
+Requires: crosstalk, htmltools, htmlwidgets, magrittr, promises
+
 Package: Formula
 Source: CRAN
 Version: 1.2-3
@@ -122,6 +128,12 @@ Source: CRAN
 Version: 1.3.4
 Hash: ff2840dd9b0d563fc80377a5a45510cd
 
+Package: crosstalk
+Source: CRAN
+Version: 1.0.0
+Hash: c13adea5906fbe2becfcb5f843b26749
+Requires: R6, ggplot2, htmltools, jsonlite, lazyeval, shiny
+
 Package: curl
 Source: CRAN
 Version: 3.3
@@ -174,19 +186,11 @@ Hash: a9ec088143c7a5684f23cf1ba43d0be9
 Requires: Rcpp
 
 Package: ggplot2
-Source: github
-Version: 3.0.0.9000
-Hash: d0996c1e85f434c95ec62c47cae6c916
-Requires: digest, gtable, lazyeval, plyr, reshape2, rlang, scales,
-    tibble, viridisLite, withr
-GithubRepo: ggplot2
-GithubUsername: tidyverse
-GithubRef: master
-GithubSha1: 3e1e6e43af82faf59e37df0724b65c8d829c7b07
-RemoteHost: https://api.github.com
-RemoteRepo: ggplot2
-RemoteUsername: tidyverse
-RemoteSha: 3e1e6e43af82faf59e37df0724b65c8d829c7b07
+Source: CRAN
+Version: 3.2.0
+Hash: 3f9c63b2e40ea80716bbf249d9eeb9f4
+Requires: digest, gtable, lazyeval, reshape2, rlang, scales, tibble,
+    viridisLite, withr
 
 Package: glue
 Source: CRAN
@@ -459,10 +463,16 @@ Hash: 4644935bd93e62a0b82686b26af7efc2
 Requires: htmltools, shiny
 
 Package: shinyCNC
-Source: CRAN
+Source: CNCRAN
 Version: 0.0.1
 Hash: 10c5b5ac657aac839dde1637c951e518
 Requires: httr, shiny
+
+Package: shinyjs
+Source: CRAN
+Version: 1.0
+Hash: ea95f751025e50227a96100be35e970b
+Requires: digest, htmltools, jsonlite, shiny
 
 Package: shinythemes
 Source: CRAN

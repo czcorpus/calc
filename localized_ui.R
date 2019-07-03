@@ -282,6 +282,33 @@ localizedUI <- function(i18n) {
           )
         )
       ),
+    # ====================================================== Gr ====
+    tabPanel(i18n$t("Frekvence skupin"), value = "Gr",
+      fluidRow(
+        column(width = 5,
+          h3(i18n$t("Zadání")),
+          wellPanel(
+            textInput("GrUrl", label = i18n$t("URL konkordance:"),
+              #value = NULL,
+              placeholder = "https://kontext.korpus.cz/..."
+              ),
+            numericInput("GrMinProp", label = "Podíl marginálního významu na celkové frekvenci jevu (v %):", value = 1),
+            sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"),
+              min = 0.0001,
+              max = 0.05,
+              value = 0.05
+              )
+            )
+          ),
+        column(width = 5, offset = 1,
+          h3(i18n$t("Konfidenční intervaly skupin")),
+          plotOutput("GrChart"),
+          htmlOutput("GrGeom"),
+          #textOutput("debug"),
+          DT::dataTableOutput("GrValues")
+          )
+        )
+      ), 
     # ================= HELP ===========================
     tabPanel(i18n$t("O aplikaci"), value = "about",
       fluidRow(
