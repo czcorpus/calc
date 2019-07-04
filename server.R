@@ -688,13 +688,25 @@ shinyServer(function(input, output, session) {
       grfq <- Gr.data()
       if (!is.null(grfq)) {
         p.lim <- input$GrMinProp / 100
-        gr.prob <- pgeom(grfq$grouplines, p.lim)
-        gr.min <- qgeom(1 - input$GrAlpha, p.lim)
+        #gr.prob <- pgeom(grfq$grouplines, p.lim)
+        #gr.min <- qgeom(1 - input$GrAlpha, p.lim)
+        m = round(grfq$fq * p.lim, digits = 0)
+        l = round(grfq$fq * (1-p.lim), digits = 0)
+        gr.prob <- dhyper(0, m, l, grfq$grouplines)
+        gr.min <- NULL
+        for(n in 2:grfq$fq) {
+          p.tmp <- dhyper(0, m, l, n)
+          if (p.tmp < input$GrAlpha) {
+            gr.min <- n
+            break
+          }
+        }
         paste0("<div id='gr-interpretace', class='alert alert-success'>",
-          "<p>Celková frekvence jevu: ", grfq$fq, "</p>",
-          "<p>Velikost analyzovaného vzorku: ", grfq$grouplines, "</p>",
-          "<p>Pravděpodobnost výskytu marginálního (", input$GrMinProp, "%) významu ve vzorku: ", round(gr.prob, digits=3), "</p>",
-          "<p>Minimální velikost vzorku pro zachycení marginálního významu (při ", input$GrAlpha * 100, "% hladině chyby): ", gr.min, "</p>",
+          "<p>Celková frekvence jevu: ", grfq$fq, "<br/>",
+          "Velikost analyzovaného vzorku: ", grfq$grouplines, "</p>",
+          "<p>Hypergeometrický model</p>",
+          "<p>Pravděpodobnost výskytu marginálního (", input$GrMinProp, "%) významu ve vzorku: ", round(gr.prob, digits=3), "<br/>",
+          "Minimální velikost vzorku pro zachycení marginálního významu (při ", input$GrAlpha * 100, "% hladině chyby): ", gr.min, "</p>",
           "</div>")
       }
     })
