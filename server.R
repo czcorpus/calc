@@ -639,13 +639,26 @@ shinyServer(function(input, output, session) {
       grfq <- Gr.data()
       if (!is.null(grfq) & grfq$valid == TRUE) {
         doTable <- function(d, indices) { unname( table(factor(d[indices], levels=levels(as.factor(d)))) ) }
-        bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable, 
-                                 R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
+        allboot <- NULL
+        withProgress(message = "Provádím bootstrap", value = 0, {
+          for (bc in 1:bootsettings.cycle) {
+            bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable, R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
+            if (bc == 1) {
+              allboot <- as.data.frame(bootobject$t)
+            } else {
+              allboot <- bind_rows(allboot, as.data.frame(bootobject$t))
+            }
+            incProgress(1/bootsettings.cycle, detail = paste0("Hotovo ", round(100 * bc/bootsettings.cycle, digits=1), "%"))
+          }
+        })
         perc.low = input$GrAlpha / 2
         perc.up = 1 - input$GrAlpha / 2
-        graph.group.data <- as.data.frame(t(apply(bootobject$t, 2, function(x) quantile(x, probs =c(perc.low, perc.up)) ))) %>% 
-          rownames_to_column(var = "Group") %>% rename(Lower = 2, Upper = 3) %>% mutate(Fq = as.numeric(grfq$groupfreqs)) %>% 
-          mutate(Group = as.factor(grfq$groups)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK"))
+        as.data.frame(t(apply(allboot, 2, function(x) quantile(x, probs = c(perc.low, perc.up))))) %>% mutate(Group = as.factor(grfq$groups)) %>%
+          rename(Lower = 1, Upper = 2) %>% mutate(Fq = as.numeric(grfq$groupfreqs)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK")) %>%
+          select(Group, Fq, Lower, Upper, Reliability)
+        #graph.group.data <- as.data.frame(t(apply(bootobject$t, 2, function(x) quantile(x, probs = c(perc.low, perc.up)) ))) %>% 
+        #  rownames_to_column(var = "Group") %>% rename(Lower = 2, Upper = 3) %>% mutate(Fq = as.numeric(grfq$groupfreqs)) %>% 
+        #  mutate(Group = as.factor(grfq$groups)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK"))
       } else {
         graph.group.data <- NULL
       }
