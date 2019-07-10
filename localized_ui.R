@@ -288,20 +288,23 @@ localizedUI <- function(i18n) {
         column(width = 5,
           h3(i18n$t("Zadání")),
           wellPanel(
-            textInput("GrUrl", label = i18n$t("URL konkordance:"),
+            textInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"),
               #value = NULL,
-              placeholder = "https://kontext.korpus.cz/..."
+              placeholder = "např. https://kontext.korpus.cz/..."
               ),
-            numericInput("GrMinProp", label = "Podíl marginálního významu na celkové frekvenci jevu (v %):", value = 1),
+            numericInput("GrMinProp", label = "Podíl marginální skupiny na celkové frekvenci jevu (v %):", value = 1),
             sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"),
               min = 0.0001,
               max = 0.05,
               value = 0.05
               )
-            )
+            ),
+          tags$p(HTML(i18n$t(helpGr))),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpGr_ex)) ) )
           ),
         column(width = 5, offset = 1,
-          h3(i18n$t("Konfidenční intervaly skupin")),
+          
+          uiOutput("GrTitle"),
           plotOutput("GrChart"),
           htmlOutput("GrGeom"),
           #textOutput("debug"),
@@ -309,7 +312,7 @@ localizedUI <- function(i18n) {
           )
         )
       ), 
-    # ================= HELP ===========================
+    # ================= WELCOME ===========================
     tabPanel(i18n$t("O aplikaci"), value = "about",
       fluidRow(
         column(8,

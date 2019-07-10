@@ -598,6 +598,8 @@ shinyServer(function(input, output, session) {
     Gr.data <- reactive({
       if (input$GrUrl == "") {
         outlist <- NULL
+      } else if (is.na(str_extract(input$GrUrl, "kontext.korpus.cz"))) {
+        outlist <- list(valid = FALSE, message = "Neplatná URL")
       } else {
         origurl.list <- httr::parse_url(input$GrUrl)
         origurl.list$query <- list(
@@ -612,24 +614,30 @@ shinyServer(function(input, output, session) {
         )
         newurl <- httr::build_url(origurl.list)
         jsonlist <- jsonlite::fromJSON(newurl)
-        origurl.list$query$pagesize = jsonlist$num_lines_in_groups
-        newurl <- httr::build_url(origurl.list)
-        jsonlist <- jsonlite::fromJSON(newurl)
-        outlist <- list(
-          fq = jsonlist$fullsize,
-          ipm = jsonlist$relconcsize,
-          arf = jsonlist$result_arf,
-          groups = jsonlist$lines_groups_numbers,
-          grouplines = jsonlist$num_lines_in_groups,
-          groupfreqs = table(jsonlist$Lines$linegroup)
-        )
+        if (jsonlist$num_lines_in_groups > 0) {
+          origurl.list$query$pagesize = jsonlist$num_lines_in_groups
+          newurl <- httr::build_url(origurl.list)
+          jsonlist <- jsonlite::fromJSON(newurl)
+          outlist <- list(
+            valid = TRUE,
+            message = "",
+            fq = jsonlist$fullsize,
+            ipm = jsonlist$relconcsize,
+            arf = jsonlist$result_arf,
+            groups = jsonlist$lines_groups_numbers,
+            grouplines = jsonlist$num_lines_in_groups,
+            groupfreqs = table(jsonlist$Lines$linegroup)
+          )
+        } else {
+         outlist = list(valid = FALSE, message = "V konkordanci nejsou označené skupiny") 
+        }
       }
       outlist
     })
     
     doBoot <- reactive({
       grfq <- Gr.data()
-      if (!is.null(grfq)) {
+      if (!is.null(grfq) & grfq$valid == TRUE) {
         doTable <- function(d, indices) { unname( table(factor(d[indices], levels=levels(as.factor(d)))) ) }
         bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable, 
                                  R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
@@ -643,78 +651,103 @@ shinyServer(function(input, output, session) {
       }
     })
     
+    output$GrTitle <- renderUI({
+      grfq <- Gr.data()
+      if (!is.null(grfq)) {
+        if (grfq$valid == FALSE) {
+          tags$div( 
+            tags$h3(i18n$t("Chyba v zadání")),
+            tags$p(i18n$t(grfq$message)) 
+            )
+        } else {
+          h3(i18n$t("Konfidenční intervaly skupin")) 
+        }
+      }
+    })
+    
     output$GrValues <- DT::renderDataTable({
       grfq <- Gr.data()
       if (is.null(grfq)) {
         data.frame()
       } else {
-        graph.group.data <- doBoot()
-        df <- graph.group.data %>%
-          mutate(Proportion = Fq / sum(Fq)) %>%
-          select(Group, Fq, Proportion, Lower, Upper, Reliability)
-        DT::datatable(df, rownames = F, filter="none", colnames = c("Lower limit" = 4, "Upper limit" = 5), 
-                      options = list(dom = '', ordering=F, columnDefs = list(list(visible=FALSE, targets=5)) )) %>%
-          DT::formatRound(1:2, digits = 0) %>%
-          DT::formatPercentage(3, digits = 1) %>%
-          DT::formatRound(4:5, digits = 1) %>%
-          DT::formatStyle('Reliability', target = 'row',
-            backgroundColor = DT::styleEqual(c("OK", "NOT"), c('', cnk_lighter_color_vector[4]))
-        )
+        if (grfq$valid == FALSE) {
+          data.frame()
+        } else {
+          graph.group.data <- doBoot()
+          df <- graph.group.data %>% 
+            mutate(Proportion = Fq / sum(Fq)) %>%
+            select(Group, Fq, Proportion, Lower, Upper, Reliability)
+          DT::datatable(df, rownames = F, filter="none",
+            colnames = c("Skupina" = 1, "Frekvence" = 2, "Podíl" = 3, "Spodní limit" = 4, "Horní limit" = 5),
+            options = list(dom = '', ordering=F, columnDefs = list(list(visible=FALSE, targets=5)) )) %>%
+            DT::formatRound(1:2, digits = 0) %>%
+            DT::formatPercentage(3, digits = 1) %>%
+            DT::formatRound(4:5, digits = 1) %>%
+            DT::formatStyle(
+              'Reliability', target = 'row', 
+              backgroundColor = DT::styleEqual(c("OK", "NOT"), c('', cnk_lighter_color_vector[4]))
+            )
+        }
       }
     })
     
     output$GrChart <- renderPlot({
       grfq <- Gr.data()
-      if (length(grfq$groups) > 1) {
-        graph.group.data <- doBoot()
-        if (nrow(graph.group.data[ graph.group.data$Lower < 1, ]) > 0) {
-          #graph.group.data[ graph.group.data$Lower < 1, ]$Reliability = "NOT"
-          gr_palette = cnk_color_vector[c(4,2)]
-        } else {
-          gr_palette = cnk_color_vector[2]
-        }
-        ggplot(data = graph.group.data, aes(x = reorder(Group, Fq), y = Fq, ymin = Lower, ymax = Upper, fill = Reliability)) +
-          geom_col(show.legend = FALSE) +
-          scale_fill_manual(values=gr_palette, drop = FALSE) +
-          geom_errorbar(width = 0.5) +
-          labs(x = "Skupiny", y = "Frekvence skupin ve vzorku") +
-          theme_minimal(base_size = graphBaseSizeFont)
+      if (is.null(grfq)) {
+        ggplot() + geom_blank() + theme_minimal()
       } else {
-        ggplot() + geom_blank() + theme_minimal(base_size = graphBaseSizeFont)
+        if (grfq$valid == FALSE) {
+          ggplot() + geom_blank() + theme_minimal()
+        } else if (length(grfq$groups) > 1) {
+          graph.group.data <- doBoot()
+          if (nrow(graph.group.data[ graph.group.data$Lower < 1, ]) > 0) {
+            gr_palette = cnk_color_vector[c(4,2)]
+          } else {
+            gr_palette = cnk_color_vector[2]
+          }
+          ggplot(data = graph.group.data, aes(x = reorder(Group, Fq), y = Fq, ymin = Lower, ymax = Upper, fill = Reliability)) +
+            geom_col(show.legend = FALSE) +
+            scale_fill_manual(values=gr_palette, drop = FALSE) +
+            geom_errorbar(width = 0.5) +
+            labs(x = "Skupiny", y = "Frekvence skupin ve vzorku") +
+            theme_minimal(base_size = graphBaseSizeFont)
+        }
       }
     })
     
     output$GrGeom <- renderText({
       grfq <- Gr.data()
       if (!is.null(grfq)) {
-        p.lim <- input$GrMinProp / 100
-        #gr.prob <- pgeom(grfq$grouplines, p.lim)
-        #gr.min <- qgeom(1 - input$GrAlpha, p.lim)
-        m = round(grfq$fq * p.lim, digits = 0)
-        l = round(grfq$fq * (1-p.lim), digits = 0)
-        gr.prob <- dhyper(0, m, l, grfq$grouplines)
-        gr.min <- NULL
-        for(n in 2:grfq$fq) {
-          p.tmp <- dhyper(0, m, l, n)
-          if (p.tmp < input$GrAlpha) {
-            gr.min <- n
-            break
+        if (grfq$valid == TRUE) {
+          p.lim <- input$GrMinProp / 100
+          gr.m = round(grfq$fq * p.lim, digits = 0)
+          gr.l = grfq$fq - gr.m
+          gr.prob <- 1 - dhyper(0, gr.m, gr.l, grfq$grouplines)
+          gr.min <- NULL
+          for(gr.n in 2:grfq$fq) {
+            p.tmp <- dhyper(0, gr.m, gr.l, gr.n)
+            if (p.tmp < input$GrAlpha) {
+              gr.min <- gr.n
+              break
+            }
           }
+          paste0(
+            "<p>Celková frekvence jevu: ", grfq$fq, "<br/>",
+            "Velikost analyzovaného vzorku: ", grfq$grouplines, "</p>",
+            "<div id='gr-interpretace', class='alert alert-success'>",
+            "<p><b>Hypergeometrický model:</b></p>",
+            "<p>Pravděpodobnost výskytu marginální (", input$GrMinProp, "%) skupiny ve vzorku: ", round(gr.prob, digits=3), "<br/>",
+            "Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při ", 
+            input$GrAlpha * 100, "% hladině chyby): ", gr.min, "</p>",
+            "</div>")
         }
-        paste0("<div id='gr-interpretace', class='alert alert-success'>",
-          "<p>Celková frekvence jevu: ", grfq$fq, "<br/>",
-          "Velikost analyzovaného vzorku: ", grfq$grouplines, "</p>",
-          "<p>Hypergeometrický model</p>",
-          "<p>Pravděpodobnost výskytu marginálního (", input$GrMinProp, "%) významu ve vzorku: ", round(gr.prob, digits=3), "<br/>",
-          "Minimální velikost vzorku pro zachycení marginálního významu (při ", input$GrAlpha * 100, "% hladině chyby): ", gr.min, "</p>",
-          "</div>")
       }
     })
     
-    output$debug <- renderText({
-      grfq <- Gr.data()
-      paste("Celková frekvence:", grfq$fq)
-    })
+    #output$debug <- renderText({
+    #  grfq <- Gr.data()
+    #  paste("Celková frekvence:", grfq$fq)
+    #})
 
 # ================= Napoveda =====================
     
