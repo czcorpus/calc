@@ -288,12 +288,21 @@ localizedUI <- function(i18n) {
         column(width = 5,
           h3(i18n$t("Zadání")),
           wellPanel(
-            textInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"),
-              #value = NULL,
-              placeholder = "např. https://kontext.korpus.cz/..."
-              ),
+            tabsetPanel(id = "GrInputType", type = "pills", 
+              tabPanel(id = "GrUrlInput", title = "Zadání pomocí URL", value = "GrUrlInput",
+                textAreaInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"), rows = 4, 
+                              placeholder = "např. https://kontext.korpus.cz/...")
+                ),
+              tabPanel(id = "GrTextInput", title = "Manuální zadání", value = "GrTextInput",
+                numericInput("GrFq", label = "Celková frekvence jevu:", value = 0),
+                textInput("GrSkupiny", label = "Frekvence skupin:"),
+                helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") ),
+                actionButton("GrGo", "Spočti!")
+                )
+            ),
+            hr(),
             numericInput("GrMinProp", label = "Podíl marginální skupiny na celkové frekvenci jevu (v %):", value = 1),
-            sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"),
+            sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"), 
               min = 0.0001,
               max = 0.05,
               value = 0.05

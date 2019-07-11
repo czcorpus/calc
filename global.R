@@ -10,8 +10,8 @@ appName <- "KoKS"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
 binomMethod = "exact"  # wilson
 graphBaseSizeFont = 14
-bootsettings.R = 5000 # pocet bootstrap iteraci
-bootsettings.cycle = 20 # pocet cyklu bootstrapingu
+bootsettings.R = 4000 # pocet bootstrap iteraci
+bootsettings.cycle = 15 # pocet cyklu bootstrapingu
 bootsettings.ncpus = 30 # pocet CPUs pro bootstrap
 
 # ============== log-likelihood methods =============

@@ -596,43 +596,73 @@ shinyServer(function(input, output, session) {
 # ================= Gr =====================    
 
     Gr.data <- reactive({
-      if (input$GrUrl == "") {
-        outlist <- NULL
-      } else if (is.na(str_extract(input$GrUrl, "kontext.korpus.cz"))) {
-        outlist <- list(valid = FALSE, message = "Neplatná URL")
-      } else {
-        origurl.list <- httr::parse_url(input$GrUrl)
-        origurl.list$query <- list(
-          ctxattrs = "word",
-          pagesize = 1,
-          refs = "=doc.id",
-          q = origurl.list$query$q,
-          attrs = "word",
-          corpname = origurl.list$query$corpname,
-          structs = "doc",
-          format = "json"
-        )
-        newurl <- httr::build_url(origurl.list)
-        jsonlist <- jsonlite::fromJSON(newurl)
-        if (jsonlist$num_lines_in_groups > 0) {
-          origurl.list$query$pagesize = jsonlist$num_lines_in_groups
+      if (input$GrInputType == "GrUrlInput") { # zadani pomoci URL
+        if (input$GrUrl == "") {
+          outlist <- NULL
+        } else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
+          outlist <- list(valid = FALSE, message = "Neplatná URL")
+        } else {
+          origurl.list <- httr::parse_url(input$GrUrl)
+          origurl.list$query <- list(
+            ctxattrs = "word",
+            pagesize = 1,
+            refs = "=doc.id",
+            q = origurl.list$query$q,
+            attrs = "word",
+            corpname = origurl.list$query$corpname,
+            structs = "doc",
+            format = "json"
+          )
           newurl <- httr::build_url(origurl.list)
           jsonlist <- jsonlite::fromJSON(newurl)
+          if (jsonlist$num_lines_in_groups > 0) {
+            origurl.list$query$pagesize = jsonlist$num_lines_in_groups
+            newurl <- httr::build_url(origurl.list)
+            jsonlist <- jsonlite::fromJSON(newurl)
+            outlist <- list(
+              valid = TRUE,
+              message = "",
+              fq = jsonlist$fullsize,
+              ipm = jsonlist$relconcsize,
+              arf = jsonlist$result_arf,
+              groups = jsonlist$lines_groups_numbers,
+              grouplines = jsonlist$num_lines_in_groups,
+              groupfreqs = table(jsonlist$Lines$linegroup)
+            )
+          } else {
+            outlist = list(valid = FALSE, message = "V konkordanci nejsou označené skupiny") 
+          }
+        }
+      } else { # manualni zadani
+        gr.vals <- ParseManualInput()
+        if (input$GrFq > 0 & length(gr.vals) > 1) {
           outlist <- list(
             valid = TRUE,
             message = "",
-            fq = jsonlist$fullsize,
-            ipm = jsonlist$relconcsize,
-            arf = jsonlist$result_arf,
-            groups = jsonlist$lines_groups_numbers,
-            grouplines = jsonlist$num_lines_in_groups,
-            groupfreqs = table(jsonlist$Lines$linegroup)
+            fq = input$GrFq,
+            ipm = NA,
+            arf = NA,
+            groups = 1:length(gr.vals),
+            grouplines = sum(gr.vals),
+            groupfreqs = table(rep(1:length(gr.vals), gr.vals))
           )
         } else {
-         outlist = list(valid = FALSE, message = "V konkordanci nejsou označené skupiny") 
+          outlist <- NULL
         }
       }
       outlist
+    })
+    
+    ParseManualInput <- eventReactive(input$GrGo, {
+      gr.vals <- unlist(strsplit(input$GrSkupiny, split = "[,; ]+"))
+      gr.vals <- as.numeric(gr.vals)
+      if (sum(is.na(gr.vals)) > 0) {
+        showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
+                              i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
+                              easyClose = TRUE
+        ))
+      }
+      gr.vals
     })
     
     doBoot <- reactive({
@@ -642,13 +672,14 @@ shinyServer(function(input, output, session) {
         allboot <- NULL
         withProgress(message = "Provádím bootstrap", value = 0, {
           for (bc in 1:bootsettings.cycle) {
-            bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable, R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
+            bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable,
+              R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
             if (bc == 1) {
               allboot <- as.data.frame(bootobject$t)
             } else {
               allboot <- bind_rows(allboot, as.data.frame(bootobject$t))
             }
-            incProgress(1/bootsettings.cycle, detail = paste0("Hotovo ", round(100 * bc/bootsettings.cycle, digits=1), "%"))
+            incProgress(1/bootsettings.cycle, detail = paste0("Hotovo ", round(100 * bc/bootsettings.cycle, digits=1), " %"))
           }
         })
         perc.low = input$GrAlpha / 2
@@ -828,5 +859,6 @@ shinyServer(function(input, output, session) {
     observeEvent(input$LinkTozTTRMedianIQRPanel, {
       updateCollapse(session, "zTTRModel", open = "zTTRMedianIQRPanel")
     })
+    session$onSessionEnded(stopApp)
 })
 
