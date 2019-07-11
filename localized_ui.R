@@ -295,7 +295,7 @@ localizedUI <- function(i18n) {
                 ),
               tabPanel(id = "GrTextInput", title = "Manuální zadání", value = "GrTextInput",
                 numericInput("GrFq", label = "Celková frekvence jevu:", value = 0),
-                textInput("GrSkupiny", label = "Frekvence skupin:"),
+                textInput("GrSkupiny", label = "Frekvence skupin (minimálně dvě hodnoty):"),
                 helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") ),
                 actionButton("GrGo", "Spočti!")
                 )

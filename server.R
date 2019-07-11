@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
      gh
    })
 
-   # =========== 2 slova 1 korpus (TwOc) ==========
+# ================= 2 slova 1 korpus (TwOc) ==========
 
    TwOc.data <- reactive({
      data <- c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
@@ -252,7 +252,7 @@ shinyServer(function(input, output, session) {
      }
    })
 
-   # =========== 2 slova 2 korpusy (TwTc) ==========
+# ================= 2 slova 2 korpusy (TwTc) ==========
    TwTc.data <- reactive({
      data <- c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
      if ((data["F1"] >= data["N1"]) || (data["F2"] >= data["N2"])) {
@@ -545,7 +545,7 @@ shinyServer(function(input, output, session) {
         scale_fill_manual("", values = cnk_color_vector) +
         labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
         theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(1,1), legend.position=c(1,1))
+        theme(legend.justification=c(0,1), legend.position=c(0,1))
     })
 
     output$zqTTRscheme <- renderPlot({
@@ -571,7 +571,7 @@ shinyServer(function(input, output, session) {
         scale_fill_manual("", values = cnk_color_vector) +
         labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
         theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(1,1), legend.position=c(1,1))
+        theme(legend.justification=c(0,1), legend.position=c(0,1))
     })
     
     observe({
@@ -695,12 +695,10 @@ shinyServer(function(input, output, session) {
         })
         perc.low = input$GrAlpha / 2
         perc.up = 1 - input$GrAlpha / 2
-        as.data.frame(t(apply(allboot, 2, function(x) quantile(x, probs = c(perc.low, perc.up))))) %>% mutate(Group = as.factor(grfq$groups)) %>%
-          rename(Lower = 1, Upper = 2) %>% mutate(Fq = as.numeric(grfq$groupfreqs)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK")) %>%
+        as.data.frame(t(apply(allboot, 2, function(x) quantile(x, probs = c(perc.low, perc.up))))) %>% 
+          mutate(Group = as.factor(grfq$groups)) %>% rename(Lower = 1, Upper = 2) %>% 
+          mutate(Fq = as.numeric(grfq$groupfreqs)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK")) %>%
           select(Group, Fq, Lower, Upper, Reliability)
-        #graph.group.data <- as.data.frame(t(apply(bootobject$t, 2, function(x) quantile(x, probs = c(perc.low, perc.up)) ))) %>% 
-        #  rownames_to_column(var = "Group") %>% rename(Lower = 2, Upper = 3) %>% mutate(Fq = as.numeric(grfq$groupfreqs)) %>% 
-        #  mutate(Group = as.factor(grfq$groups)) %>% mutate(Reliability = if_else(Lower == 0, "NOT", "OK"))
       } else {
         graph.group.data <- NULL
       }
@@ -776,6 +774,7 @@ shinyServer(function(input, output, session) {
         if (grfq$valid == TRUE) {
           p.lim <- input$GrMinProp / 100
           gr.m = round(grfq$fq * p.lim, digits = 0)
+          if (gr.m < 1) { gr.m <- 1 }
           gr.l = grfq$fq - gr.m
           gr.prob <- 1 - dhyper(0, gr.m, gr.l, grfq$grouplines)
           gr.min <- NULL
