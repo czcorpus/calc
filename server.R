@@ -665,6 +665,17 @@ shinyServer(function(input, output, session) {
       gr.vals
     })
     
+    # predavani parametru (URL) pro modul Gr
+    observe({
+      query <- parseQueryString(session$clientData$url_search)
+      if(!is.null(query$grurl)) {
+        updateNavlistPanel(session, "navigace", selected = "Gr")
+        updateTabsetPanel(session, "GrInputType", selected = "GrUrlInput")
+        # zakodovani URL: URLencode(origurl, repeated=T, reserved=T)
+        updateTextAreaInput(session, "GrUrl", value = URLdecode(query$grurl)) 
+      }
+    })
+    
     doBoot <- reactive({
       grfq <- Gr.data()
       if (!is.null(grfq) & grfq$valid == TRUE) {
