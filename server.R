@@ -745,7 +745,6 @@ shinyServer(function(input, output, session) {
             mutate(Proportion = Fq / sum(Fq)) %>%
             select(Group, Fq, Proportion, Lower, Upper, Reliability)
           DT::datatable(df, rownames = F, filter="none", container = sketch,
-            #colnames = c("Skupina" = 1, "Frekvence" = 2, "Podíl" = 3, "Spodní limit" = 4, "Horní limit" = 5),
             options = list(dom = '', ordering=F, columnDefs = list(list(visible=FALSE, targets=5)) )) %>%
             DT::formatRound(1:2, digits = 0) %>%
             DT::formatPercentage(3, digits = 1) %>%
