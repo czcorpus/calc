@@ -233,7 +233,6 @@ shinyServer(function(input, output, session) {
        } else {
          graphlimits$onclick <- FALSE
        }
-       #browser()
        barchart <- ggplot(data = graphdata, aes(x = x, y = ipm)) +
          geom_bar(stat="identity", fill = cnk_color_vector[2], alpha = 0.75) +
          geom_errorbar(aes(ymin = ipm - ci, ymax = ipm + ci), col = cnk_color_vector[4], width=0.5) +
@@ -727,11 +726,26 @@ shinyServer(function(input, output, session) {
           data.frame()
         } else {
           graph.group.data <- doBoot()
+          sketch = htmltools::withTags(table(
+            class = 'display',
+            thead(
+              tr(
+                th(rowspan = 2, 'Skupina', style='text-align:left'),
+                th(rowspan = 2, 'Frekvence'),
+                th(rowspan = 2, 'Podíl'),
+                th(colspan = 2, 'Konfidenční intervaly', style='text-align:center')
+              ),
+              tr(
+                th('spodní limit'),
+                th('horní limit')
+              )
+            )
+          ))
           df <- graph.group.data %>% 
             mutate(Proportion = Fq / sum(Fq)) %>%
             select(Group, Fq, Proportion, Lower, Upper, Reliability)
-          DT::datatable(df, rownames = F, filter="none",
-            colnames = c("Skupina" = 1, "Frekvence" = 2, "Podíl" = 3, "Spodní limit" = 4, "Horní limit" = 5),
+          DT::datatable(df, rownames = F, filter="none", container = sketch,
+            #colnames = c("Skupina" = 1, "Frekvence" = 2, "Podíl" = 3, "Spodní limit" = 4, "Horní limit" = 5),
             options = list(dom = '', ordering=F, columnDefs = list(list(visible=FALSE, targets=5)) )) %>%
             DT::formatRound(1:2, digits = 0) %>%
             DT::formatPercentage(3, digits = 1) %>%
@@ -759,7 +773,7 @@ shinyServer(function(input, output, session) {
             gr_palette = cnk_color_vector[2]
           }
           ggplot(data = graph.group.data, aes(x = reorder(Group, Fq), y = Fq, ymin = Lower, ymax = Upper, fill = Reliability)) +
-            geom_col(show.legend = FALSE) +
+            geom_col(show.legend = FALSE, alpha = 0.75) +
             scale_fill_manual(values=gr_palette, drop = FALSE) +
             geom_errorbar(width = 0.5) +
             labs(x = "Skupiny", y = "Frekvence skupin ve vzorku") +
