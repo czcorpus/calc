@@ -613,6 +613,7 @@ shinyServer(function(input, output, session) {
             format = "json"
           )
           newurl <- httr::build_url(origurl.list)
+          validate(need(try(jsonlite::fromJSON(newurl)), "Nemáte přístup ke konkordanci"))
           jsonlist <- jsonlite::fromJSON(newurl)
           if (jsonlist$num_lines_in_groups > 0) {
             origurl.list$query$pagesize = jsonlist$num_lines_in_groups
