@@ -483,10 +483,19 @@ shinyServer(function(input, output, session) {
         "1" = "ci",
         "2" = "ci",
         "3" = "cs")
+      lang <- switch(input$zTTRlangsel,
+        "1" = "cs",
+        "2" = "de",
+        "3" = "en",
+        "4" = "es",
+        "5" = "fr",
+        "6" = "nl",
+        "7" = "pl",
+        "8" = "pt")
       if (reg == "SPO") { corp = "Oral" }
       else { corp = "SYN2015" }
       list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
-        "corpus" = corp, "register" = reg, "attribute" = att, "case" = case)
+        "corpus" = corp, "register" = reg, "attribute" = att, "case" = case, "language" = lang)
     })
     
     output$zTTRvalue <- renderText({
@@ -574,13 +583,27 @@ shinyServer(function(input, output, session) {
     })
     
     observe({
-      shinyjs::disable("zTTRlangsel")
+      #shinyjs::disable("zTTRlangsel")
       x <- input$zTTRlangsel
       if (is.null(x)) { x = 1 }
+      lang <- switch(x,
+        "1" = "cs",
+        "2" = "de",
+        "3" = "en",
+        "4" = "es",
+        "5" = "fr",
+        "6" = "nl",
+        "7" = "pl",
+        "8" = "pt")
       
       u.choices = {
-        choices <- 1:4
-        names(choices) <- sapply( c("Psaný - beletrie", "Psaný - oborová literatura", "Psaný - publicistika", "Mluvený - spontánní konverzace"), i18n$t )
+        choices <- 1:4 # treba upravit
+        names(choices) <- sapply( 
+          #c("Psaný - beletrie", "Psaný - oborová literatura", "Psaný - publicistika", "Mluvený - spontánní konverzace"),
+          filter(koeficienty$median_iqr, language == "cs") %>% select(description, corpus) %>% 
+            unite(fulldesc, sep=" (") %>% mutate(fulldesc = paste0(fulldesc, ")")) %>% 
+            pull(fulldesc) %>% unique(),
+          i18n$t )
         choices}
       
       if (x != 1) {
@@ -613,7 +636,11 @@ shinyServer(function(input, output, session) {
             format = "json"
           )
           newurl <- httr::build_url(origurl.list)
-          validate(need(try(jsonlite::fromJSON(newurl)), "Nemáte přístup ke konkordanci"))
+          urlresp <- httr::GET(newurl)
+          #browser()
+          validate(need(try(
+            !httr::http_error(urlresp)
+          ), jsonlite::fromJSON(httr::content(urlresp,as="text", encoding="UTF-8"))$messages))
           jsonlist <- jsonlite::fromJSON(newurl)
           if (jsonlist$num_lines_in_groups > 0) {
             origurl.list$query$pagesize = jsonlist$num_lines_in_groups
@@ -883,6 +910,6 @@ shinyServer(function(input, output, session) {
     observeEvent(input$LinkTozTTRMedianIQRPanel, {
       updateCollapse(session, "zTTRModel", open = "zTTRMedianIQRPanel")
     })
-    session$onSessionEnded(stopApp)
+    # session$onSessionEnded(stopApp)
 })
 

@@ -165,7 +165,7 @@
       {"cs": "Psaný - publicistika", "en": "Written - newspapers"},
       {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"},
       {"cs": "Typ jednotky", "en": "Unit type"},
-      {"cs": "Analyzovaný jazyk (zatím neimplementováno)", "en": "Analysed language (not implemented yet)"},
+      {"cs": "Analyzovaný jazyk", "en": "Analysed language"},
       {"cs": "čeština", "en": "Czech"},
       {"cs": "angličtina", "en": "English"},
       {"cs": "Medián – IQR model", "en": "Median – IQR model"},

@@ -218,40 +218,35 @@ localizedUI <- function(i18n) {
           h3(i18n$t("Zadání")),
           wellPanel(
             fluidRow(
-              column(5,
+              column(6,
                 numericInput("zTTRtypes", i18n$t("Počet typů"), 1500, min = 1)
                 ),
-              column(7,
-                selectInput("zTTRregister",
-                  i18n$t("Druh textu"),
-                  choices = {
-                    choices <- 1:4
-                    names(choices) <- sapply( c("Psaný - beletrie", "Psaný - oborová literatura", "Psaný - publicistika", "Mluvený - spontánní konverzace"), i18n$t )
-                    choices
-                    }
-                  )
-                )),
-            fluidRow(
-              column(5,
+              column(6,
                 numericInput("zTTRtokens", i18n$t("Počet tokenů"), 10000, min = 1)
-                ),
-              column(7,
-                selectInput("zTTRattribute",
-                  i18n$t("Typ jednotky"),
-                  choices = list(
-                    "lemma" = 1,
-                    "word (case-insensitive)" = 2,
-                    "word (case-sensitive)" = 3
-                    )
-                  )
                 )),
             shinyjs::useShinyjs(),
-            radioButtons("zTTRlangsel", i18n$t("Analyzovaný jazyk (zatím neimplementováno)"),
+            radioButtons("zTTRlangsel", i18n$t("Analyzovaný jazyk"),
+              choices = {
+                choices <- 1:8
+                names(choices) <- sapply( c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), i18n$t )
+                choices
+              }, inline = T),
+            selectInput("zTTRregister",
+              i18n$t("Druh textu"),
               choices = {
                 choices <- 1:2
-                names(choices) <- sapply( c("čeština", "angličtina"), i18n$t )
+                names(choices) <- c("a", "b")
                 choices
-              }, inline = T)
+                }
+              ),
+            selectInput("zTTRattribute",
+              i18n$t("Typ jednotky"),
+              choices = list(
+                "lemma" = 1,
+                "word (case-insensitive)" = 2,
+                "word (case-sensitive)" = 3
+                )
+              )
             ),
           tags$p(HTML(i18n$t(helpzTTR_beza1)),
                  pack_punctuation( span(i18n$t("(viz"), actionLink("LinkTozTTRMeanSDPanel", i18n$t("Průměr – SD model")), ")," ) ),

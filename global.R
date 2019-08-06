@@ -272,7 +272,8 @@ getgraphdata <- function(f1, f2, n1, n2, Alpha = 0.05, i18n) {
 
 # ============== zTTR koeficienty =============
 
-load("data/zTTR-coeffs_2019-04-17.RData")
+#load("data/zTTR-coeffs_2019-04-17.RData")
+load("data/zTTR-coeffs_2019-08-06.RData")
 
 # ============== zTTR a zqTTR =============
 
@@ -280,6 +281,7 @@ countzttr <- function(data, model = "mean-sd") {
   ttr <- data$types / data$tokens
   if (model == "mean-sd") {
     coeffs <- filter(koeficienty$mean_sd,
+                     language == data["language"],
                      corpus == data["corpus"],
                      register == data["register"],
                      attribute == data["attribute"],
@@ -288,6 +290,7 @@ countzttr <- function(data, model = "mean-sd") {
   }
   else if (model == "median-iqr") {
     coeffs <- filter(koeficienty$median_iqr,
+                     language == data["language"],
                      corpus == data["corpus"],
                      register == data["register"],
                      attribute == data["attribute"],
