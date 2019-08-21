@@ -17,14 +17,17 @@ shinyServer(function(input, output, session) {
   
   output$localizedUI <- renderUI(localizedUI(i18n))
   
-  insertUI(
-    selector = "#navigace",
-    where = "beforeEnd",
-    ui = bookmarkButton(
-      label = i18n$t("Trvalý odkaz"),
-      title = i18n$t("URL ke sdílení")
+  observeEvent(input$OwOcCorpus, {
+    insertUI(
+      selector = "#navigace",
+      where = "beforeEnd",
+      immediate = FALSE,
+      ui = bookmarkButton(
+        label = i18n$t("Trvalý odkaz"),
+        title = i18n$t("URL ke sdílení")
       )
     )
+  }, once = TRUE)
   
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
