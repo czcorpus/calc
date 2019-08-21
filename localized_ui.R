@@ -236,7 +236,7 @@ localizedUI <- function(i18n) {
             radioButtons("zTTRlangsel", i18n$t("Analyzovaný jazyk"),
               choices = {
                 choices <- 1:8
-                names(choices) <- sapply( c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), i18n$t )
+                names(choices) <- c("cs", "de", "en", "es", "fr", "nl", "pl", "pt")
                 choices
               }, inline = T),
             selectInput("zTTRregister",
@@ -284,19 +284,19 @@ localizedUI <- function(i18n) {
           h3(i18n$t("Zadání")),
           wellPanel(
             tabsetPanel(id = "GrInputType", type = "pills", 
-              tabPanel(id = "GrUrlInput", title = "Zadání pomocí URL", value = "GrUrlInput",
+              tabPanel(id = "GrUrlInput", title = i18n$t("Zadání pomocí URL"), value = "GrUrlInput",
                 textAreaInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"), rows = 4, 
-                              placeholder = "např. https://kontext.korpus.cz/...")
+                              placeholder = i18n$t("např. https://kontext.korpus.cz/..."))
                 ),
-              tabPanel(id = "GrTextInput", title = "Manuální zadání", value = "GrTextInput",
-                numericInput("GrFq", label = "Celková frekvence jevu:", value = 0),
-                textInput("GrSkupiny", label = "Frekvence skupin (minimálně dvě hodnoty):"),
+              tabPanel(id = "GrTextInput", title = i18n$t("Manuální zadání"), value = "GrTextInput",
+                numericInput("GrFq", label = paste0(i18n$t("Celková frekvence jevu"), ":"), value = 0),
+                textInput("GrSkupiny", label = i18n$t("Frekvence skupin (minimálně dvě hodnoty):")),
                 helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") ),
-                actionButton("GrGo", "Spočti!")
+                actionButton("GrGo", i18n$t("Spočti!"))
                 )
             ),
             hr(),
-            numericInput("GrMinProp", label = "Podíl marginální skupiny na celkové frekvenci jevu (v %):", value = 1),
+            numericInput("GrMinProp", label = i18n$t("Podíl marginální skupiny na celkové frekvenci jevu (v %):"), value = 1),
             sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"), 
               min = 0.0001,
               max = 0.05,
@@ -379,6 +379,7 @@ localizedUI <- function(i18n) {
   bsTooltip("TwOcAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")),
   bsTooltip("TwTcAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")),
   bsTooltip("SaReAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")), 
+  bsTooltip("GrAlpha", i18n$t("α = přijatelná pravděpodobnost omylu")), 
   # ========================== FOOTER ==================================
   tags$hr(),
   tags$p(

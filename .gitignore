@@ -4,3 +4,6 @@
 .Ruserdata
 packrat/lib*/
 packrat/src
+old/*
+www/external-link.png
+www/question-mark.svg

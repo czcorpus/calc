@@ -162,10 +162,12 @@
       {"cs": "Počet typů", "en": "Number of types"},
       {"cs": "Počet tokenů", "en": "Number of tokens"},
       {"cs": "Druh textu", "en": "Text category"},
-      {"cs": "Psaný - beletrie", "en": "Written - fiction"},
-      {"cs": "Psaný - oborová literatura", "en": "Written - non-fiction"},
-      {"cs": "Psaný - publicistika", "en": "Written - newspapers"},
-      {"cs": "Mluvený - spontánní konverzace", "en": "Spoken - private conversation"},
+      {"cs": "Psaný - beletrie (SYN2015)", "en": "Written - fiction (SYN2015)"},
+      {"cs": "Psaný - oborová literatura (SYN2015)", "en": "Written - non-fiction (SYN2015)"},
+      {"cs": "Psaný - publicistika (SYN2015)", "en": "Written - newspapers (SYN2015)"},
+      {"cs": "Mluvený - spontánní konverzace (Oral v1)", "en": "Spoken - private conversation (Oral v1)"},
+      {"cs": "Psaný - beletrie (InterCorp v11)", "en": "Written - ficiton (InterCorp v11)"},
+      {"cs": "Psaný - oborová literatura (InterCorp v11)", "en": "Written - non-ficiton (InterCorp v11)"},
       {"cs": "Typ jednotky", "en": "Unit type"},
       {"cs": "Analyzovaný jazyk", "en": "Analysed language"},
       {"cs": "čeština", "en": "Czech"},
@@ -206,6 +208,46 @@
       {
         "cs": "Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná.",
         "en": "The graph is a schematic visualisation of the position of the observed lexical richness in relation to an expected value (average for texts of the same length). If the observed value is lower than the reference value, the resulting zTTR index is negative, if the value is higher, the zTTR index is positive."
+      },
+      
+      
+      {"cs": "Frekvence skupin", "en": "Frequency of groups"},
+      {"cs": "Zadání pomocí URL", "en": "Input via URL"},
+      {"cs": "např. https://kontext.korpus.cz/...", "en": "e.g. https://kontext.korpus.cz/..."},
+      {"cs": "Manuální zadání", "en": "Manual input"},
+      {"cs": "Celková frekvence jevu", "en": "Total frequency"},
+      {"cs": "Velikost analyzovaného vzorku", "en": "Sample size"},
+      {"cs": "Frekvence skupin (minimálně dvě hodnoty):", "en": "Frequency of groups (at least two values):"},
+      {"cs": "URL konkordance (s vyznačením skupin):", "en": "Concordance URL (with marked groups):"},
+      {"cs": "Spočti!", "en": "Go!"},
+      {"cs": "Podíl marginální skupiny na celkové frekvenci jevu (v %):", "en": "Share of marginal group on total frequency (in %):"},
+      {"cs": "Provádím bootstrap", "en": "Bootstrapping"},
+      {"cs": "Hotovo ", "en": "Done "},
+      {"cs": "spodní limit", "en": "lower limit"},
+      {"cs": "horní limit", "en": "upper limit"},
+      {"cs": "Podíl", "en": "Proportion"},
+      {"cs": "Skupiny", "en": "Groups"},
+      {"cs": "Skupina", "en": "Group"},
+      {"cs": "Frekvence skupin ve vzorku", "en": "Group frequencies in the sample"},
+      {"cs": "Hypergeometrický model", "en": "Hypergeometric model"},
+      {"cs": "Pravděpodobnost výskytu marginální", "en": "Probability of marginal"},
+      {"cs": "skupiny ve vzorku", "en": "group in the sample"},
+      {
+        "cs": "Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při ", 
+        "en": "Minimal sample size for reliable detecting an occurence from marginal group (with "
+      },
+      {"cs": "% hladině chyby", "en": "% error rate"},
+      {"cs": "Konfidenční intervaly skupin", "en": "Confidence intervals for groups"},
+      {"cs": "Neplatná URL", "en": "Invalid URL"},
+      {"cs": "Chyba v zadání", "en": "Invalid input"},
+      {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
+      {
+        "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít manuální zadání). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit tak, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em>, a to vždy s&nbsp;ohledem na velikost analyzovaného vzorku a celkovou frekevnci jevu. Zároveň modul vypočítá pravděpodobnost výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku a navrhne minimální velikost vzorku, v němž by se s přijatelnou mírou chyby měla hypotetická marginální skupina spolehlivě vyskytnout.", 
+        "en": "Description: to be translated"
+      },
+      {
+        "cs": "Ve vzorku 100 výskytů slova <em>měkký</em> jsme identifikovali 6 významů. Chceme vědět, zda je lze považovat na takovémto vzorku za doložené a jaké je jejich pořadí podle frekvence. S obojím nám pomůžou konfidenční intervaly (viz graf i tabulka), které naznačují, v jakém rozpětí by se výsledky při opakování analýzy vyskytovaly. Máme-li navíc důvodné podezření, že hledané slovo má ještě jeden význam, který se ve vzorku neobjevil, můžeme odhadnout jak pravděpodobné to je. Pokud si stanovíme, že náš význam představuje minimálně 1 % z celkové frekvence slova <em>měkký</em>, je pravděpodobnost, že se objeví ve vzorku o 100 výskytech, 0.637; abychom marginální význam spolehlivě zaregistrovali potřebovali bychom minimálně vzorek o velikosti 291 výskytů (při stanovené přijatelné míře chyby).", 
+        "en": "Example: to be translated"
       },
       
       

@@ -673,7 +673,7 @@ shinyServer(function(input, output, session) {
         if (input$GrUrl == "") {
           outlist <- NULL
         } else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
-          outlist <- list(valid = FALSE, message = "Neplatná URL")
+          outlist <- list(valid = FALSE, message = i18n$t("Neplatná URL"))
         } else {
           origurl.list <- httr::parse_url(input$GrUrl)
           origurl.list$query <- list(
@@ -708,7 +708,7 @@ shinyServer(function(input, output, session) {
               groupfreqs = table(jsonlist$Lines$linegroup)
             )
           } else {
-            outlist = list(valid = FALSE, message = "V konkordanci nejsou označené skupiny") 
+            outlist = list(valid = FALSE, message = i18n$t("V konkordanci nejsou označené skupiny"))
           }
         }
       } else { # manualni zadani
@@ -763,7 +763,7 @@ shinyServer(function(input, output, session) {
       if (!is.null(grfq) & grfq$valid == TRUE) {
         doTable <- function(d, indices) { unname( table(factor(d[indices], levels=levels(as.factor(d)))) ) }
         allboot <- NULL
-        withProgress(message = "Provádím bootstrap", value = 0, {
+        withProgress(message = i18n$t("Provádím bootstrap"), value = 0, {
           for (bc in 1:bootsettings.cycle) {
             bootobject <- boot::boot(rep(grfq$groups, grfq$groupfreqs), doTable,
               R = bootsettings.R, parallel = "multicore", ncpus = bootsettings.ncpus)
@@ -772,7 +772,7 @@ shinyServer(function(input, output, session) {
             } else {
               allboot <- bind_rows(allboot, as.data.frame(bootobject$t))
             }
-            incProgress(1/bootsettings.cycle, detail = paste0("Hotovo ", round(100 * bc/bootsettings.cycle, digits=1), " %"))
+            incProgress(1/bootsettings.cycle, detail = paste0(i18n$t("Hotovo "), round(100 * bc/bootsettings.cycle, digits=1), " %"))
           }
         })
         perc.low = input$GrAlpha / 2
@@ -792,7 +792,7 @@ shinyServer(function(input, output, session) {
         if (grfq$valid == FALSE) {
           tags$div( 
             tags$h3(i18n$t("Chyba v zadání")),
-            tags$p(i18n$t(grfq$message)) 
+            tags$p(grfq$message) # preklada se uz pri vytvareni message 
             )
         } else {
           h3(i18n$t("Konfidenční intervaly skupin")) 
@@ -813,14 +813,14 @@ shinyServer(function(input, output, session) {
             class = 'display',
             thead(
               tr(
-                th(rowspan = 2, 'Skupina', style='text-align:left'),
-                th(rowspan = 2, 'Frekvence'),
-                th(rowspan = 2, 'Podíl'),
-                th(colspan = 2, 'Konfidenční intervaly', style='text-align:center')
+                th(rowspan = 2, i18n$t('Skupina'), style='text-align:left'),
+                th(rowspan = 2, i18n$t('Frekvence')),
+                th(rowspan = 2, i18n$t("Podíl")),
+                th(colspan = 2, i18n$t('Konfidenční intervaly'), style='text-align:center')
               ),
               tr(
-                th('spodní limit'),
-                th('horní limit')
+                th(i18n$t('spodní limit')),
+                th(i18n$t('horní limit'))
               )
             )
           ))
@@ -858,7 +858,7 @@ shinyServer(function(input, output, session) {
             geom_col(show.legend = FALSE, alpha = 0.75) +
             scale_fill_manual(values=gr_palette, drop = FALSE) +
             geom_errorbar(width = 0.5) +
-            labs(x = "Skupiny", y = "Frekvence skupin ve vzorku") +
+            labs(x = i18n$t("Skupiny"), y = i18n$t("Frekvence skupin ve vzorku")) +
             theme_minimal(base_size = graphBaseSizeFont)
         }
       }
@@ -882,22 +882,18 @@ shinyServer(function(input, output, session) {
             }
           }
           paste0(
-            "<p>Celková frekvence jevu: ", grfq$fq, "<br/>",
-            "Velikost analyzovaného vzorku: ", grfq$grouplines, "</p>",
+            "<p>", i18n$t("Celková frekvence jevu"), ": ", grfq$fq, "<br/>",
+            i18n$t("Velikost analyzovaného vzorku"), ": ", grfq$grouplines, "</p>",
             "<div id='gr-interpretace', class='alert alert-success'>",
-            "<p><b>Hypergeometrický model:</b></p>",
-            "<p>Pravděpodobnost výskytu marginální (", input$GrMinProp, "%) skupiny ve vzorku: ", round(gr.prob, digits=3), "<br/>",
-            "Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při ", 
-            input$GrAlpha * 100, "% hladině chyby): ", gr.min, "</p>",
+            "<p><b>", i18n$t("Hypergeometrický model"), ":</b></p>",
+            "<p>", i18n$t("Pravděpodobnost výskytu marginální"), " (", input$GrMinProp, "%) ", 
+            i18n$t("skupiny ve vzorku"),": ", round(gr.prob, digits=3), "<br/>",
+            i18n$t("Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při "), 
+            input$GrAlpha * 100, i18n$t("% hladině chyby"), "): ", gr.min, "</p>",
             "</div>")
         }
       }
     })
-    
-    #output$debug <- renderText({
-    #  grfq <- Gr.data()
-    #  paste("Celková frekvence:", grfq$fq)
-    #})
 
 # ================= Napoveda =====================
     
