@@ -219,7 +219,15 @@ localizedUI <- function(i18n) {
           wellPanel(
             fluidRow(
               column(6,
-                numericInput("zTTRtypes", i18n$t("Počet typů"), 1500, min = 1)
+                numericInput("zTTRtypes", i18n$t("Počet typů"), 1500, min = 1),
+                selectInput("zTTRattribute",
+                  i18n$t("Typ jednotky"),
+                  choices = list(
+                    "lemma" = 1,
+                    "word (case-insensitive)" = 2,
+                    "word (case-sensitive)" = 3
+                    )
+                  )
                 ),
               column(6,
                 numericInput("zTTRtokens", i18n$t("Počet tokenů"), 10000, min = 1)
@@ -238,14 +246,6 @@ localizedUI <- function(i18n) {
                 names(choices) <- c("a", "b")
                 choices
                 }
-              ),
-            selectInput("zTTRattribute",
-              i18n$t("Typ jednotky"),
-              choices = list(
-                "lemma" = 1,
-                "word (case-insensitive)" = 2,
-                "word (case-sensitive)" = 3
-                )
               )
             ),
           tags$p(HTML(i18n$t(helpzTTR_beza1)),

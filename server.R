@@ -17,6 +17,15 @@ shinyServer(function(input, output, session) {
   
   output$localizedUI <- renderUI(localizedUI(i18n))
   
+  insertUI(
+    selector = "#navigace",
+    where = "beforeEnd",
+    ui = bookmarkButton(
+      label = i18n$t("Trvalý odkaz"),
+      title = i18n$t("URL ke sdílení")
+      )
+    )
+  
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
      n <- switch(input$OwOcCorpus,
@@ -469,12 +478,19 @@ shinyServer(function(input, output, session) {
     })
 
 # ================= zTTR =====================
+    zTTRregister <- reactiveValues(value = NULL, flag = FALSE)
+    observeEvent(input$zTTRregister, {
+      #reg <- try(input$zTTRregister, silent = TRUE)
+      #if (class(reg) != "try-error") {
+      #cat(zTTRregister$flag, "\t", zTTRregister$value, "\n")
+      #browser()
+      if (!zTTRregister$flag) { # pokud nedoslo ke zmene jazyka, zmen registr
+        zTTRregister$value <- as.numeric(input$zTTRregister)
+      }
+      zTTRregister$flag <- FALSE
+    })
+    
     zTTRdata <- reactive({
-      reg <- switch(input$zTTRregister,
-        "1" = "FIC",
-        "2" = "NFC",
-        "3" = "NMG",
-        "4" = "SPO")
       att <- switch(input$zTTRattribute,
         "1" = "lemma",
         "2" = "word",
@@ -492,95 +508,117 @@ shinyServer(function(input, output, session) {
         "6" = "nl",
         "7" = "pl",
         "8" = "pt")
-      if (reg == "SPO") { corp = "Oral" }
-      else { corp = "SYN2015" }
+      zTTRmenuitems <- filter(koeficienty$median_iqr, language == lang) %>% select(register, corpus) %>% 
+        arrange(desc(corpus)) %>% unique()
+      regnum <- zTTRregister$value
+      reg <- zTTRmenuitems[regnum, 1]
+      corp <- zTTRmenuitems[regnum, 2]
+      # browser()
       list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
-        "corpus" = corp, "register" = reg, "attribute" = att, "case" = case, "language" = lang)
+        "corpus" = corp, "register" = reg, "attribute" = att, "case" = case, "language" = lang, "regnum" = regnum)
     })
     
     output$zTTRvalue <- renderText({
       data <- zTTRdata()
-      out <- countzttr(data, model = "mean-sd")
-      paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
-             i18n$t("Vypočítané zTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "mean-sd")
+        paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
+               i18n$t("Vypočítané zTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+      }
     })
 
     output$zTTRvalueRefs <- renderTable({
       data <- zTTRdata()
-      out <- countzttr(data, model = "mean-sd")
-      tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
-                 "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
-      colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
-      tabout
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "mean-sd")
+        tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), 
+                                            i18n$t("Disperze TTR")),
+                             "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
+        colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
+        tabout
+      }
     })
     
     output$zqTTRvalue <- renderText({
       data <- zTTRdata()
-      out <- countzttr(data, model = "median-iqr")
-      paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
-             i18n$t("Vypočítané zqTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "median-iqr")
+        paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
+               i18n$t("Vypočítané zqTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
+      }
     })
 
     output$zqTTRvalueRefs <- renderTable({
       data <- zTTRdata()
-      out <- countzttr(data, model = "median-iqr")
-      tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), i18n$t("Disperze TTR")),
-                 "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
-      colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
-      tabout
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "median-iqr")
+        tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), 
+                                            i18n$t("Disperze TTR")),
+                             "Hodnota" = c(out["ttr"], out["refttr"], out["sdttr"]))
+        colnames(tabout) <- c(i18n$t("Veličina"), i18n$t("Hodnota"))
+        tabout
+      }
     })
 
     output$zTTRscheme <- renderPlot({
       data <- zTTRdata()
-      out <- countzttr(data, model = "mean-sd")
-      cinitel = 3
-      if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
-      rozsah = sort(c(seq(from = (out["refttr"] - cinitel * out["sdttr"]), to = (out["refttr"] + cinitel * out["sdttr"]), length.out = 200),
-                      out["refttr"], out["ttr"]))
-      pps = dnorm(rozsah, mean = out["refttr"], sd = out["sdttr"])
-      graphdata <- data.frame(TTR = rozsah, types = rozsah * data$tokens, probs = pps)
-      graphdata.points <- bind_rows(
-        filter(graphdata, TTR == out["refttr"]) %>% mutate(Type = i18n$t("Očekávaná hodnota")),
-        filter(graphdata, TTR == out["ttr"]) %>% mutate(Type = i18n$t("Naměřená hodnota"))
-      )
-      ggplot(data = graphdata, aes(x = types, y = probs)) +
-        geom_area(color = cnk_color_vector[6], fill = cnk_color_vector[7], alpha = 0.7) +
-        geom_point(data = graphdata.points,
-                   aes(x = types, y = probs, color = Type, fill = Type), shape = 21, size = 4, alpha = 0.8) +
-        geom_segment(data = graphdata.points,
-                     aes(x = types, y = 0, xend = types, yend = probs, color = Type), alpha = 0.8) +
-        scale_colour_manual("", values = cnk_color_vector) +
-        scale_fill_manual("", values = cnk_color_vector) +
-        labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
-        theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(0,1), legend.position=c(0,1))
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "mean-sd")
+        cinitel = 3
+        if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
+        rozsah = sort(c(seq(from = (out["refttr"] - cinitel * out["sdttr"]), 
+                            to = (out["refttr"] + cinitel * out["sdttr"]), length.out = 200),
+                        out["refttr"], out["ttr"]))
+        pps = dnorm(rozsah, mean = out["refttr"], sd = out["sdttr"])
+        graphdata <- data.frame(TTR = rozsah, types = rozsah * data$tokens, probs = pps)
+        graphdata.points <- bind_rows(
+          filter(graphdata, TTR == out["refttr"]) %>% mutate(Type = i18n$t("Očekávaná hodnota")),
+          filter(graphdata, TTR == out["ttr"]) %>% mutate(Type = i18n$t("Naměřená hodnota"))
+        )
+        ggplot(data = graphdata, aes(x = types, y = probs)) +
+          geom_area(color = cnk_color_vector[6], fill = cnk_color_vector[7], alpha = 0.7) +
+          geom_point(data = graphdata.points,
+                     aes(x = types, y = probs, color = Type, fill = Type), shape = 21, size = 4, alpha = 0.8) +
+          geom_segment(data = graphdata.points,
+                       aes(x = types, y = 0, xend = types, yend = probs, color = Type), alpha = 0.8) +
+          scale_colour_manual("", values = cnk_color_vector) +
+          scale_fill_manual("", values = cnk_color_vector) +
+          labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
+          theme_minimal(base_size = graphBaseSizeFont) +
+          theme(legend.justification=c(0,1), legend.position=c(0,1))
+      }
     })
 
     output$zqTTRscheme <- renderPlot({
       data <- zTTRdata()
-      out <- countzttr(data, model = "median-iqr")
-      cinitel = 3
-      if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
-      rozsah = sort(c(seq(from = (out["refttr"] - cinitel * out["sdttr"]), to = (out["refttr"] + cinitel * out["sdttr"]), length.out = 200),
-                      out["refttr"], out["ttr"]))
-      pps = dnorm(rozsah, mean = out["refttr"], sd = out["sdttr"])
-      graphdata <- data.frame(TTR = rozsah, types = rozsah * data$tokens, probs = pps)
-      graphdata.points <- bind_rows(
-        filter(graphdata, TTR == out["refttr"]) %>% mutate(Type = i18n$t("Očekávaná hodnota")),
-        filter(graphdata, TTR == out["ttr"]) %>% mutate(Type = i18n$t("Naměřená hodnota"))
-      )
-      ggplot(data = graphdata, aes(x = types, y = probs)) +
-        geom_area(color = cnk_color_vector[6], fill = cnk_color_vector[7], alpha = 0.7) +
-        geom_point(data = graphdata.points,
-                   aes(x = types, y = probs, color = Type, fill = Type), shape = 21, size = 4) +
-        geom_segment(data = graphdata.points,
-                     aes(x = types, y = 0, xend = types, yend = probs, color = Type)) +
-        scale_colour_manual("", values = cnk_color_vector) +
-        scale_fill_manual("", values = cnk_color_vector) +
-        labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
-        theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(0,1), legend.position=c(0,1))
+      #browser()
+      if (!is.na(data$register)) {
+        out <- countzttr(data, model = "median-iqr")
+        cinitel = 3
+        if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
+        rozsah = sort(c(seq(from = (out["refttr"] - cinitel * out["sdttr"]), 
+                            to = (out["refttr"] + cinitel * out["sdttr"]), length.out = 200),
+                        out["refttr"], out["ttr"]))
+        pps = dnorm(rozsah, mean = out["refttr"], sd = out["sdttr"])
+        graphdata <- data.frame(TTR = rozsah, types = rozsah * data$tokens, probs = pps)
+        graphdata.points <- bind_rows(
+          filter(graphdata, TTR == out["refttr"]) %>% mutate(Type = i18n$t("Očekávaná hodnota")),
+          filter(graphdata, TTR == out["ttr"]) %>% mutate(Type = i18n$t("Naměřená hodnota"))
+        )
+        ggplot(data = graphdata, aes(x = types, y = probs)) +
+          geom_area(color = cnk_color_vector[6], fill = cnk_color_vector[7], alpha = 0.7) +
+          geom_point(data = graphdata.points,
+                     aes(x = types, y = probs, color = Type, fill = Type), shape = 21, size = 4) +
+          geom_segment(data = graphdata.points,
+                       aes(x = types, y = 0, xend = types, yend = probs, color = Type)) +
+          scale_colour_manual("", values = cnk_color_vector) +
+          scale_fill_manual("", values = cnk_color_vector) +
+          labs(x = i18n$t("Počet typů"), y = i18n$t("Hustota pravděpodobnosti")) +
+          theme_minimal(base_size = graphBaseSizeFont) +
+          theme(legend.justification=c(0,1), legend.position=c(0,1))
+      }
     })
+    
     
     observe({
       #shinyjs::disable("zTTRlangsel")
@@ -595,24 +633,34 @@ shinyServer(function(input, output, session) {
         "6" = "nl",
         "7" = "pl",
         "8" = "pt")
-      
       u.choices = {
-        choices <- 1:4 # treba upravit
-        names(choices) <- sapply( 
-          #c("Psaný - beletrie", "Psaný - oborová literatura", "Psaný - publicistika", "Mluvený - spontánní konverzace"),
-          filter(koeficienty$median_iqr, language == "cs") %>% select(description, corpus) %>% 
-            unite(fulldesc, sep=" (") %>% mutate(fulldesc = paste0(fulldesc, ")")) %>% 
-            pull(fulldesc) %>% unique(),
+        choices <- seq(1, filter(koeficienty$median_iqr, language == "cs") %>% select(description,corpus) %>% 
+                         n_distinct())
+        names(choices) <- sapply( filter(koeficienty$median_iqr, language == "cs") %>% select(description, corpus) %>%
+                                    arrange(desc(corpus)) %>% unite(fulldesc, sep=" (") %>% 
+                                    mutate(fulldesc = paste0(fulldesc, ")")) %>% pull(fulldesc) %>% unique(),
           i18n$t )
         choices}
       
-      if (x != 1) {
+      if (lang != "cs") {
         u.choices = {
-          choices <- 1:3
-          names(choices) <- sapply( c("xxx", "yyy", "zzz"), i18n$t )
+          choices <- seq(1, filter(koeficienty$median_iqr, language == lang) %>% select(description,corpus) %>% 
+                           n_distinct())
+          names(choices) <- sapply( filter(koeficienty$median_iqr, language == lang) %>% select(description, corpus) %>%
+                                      arrange(desc(corpus)) %>% unite(fulldesc, sep=" (") %>%
+                                      mutate(fulldesc = paste0(fulldesc, ")")) %>% pull(fulldesc) %>% unique(),
+            i18n$t )
           choices }
       }
-      updateSelectInput(session, "zTTRregister", choices = u.choices)
+      defaultRegister <- 1
+      origRegister <- isolate(zTTRregister$value)
+      #browser()
+      updateSelectInput(session, "zTTRregister", choices = u.choices, selected = defaultRegister)
+      if (is.null(origRegister) || origRegister != defaultRegister) {
+        zTTRregister$value <- defaultRegister
+        zTTRregister$flag <- TRUE # doslo ke zmene jazyka
+      }
+      #freezeReactiveValue(input, "zTTRregister")
     })
     
 # ================= Gr =====================    
@@ -661,12 +709,15 @@ shinyServer(function(input, output, session) {
           }
         }
       } else { # manualni zadani
-        gr.vals <- ParseManualInput()
-        if (input$GrFq > 0 & length(gr.vals) > 1) {
+        #fq <- isolate(input$GrFq)
+        vals <- ParseManualInput()
+        gr.vals <- vals$Groups
+        fq <- vals$Fq
+        if (fq > 0 & length(gr.vals) > 1) {
           outlist <- list(
             valid = TRUE,
             message = "",
-            fq = input$GrFq,
+            fq = fq,
             ipm = NA,
             arf = NA,
             groups = 1:length(gr.vals),
@@ -683,13 +734,14 @@ shinyServer(function(input, output, session) {
     ParseManualInput <- eventReactive(input$GrGo, {
       gr.vals <- unlist(strsplit(input$GrSkupiny, split = "[,; ]+"))
       gr.vals <- as.numeric(gr.vals)
+      gr.fq <- input$GrFq
       if (sum(is.na(gr.vals)) > 0) {
         showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
                               i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
                               easyClose = TRUE
         ))
       }
-      gr.vals
+      list(Groups = gr.vals, Fq = gr.fq)
     })
     
     # predavani parametru (URL) pro modul Gr

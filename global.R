@@ -13,6 +13,7 @@ graphBaseSizeFont = 14
 bootsettings.R = 4000 # pocet bootstrap iteraci
 bootsettings.cycle = 15 # pocet cyklu bootstrapingu
 bootsettings.ncpus = 30 # pocet CPUs pro bootstrap
+enableBookmarking(store = "url")
 
 # ============== log-likelihood methods =============
 
@@ -273,7 +274,7 @@ getgraphdata <- function(f1, f2, n1, n2, Alpha = 0.05, i18n) {
 # ============== zTTR koeficienty =============
 
 #load("data/zTTR-coeffs_2019-04-17.RData")
-load("data/zTTR-coeffs_2019-08-06.RData")
+load("data/zTTR-coeffs_2019-08-07.RData")
 
 # ============== zTTR a zqTTR =============
 

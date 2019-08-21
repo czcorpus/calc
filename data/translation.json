@@ -3,6 +3,8 @@
   "languages": ["cs", "en"],
   "translation": [
       {"cs": "KOKS: Korpusová kalkulačka spolehlivosti", "en": "C3O: Corpus confidence calculator online"},
+      {"cs": "Trvalý odkaz", "en": "Bookmark"},
+      {"cs": "URL ke sdílení", "en": "URL for sharing"},
       {"cs": "1 slovo v 1 korpusu", "en": "1 word in 1 corpus"},
       {"cs": "Zadání", "en": "Input"},
       {"cs": "Zjištěná frekvence", "en": "Observed frequency"},
