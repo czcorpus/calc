@@ -339,7 +339,7 @@ localizedUI <- function(i18n) {
                  span(class="example-text text-muted", HTML(i18n$t(helpNgrams_ex))))
         ),
         column(width = 5, offset = 1,
-          h3(i18n$t("Výsledky")),
+          h3(i18n$t("Model")),
           #h5(i18n$t("Parametry modelu")),
           htmlOutput("NgramsParams"),
           h3(i18n$t("Schématické znázornění")),

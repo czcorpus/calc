@@ -960,6 +960,7 @@ shinyServer(function(input, output, session) {
           geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE) +
           geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type)) +
           scale_colour_manual(values = cnk_color_vector) +
+          scale_x_continuous(breaks = seq(0,16,4)) +
           labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
           theme_minimal(base_size = graphBaseSizeFont) +
           theme(axis.text.x = element_blank(),

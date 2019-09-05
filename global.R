@@ -410,19 +410,20 @@ ngrams.getData <- function(languages) {
 }
 
 ngrams.transformData <- function(sourcelang, targetlang, fqthresh) {
-  # pozor, zadani vychoziho a ciloveho jazyka je treba dat opacne
+  # pozor, zadani vychoziho a ciloveho jazyka se nekrej s tim, co je transformovano (= je treba dat opacne)
   if (!exists("ngram.fit.parameters")) { load("data/ngram-parameters_2019-08-06.RData") }
   a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
   b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
-  floor_x <- floor(fqthresh / b)
-  ceiling_x <- ceiling(fqthresh / b)
+  targetthresh <- fqthresh / b
+  floor_x <- floor(targetthresh)
+  ceiling_x <- ceiling(targetthresh)
   ngrams.data <- ngrams.getData(c(sourcelang, targetlang))
-  mezi <- filter(ngrams.data, lang == sourcelang, fq >= floor_x, fq <= ceiling_x) %>% 
-    select(-lang, -types) %>% spread("fq", "ctypes") %>% rename(y1 = 2, y2 = 3)
-  mezi$v <- (log(mezi$y1) - log(mezi$y2))/(log(10) - log(11))
-  mezi$u <- mezi$y1 * 10 ^(-mezi$v)
-  mezi$extrapolated <- mezi$u * 10.3 ^ mezi$v
   if (nrow(ngrams.data) != 0) {
+    mezi <- filter(ngrams.data, lang == sourcelang, fq >= floor_x, fq <= ceiling_x) %>% 
+      select(-lang, -types) %>% spread("fq", "ctypes") %>% rename(y1 = 2, y2 = 3)
+    mezi$v <- (log(mezi$y1) - log(mezi$y2))/(log(floor_x) - log(ceiling_x))
+    mezi$u <- mezi$y1 * floor_x ^(-mezi$v)
+    mezi$extrapolated <- mezi$u * targetthresh ^ mezi$v
     trans <- bind_rows(
       mutate(mezi, n = size * a, type = "trans", lang = sourcelang) %>% rename(ctypes = extrapolated) %>% select(n, lang, ctypes, type),
       filter(ngrams.data, fq == fqthresh, lang == targetlang) %>% rename(n = size) %>% mutate(type = "trans", lang = as.character(lang)) %>% select(n, lang, ctypes, type)
