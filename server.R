@@ -29,7 +29,17 @@ shinyServer(function(input, output, session) {
     )
   }, once = TRUE)
   
-  
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$module)) {
+      if (grepl("^[12345678]$", query$module)) {
+        moduleno <- as.numeric(query$module)
+        updateNavlistPanel(session, "navigace", selected = names(modulenames[moduleno]))
+      } else if (is.character(query$module)) {
+        updateNavlistPanel(session, "navigace", selected = query$module)
+      }
+    }
+  })
   
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({

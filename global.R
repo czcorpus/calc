@@ -6,7 +6,7 @@ library(Hmisc)
 # ============== general parameters =================
 
 httr::set_config(httr::config(http_version = 0)) # problem s nginex
-
+modulenames <- c("OwOc" = 1, "TwOc" = 2, "TwTc" = 3, "SaRe" = 4, "zTTR" = 5, "Gr" = 6, "Ngrams" = 7, "about" = 8)
 appName <- "KoKS"
 #appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
