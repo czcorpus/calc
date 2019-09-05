@@ -307,7 +307,6 @@ localizedUI <- function(i18n) {
           tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpGr_ex)) ) )
           ),
         column(width = 5, offset = 1,
-          
           uiOutput("GrTitle"),
           plotOutput("GrChart"),
           htmlOutput("GrGeom"),
@@ -315,7 +314,41 @@ localizedUI <- function(i18n) {
           DT::dataTableOutput("GrValues")
           )
         )
-      ), 
+      ),
+    # ====================================================== Ngrams ====
+    tabPanel(i18n$t("Korespondence n-gramů"), value = "Ngrams",
+      fluidRow(
+        column(width = 5,
+          h3(i18n$t("Zadání")),
+          wellPanel(
+            fluidRow(
+              column(width = 6,
+                selectInput("NgramsSource", i18n$t("Výchozí jazyk (L1)"),
+                  choices = c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), selected = "cs"),
+                numericInput("NgramsN", i18n$t("Výchozí délka n-gramu (n)"), value = 2, step = 1, min = 1, max = 12)
+                ),
+              column(width = 6,
+                selectInput("NgramsTarget", i18n$t("Cílový jazyk (L2)"),
+                  choices = c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), selected = "de"),
+                numericInput("NgramsFq", i18n$t("Minimální frekvence (t)"), value = 10)
+                )
+              )
+            ),
+          tags$p(HTML(i18n$t(helpNgrams))),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")),
+                 span(class="example-text text-muted", HTML(i18n$t(helpNgrams_ex))))
+        ),
+        column(width = 5, offset = 1,
+          h3(i18n$t("Výsledky")),
+          #h5(i18n$t("Parametry modelu")),
+          htmlOutput("NgramsParams"),
+          h3(i18n$t("Schématické znázornění")),
+          plotOutput("NgramsFit"),
+          h3(i18n$t("Jak n-gramy namíchat pro srovnání")),
+          htmlOutput("NgramsMix")
+        )
+      )
+    ),
     # ================= WELCOME ===========================
     tabPanel(i18n$t("O aplikaci"), value = "about",
       fluidRow(

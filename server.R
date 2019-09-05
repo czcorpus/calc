@@ -29,6 +29,8 @@ shinyServer(function(input, output, session) {
     )
   }, once = TRUE)
   
+  
+  
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
      n <- switch(input$OwOcCorpus,
@@ -480,7 +482,7 @@ shinyServer(function(input, output, session) {
         theme(legend.justification=c(1,0.8), legend.position=c(1,1))
     })
 
-# ================= zTTR =====================
+# ================= Lexikální bohatost (zTTR) =====================
     zTTRregister <- reactiveValues(value = NULL, flag = FALSE)
     observeEvent(input$zTTRregister, {
       #reg <- try(input$zTTRregister, silent = TRUE)
@@ -666,7 +668,7 @@ shinyServer(function(input, output, session) {
       #freezeReactiveValue(input, "zTTRregister")
     })
     
-# ================= Gr =====================    
+# ================= Frekvence skupin (Gr) =====================    
 
     Gr.data <- reactive({
       if (input$GrInputType == "GrUrlInput") { # zadani pomoci URL
@@ -894,8 +896,99 @@ shinyServer(function(input, output, session) {
         }
       }
     })
-
-# ================= Napoveda =====================
+# ================= Korespondence ngramů (Ngrams) =====================
+    
+    Ngrams.params <- reactive({
+      sourcelang <- input$NgramsSource
+      targetlang <- input$NgramsTarget
+      size <- input$NgramsN
+      fqthresh <- input$NgramsFq
+      if (sourcelang == targetlang) {
+        a <- 1; b <- 1
+      } else {
+        if (!exists("ngram.fit.parameters")) { load("data/ngram-parameters_2019-08-06.RData") }
+        a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
+        b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
+      }
+      list(sourcelang = sourcelang, targetlang = targetlang, size = size, fqthresh = fqthresh, a = round(a, 2), b = round(b,2))
+    })
+    
+    output$NgramsParams <- renderText({
+      ngrams.input <- Ngrams.params()
+      target.n <- round(ngrams.input$a * ngrams.input$size, 2)
+      target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 2)
+      paramstext0 <- paste0("T<sub>L1</sub> (n, t) = T<sub>L2</sub> (<i>a</i> n, <i>b</i> t)")
+      paramstext1 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (n, t) = ", 
+                            "T<sub>", ngrams.input$targetlang, "</sub> (", ngrams.input$a, " <i>n</i>, ", ngrams.input$b, " <i>t</i>)")
+      paramstext2 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (", ngrams.input$size, ", ", ngrams.input$fqthresh, ") = ", 
+                            "T<sub>", ngrams.input$targetlang, "</sub> (", target.n, ", ", target.t, ")")
+      paste0("<div id='ngrams-model' class='alert alert-success'>",
+        "<p>Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích<br/>",
+        "<big>", paramstext0, "</big><br/>",
+        "se při doplnění parametrů specifických pro daný jazykový pár<br/>",
+        "<span style='margin-left: 2em'><i>a</i> = ", ngrams.input$a, "</span><br/>",
+        "<span style='margin-left: 2em'><i>b</i> = ", ngrams.input$b, "</span><br/>",
+        "změní do konkretizované podoby<br/>",
+        "<big><b>", paramstext2, "</b></big></p>",
+        "</div>")
+    })
+    
+    output$NgramsFit <- renderPlot({
+      ngrams.input <- Ngrams.params()
+      out <- ngrams.transformData(ngrams.input$targetlang, ngrams.input$sourcelang, ngrams.input$fqthresh)
+      # pozor, poradi je zamerne opacne
+      if (is.data.frame(out$trans)) {
+        both <- bind_rows(out$orig, out$trans) %>% mutate(type = as.factor(type))
+        both$type <- factor(both$type, levels(both$type)[c(2,1)])
+        both.sp <- bind_rows(
+          mutate(out$orig.sp, lang = as.character(lang), type = as.character(type)), 
+          mutate(out$trans.sp, lang = as.character(lang), type = as.character(type))
+        ) %>% mutate(lange = as.character(lang), type = as.factor(type))
+        both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Interpolovaná"), i18n$t("Původní")))
+        
+        ggplot(data = both[ both$type == "trans",], aes(x = n, y = ctypes, color = lang)) +
+          geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE) +
+          geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type)) +
+          scale_colour_manual(values = cnk_color_vector) +
+          labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
+          theme_minimal(base_size = graphBaseSizeFont) +
+          theme(axis.text.x = element_blank(),
+                axis.ticks = element_blank(),
+                legend.justification=c(1,1), legend.position=c(1,1))
+      }
+    })
+    
+    output$NgramsMix <- renderText({
+      ngrams.input <- Ngrams.params()
+      target.n <- round(ngrams.input$a * ngrams.input$size, 2)
+      target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 0)
+      pomer <- ngrams.najdipomer(target.n)
+      outtext1 <- paste0("Jednotky o velikosti, kterou předpokládá model (", target.n, "-gramy), ",
+        "nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů.<br/>")
+      if (!is.na(pomer$c)){
+        outtext2 <- paste0("Požadované hodnoty <i>n</i> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než ",
+                           target.t, " o velikostech <b>", 
+                           pomer$a, "</b>, <b>", pomer$b, "</b> a <b>", pomer$c, 
+                           "</b> např. v poměru:<br/>",
+                          "<b>", pomer$mostdispersed$a, " % : ", pomer$mostdispersed$b, " % : ", pomer$mostdispersed$c, 
+                          " %</b> (varianta s převahou jednoho typu) nebo<br/>",
+                          "<b>", pomer$leastdispersed$a, " % : ", pomer$leastdispersed$b, " % : ", pomer$leastdispersed$c, 
+                          " %</b> (varianta s vyrovnaným počtem typů)")
+      } else if (!is.na(pomer$b)) {
+        outtext2 <- paste("Požadované hodnoty <i>n</i> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než ",
+                          target.t, " o velikostech <b>",
+                          pomer$a, "</b>a<b>", pomer$b, "</b>v poměru<br/>",
+                          "<b>", pomer$mostdispersed$a, "% :", pomer$mostdispersed$b, "%")
+      } else {
+        outtext2 <- paste0("V tomto případě stačí vzít 100 % n-garmů o <i>n</i> = ", pomer$a, " s minimální frekvencí ", target.t, ".")
+      }
+      paste0("<div id='ngrams' class='alert alert-info'>",
+        "<p>", outtext1, "</p>",
+        "<p>", outtext2,"</p>",
+        "</div>")
+    })
+    
+# ================= Napoveda (about) =====================
     
     output$about <- renderUI({
       tagList(

@@ -5,6 +5,8 @@ library(Hmisc)
 
 # ============== general parameters =================
 
+httr::set_config(httr::config(http_version = 0)) # problem s nginex
+
 appName <- "KoKS"
 #appRoot <- "https://jupyter.korpus.cz/r/p/4423/"
 #appRoot <- "https://jupyter.korpus.cz/calc/"
@@ -306,3 +308,147 @@ countzttr <- function(data, model = "mean-sd") {
   sdttr <- coeffs$c * data$tokens ^ coeffs$d
   c("ttr" = ttr, "zttr" = zttr, "refttr" = refttr, "sdttr" = sdttr)
 }
+
+# ============== Ngrams =============
+
+load("data/ngram-parameters_2019-08-06.RData")
+
+ngrams.najdipomer <- function(target) {
+  target.r <- round(target, 2)
+  target.w <- round(target, 0)
+  a = NA; b = NA; c = NA
+  if (target < 1) {
+    a = 1
+    combinations <- data.frame(a = 100, value = a, maxtype = 100, range = 100)
+  } else if (target.w == target.r) {
+    a = target.w
+    combinations <- data.frame(a = 100, value = a, maxtype = 100, range = 100)
+  } else if (target.r <= 1.25) {
+    a = 1; b = 2
+    combinations <- createCombinations(c(a, b))
+  } else if (abs(target.r - target.w) <= 0.25) {
+    a = target.w - 1; b = target.w; c = target.w + 1
+    combinations <- createCombinations(c(a, b, c))
+  } else {
+    if (target.r > target.w) {
+      a = target.w; b = target.w + 1
+      combinations <- createCombinations(c(a, b))
+    } else {
+      a = target.w - 1; b = target.w
+      combinations <- createCombinations(c(a, b))
+    }
+  }
+  combinations$diff = abs(combinations$value - target.r)
+  if (filter(combinations, diff == min(diff)) %>% count() %>% pull == 1) {
+    list(
+      mostdispersed = filter(combinations, diff == min(diff)) %>% top_n(1, range) %>% head(n = 1),
+      leastdispersed = NA,
+      a = a,
+      b = b,
+      c = c
+    )
+  } else {
+    list(
+      mostdispersed = filter(combinations, diff == min(diff)) %>% top_n(1, range) %>% head(n = 1),
+      leastdispersed = filter(combinations, diff == min(diff)) %>% top_n(-1, range) %>% head(n = 1),
+      a = a,
+      b = b,
+      c = c
+    )
+  }
+}
+
+createCombinations <- function(ngrams) {
+  if (length(ngrams) == 2) {
+    combinations <- data.frame(a = c(), b = c())
+    for (a in 1:99) {
+      b <- 100 - a
+      combinations <- bind_rows(combinations, data.frame(a = a, b = b))
+    }
+    combinations$value <- (combinations$a * ngrams[1] + combinations$b * ngrams[2]) / 100
+    combinations$maxtype <- apply(combinations[,1:2], 1, max)
+    combinations$range <- apply(combinations[,1:2], 1, function(x) max(x) - min(x))
+  } else if (length(ngrams) == 3) {
+    combinations <- data.frame(a = c(), b = c(), c = c())
+    for (a in 0:100) {
+      for (b in 0:(100-a)) {
+        c <- 100 - a - b
+        if (a * b * c != 0) {
+          combinations <- bind_rows(combinations, data.frame(a = a, b = b, c = c))
+        }
+      }
+    }
+    combinations$value <- (combinations$a * ngrams[1] + combinations$b * ngrams[2] + combinations$c * ngrams[3]) / 100
+    combinations$maxtype <- apply(combinations[,1:3], 1, max)
+    combinations$range <- apply(combinations[,1:3], 1, function(x) max(x) - min(x))
+  } else {
+    print("wtf")
+  }
+  return(combinations)
+}
+
+ngrams.getData <- function(languages) {
+  ngrams.data <- data.frame()
+  if (languages[1] != languages[2]) {
+    path1 <- paste0("data/ngrams_raw_data/out-ic11_", languages[1], "-", languages[2], "_wo-border.csv")
+    tmp1 <- read.table(path1, header=F)
+    colnames(tmp1) <- c("size", "fq", "types")
+    tmp1$lang = languages[1]
+    path2 <- paste0("data/ngrams_raw_data/out-ic11_", languages[2], "-", languages[1], "_wo-border.csv")
+    tmp2 <- read.table(path2, header=F)
+    colnames(tmp2) <- c("size", "fq", "types")
+    tmp2$lang = languages[2]
+    ngrams.data <- bind_rows(tmp1, tmp2)
+    ngrams.data$lang <- as.factor(ngrams.data$lang)
+    ngrams.data <- arrange(ngrams.data, lang, size, desc(fq)) %>% 
+      group_by(lang, size) %>% 
+      mutate(ctypes = cumsum(types)) %>% 
+      arrange(lang, size, fq) %>% 
+      ungroup()
+  }
+  return(ngrams.data)
+}
+
+ngrams.transformData <- function(sourcelang, targetlang, fqthresh) {
+  # pozor, zadani vychoziho a ciloveho jazyka je treba dat opacne
+  if (!exists("ngram.fit.parameters")) { load("data/ngram-parameters_2019-08-06.RData") }
+  a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
+  b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
+  floor_x <- floor(fqthresh / b)
+  ceiling_x <- ceiling(fqthresh / b)
+  ngrams.data <- ngrams.getData(c(sourcelang, targetlang))
+  mezi <- filter(ngrams.data, lang == sourcelang, fq >= floor_x, fq <= ceiling_x) %>% 
+    select(-lang, -types) %>% spread("fq", "ctypes") %>% rename(y1 = 2, y2 = 3)
+  mezi$v <- (log(mezi$y1) - log(mezi$y2))/(log(10) - log(11))
+  mezi$u <- mezi$y1 * 10 ^(-mezi$v)
+  mezi$extrapolated <- mezi$u * 10.3 ^ mezi$v
+  if (nrow(ngrams.data) != 0) {
+    trans <- bind_rows(
+      mutate(mezi, n = size * a, type = "trans", lang = sourcelang) %>% rename(ctypes = extrapolated) %>% select(n, lang, ctypes, type),
+      filter(ngrams.data, fq == fqthresh, lang == targetlang) %>% rename(n = size) %>% mutate(type = "trans", lang = as.character(lang)) %>% select(n, lang, ctypes, type)
+    )
+    orig <- bind_rows(
+      filter(ngrams.data, fq == fqthresh, lang == sourcelang) %>% rename(n = size) %>% mutate(type = "orig") %>% select(n, lang, ctypes, type),
+      filter(ngrams.data, fq == fqthresh, lang == targetlang) %>% rename(n = size) %>% mutate(type = "orig") %>% select(n, lang, ctypes, type)
+    ) %>% mutate(lang = as.character(lang))
+    # trans.sp <- bind_rows(
+    #   as.data.frame(spline(trans[ trans$lang == sourcelang,]$n, trans[ trans$lang == sourcelang,]$ctypes, n = 1000)) %>% 
+    #     mutate(lang = sourcelang, type = "trans"),
+    #   as.data.frame(spline(trans[ trans$lang == targetlang,]$n, trans[ trans$lang == targetlang,]$ctypes, n = 1000)) %>% 
+    #     mutate(lang = targetlang, type = "trans")
+    # ) %>% mutate(lang = as.factor(lang), type = as.factor(type))
+    trans.sp <- as.data.frame(spline(trans[ trans$lang == sourcelang,]$n, trans[ trans$lang == sourcelang,]$ctypes, n = 1000)) %>% 
+      mutate(lang = sourcelang, type = "trans") %>% mutate(lang = as.factor(lang), type = as.factor(type))
+    orig.sp <- bind_rows(
+      as.data.frame(spline(orig[ orig$lang == sourcelang,]$n, orig[ orig$lang == sourcelang,]$ctypes, n = 1000)) %>%
+        mutate(lang = sourcelang, type = "orig"),
+      as.data.frame(spline(orig[ orig$lang == targetlang,]$n, orig[ orig$lang == targetlang,]$ctypes, n = 1000)) %>%
+        mutate(lang = targetlang, type = "orig")
+    ) %>% mutate(lang = as.factor(lang), type = as.factor(type))
+  } else {
+    trans = NA; trans.sp = NA; orig = NA; orig.sp = NA
+  }
+  list(trans = trans, trans.sp = trans.sp, orig = orig, orig.sp = orig.sp)
+}
+
+
