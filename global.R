@@ -409,47 +409,40 @@ ngrams.getData <- function(languages) {
   return(ngrams.data)
 }
 
-ngrams.transformData <- function(sourcelang, targetlang, fqthresh) {
-  # pozor, zadani vychoziho a ciloveho jazyka se nekrej s tim, co je transformovano (= je treba dat opacne)
+ngrams.transformData <- function(transformlang, empircallang, fqthresh) {
+  # pozor, transformlang = jazyk, ktery se transformuje (target), empiricalllang = jazyk, ktery zustava (source)
   if (!exists("ngram.fit.parameters")) { load("data/ngram-parameters_2019-08-06.RData") }
-  a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
-  b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
-  targetthresh <- fqthresh / b
+  a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == empircallang & ngram.fit.parameters$Lang2 == transformlang, ]$a
+  b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == empircallang & ngram.fit.parameters$Lang2 == transformlang, ]$b
+  #print(c(a, b))
+  targetthresh <- fqthresh * b
   floor_x <- floor(targetthresh)
   ceiling_x <- ceiling(targetthresh)
-  ngrams.data <- ngrams.getData(c(sourcelang, targetlang))
+  ngrams.data <- ngrams.getData(c(transformlang, empircallang))
   if (nrow(ngrams.data) != 0) {
-    mezi <- filter(ngrams.data, lang == sourcelang, fq >= floor_x, fq <= ceiling_x) %>% 
+    mezi <- filter(ngrams.data, lang == transformlang, fq >= floor_x, fq <= ceiling_x) %>% 
       select(-lang, -types) %>% spread("fq", "ctypes") %>% rename(y1 = 2, y2 = 3)
     mezi$v <- (log(mezi$y1) - log(mezi$y2))/(log(floor_x) - log(ceiling_x))
     mezi$u <- mezi$y1 * floor_x ^(-mezi$v)
     mezi$extrapolated <- mezi$u * targetthresh ^ mezi$v
     trans <- bind_rows(
-      mutate(mezi, n = size * a, type = "trans", lang = sourcelang) %>% rename(ctypes = extrapolated) %>% select(n, lang, ctypes, type),
-      filter(ngrams.data, fq == fqthresh, lang == targetlang) %>% rename(n = size) %>% mutate(type = "trans", lang = as.character(lang)) %>% select(n, lang, ctypes, type)
+      mutate(mezi, n = size / a, type = "trans", lang = transformlang) %>% rename(ctypes = extrapolated) %>% select(n, lang, ctypes, type),
+      filter(ngrams.data, fq == fqthresh, lang == empircallang) %>% rename(n = size) %>% mutate(type = "trans", lang = as.character(lang)) %>% select(n, lang, ctypes, type)
     )
-    orig <- bind_rows(
-      filter(ngrams.data, fq == fqthresh, lang == sourcelang) %>% rename(n = size) %>% mutate(type = "orig") %>% select(n, lang, ctypes, type),
-      filter(ngrams.data, fq == fqthresh, lang == targetlang) %>% rename(n = size) %>% mutate(type = "orig") %>% select(n, lang, ctypes, type)
-    ) %>% mutate(lang = as.character(lang))
-    # trans.sp <- bind_rows(
-    #   as.data.frame(spline(trans[ trans$lang == sourcelang,]$n, trans[ trans$lang == sourcelang,]$ctypes, n = 1000)) %>% 
-    #     mutate(lang = sourcelang, type = "trans"),
-    #   as.data.frame(spline(trans[ trans$lang == targetlang,]$n, trans[ trans$lang == targetlang,]$ctypes, n = 1000)) %>% 
-    #     mutate(lang = targetlang, type = "trans")
-    # ) %>% mutate(lang = as.factor(lang), type = as.factor(type))
-    trans.sp <- as.data.frame(spline(trans[ trans$lang == sourcelang,]$n, trans[ trans$lang == sourcelang,]$ctypes, n = 1000)) %>% 
-      mutate(lang = sourcelang, type = "trans") %>% mutate(lang = as.factor(lang), type = as.factor(type))
+    orig <- filter(ngrams.data, fq == fqthresh) %>% rename(n = size) %>% mutate(type = "orig") %>% select(n, lang, ctypes, type) %>% mutate(lang = as.character(lang))
+    trans.sp <- as.data.frame(spline(trans[ trans$lang == transformlang,]$n, trans[ trans$lang == transformlang,]$ctypes, n = 1000)) %>% 
+      mutate(lang = transformlang, type = "trans") %>% mutate(lang = as.factor(lang), type = as.factor(type))
     orig.sp <- bind_rows(
-      as.data.frame(spline(orig[ orig$lang == sourcelang,]$n, orig[ orig$lang == sourcelang,]$ctypes, n = 1000)) %>%
-        mutate(lang = sourcelang, type = "orig"),
-      as.data.frame(spline(orig[ orig$lang == targetlang,]$n, orig[ orig$lang == targetlang,]$ctypes, n = 1000)) %>%
-        mutate(lang = targetlang, type = "orig")
+      as.data.frame(spline(orig[ orig$lang == transformlang,]$n, orig[ orig$lang == transformlang,]$ctypes, n = 1000)) %>%
+        mutate(lang = transformlang, type = "orig"),
+      as.data.frame(spline(orig[ orig$lang == empircallang,]$n, orig[ orig$lang == empircallang,]$ctypes, n = 1000)) %>%
+        mutate(lang = empircallang, type = "orig")
     ) %>% mutate(lang = as.factor(lang), type = as.factor(type))
   } else {
     trans = NA; trans.sp = NA; orig = NA; orig.sp = NA
   }
   list(trans = trans, trans.sp = trans.sp, orig = orig, orig.sp = orig.sp)
 }
+
 
 
