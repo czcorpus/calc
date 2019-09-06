@@ -325,12 +325,12 @@ localizedUI <- function(i18n) {
               column(width = 6,
                 selectInput("NgramsSource", i18n$t("Výchozí jazyk (L1)"),
                   choices = c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), selected = "cs"),
-                numericInput("NgramsN", i18n$t("Výchozí délka n-gramu (n)"), value = 2, step = 1, min = 1, max = 12)
+                numericInput("NgramsN", i18n$t("Délka n-gramu v L1 (n)"), value = 2, step = 1, min = 1, max = 12)
                 ),
               column(width = 6,
                 selectInput("NgramsTarget", i18n$t("Cílový jazyk (L2)"),
                   choices = c("cs", "de", "en", "es", "fr", "nl", "pl", "pt"), selected = "de"),
-                numericInput("NgramsFq", i18n$t("Minimální frekvence (t)"), value = 10)
+                numericInput("NgramsFq", i18n$t("Minimální frekvence v L1 (t)"), value = 10)
                 )
               )
             ),
@@ -405,6 +405,18 @@ localizedUI <- function(i18n) {
     "zTTRscheme",
     i18n$t("Naměřená a referenční hodnota"),
     i18n$t("Graf schématicky znázorňuje pozici naměřené lexikální bohatosti ku hodnotě obvyklé (průměr pro texty stejné délky). Je-li naměřená hodnota nižší než referenční, je výsledná hodnota zTTR záporná, je-li naopak vyšší, je hodnota zTTR kladná."),
+    placement = "left"
+  ),
+  bsPopover(
+    "GrChart",
+    i18n$t("Doloženost skupin a jejich pořadí"),
+    i18n$t("Sloupce představují frekvenci skupin ve vzorku, chybová úsečka pak naznačuje konfidenční interval, v němž se frekvence můžou pohybovat (např. v jiném vzorku). Pokud se konfidenční intervaly dvou sloupců překrývají, znamená to, že nelze jednoznačně tvrdit, že jedna skupina je vždy frekventovanější než druhá. Pokud konfidenční interval zahrnuje nulu (sloupec se zbarví do oranžova), nelze vyloučit, že taková skupina by se v jiném vzorku vůbec nevyskytla (jsou tedy oprávněné pochyby o její doloženosti)."),
+    placement = "left"
+  ),
+  bsPopover(
+    "NgramsFit",
+    i18n$t("Počty n-gramů podle velikosti"),
+    i18n$t("Přerušované čáry reprezentují počet různých n-gramů (typů) v závislosti na jejich délce ve zvolených jazycích. Plná čára vznikla interpolací dat cílového jazyka na základě kvantitativního modelu a naznačuje, jak se oba jazyky aplikací vyrovnávacích koeficientů vzájemně přibližují."),
     placement = "left"
   ),
   bsTooltip("SaReMereni", i18n$t("Frekvence zkoumaného jevu v jednotlivých vzorcích")),

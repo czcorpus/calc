@@ -198,9 +198,9 @@ shinyServer(function(input, output, session) {
        "<tr><td style='min-width: 5.3em;'>", i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
-       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
-       ")</td></tr>",
+       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "),  round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
+       #"<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
+       #")</td></tr>",
        #"</table>",
        # "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
        # "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
@@ -323,9 +323,9 @@ shinyServer(function(input, output, session) {
        i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:"), "</td>",
        "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio'><b>Risk ratio</b></a>:", "</td>",
-       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
-       ")</td></tr>",
+       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "), round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
+       #"<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3),
+       #")</td></tr>",
        # "<tr><td style='padding-right:5px;'>", "<a href='https://en.wikipedia.org/wiki/Odds_ratio'><b>Odds ratio</b></a>:", "</td>",
        # "<td>", round(orci$or, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
        # "<tr><td></td><td>(", i18n$t("konfidenční interval"), ": ", round(orci$lci, digits = 3), "–", round(orci$uci, digits = 3),
@@ -881,28 +881,29 @@ shinyServer(function(input, output, session) {
       if (!is.null(grfq)) {
         if (grfq$valid == TRUE) {
           p.lim <- input$GrMinProp / 100
-          gr.m = round(grfq$fq * p.lim, digits = 0)
-          if (gr.m < 1) { gr.m <- 1 }
-          gr.l = grfq$fq - gr.m
-          gr.prob <- 1 - dhyper(0, gr.m, gr.l, grfq$grouplines)
-          gr.min <- NULL
-          for(gr.n in 2:grfq$fq) {
-            p.tmp <- dhyper(0, gr.m, gr.l, gr.n)
-            if (p.tmp < input$GrAlpha) {
-              gr.min <- gr.n
-              break
-            }
-          }
+          gr.prob <- 1 - pbinom(0, grfq$grouplines, p.lim)
+          # gr.m = round(grfq$fq * p.lim, digits = 0)
+          # if (gr.m < 1) { gr.m <- 1 }
+          # gr.l = grfq$fq - gr.m
+          # gr.prob <- 1 - dhyper(0, gr.m, gr.l, grfq$grouplines)
+          # gr.min <- NULL
+          # for(gr.n in 2:grfq$fq) {
+          #   p.tmp <- dhyper(0, gr.m, gr.l, gr.n)
+          #   if (p.tmp < input$GrAlpha) {
+          #     gr.min <- gr.n
+          #     break
+          #   }
+          # }
           paste0(
             "<p>", i18n$t("Celková frekvence jevu"), ": ", grfq$fq, "<br/>",
             i18n$t("Velikost analyzovaného vzorku"), ": ", grfq$grouplines, "</p>",
             "<div id='gr-interpretace', class='alert alert-success'>",
-            "<p><b>", i18n$t("Hypergeometrický model"), ":</b></p>",
+            "<p><b>", i18n$t("Binomický model"), ":</b></p>",
             "<p>", i18n$t("Pravděpodobnost výskytu marginální"), " (", input$GrMinProp, "%) ", 
-            i18n$t("skupiny ve vzorku"),": ", round(gr.prob, digits=3), "<br/>",
-            i18n$t("Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při "), 
-            input$GrAlpha * 100, i18n$t("% hladině chyby"), "): ", gr.min, "</p>",
-            "</div>")
+            i18n$t("skupiny ve vzorku"),": ", round(gr.prob, digits=3), # "<br/>",
+            #i18n$t("Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při "), 
+            #input$GrAlpha * 100, i18n$t("% hladině chyby"), "): ", gr.min, 
+            "</p>", "</div>")
         }
       }
     })
@@ -933,12 +934,12 @@ shinyServer(function(input, output, session) {
       paramstext2 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (", ngrams.input$size, ", ", ngrams.input$fqthresh, ") = ", 
                             "T<sub>", ngrams.input$targetlang, "</sub> (", target.n, ", ", target.t, ")")
       paste0("<div id='ngrams-model' class='alert alert-success'>",
-        "<p>Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích<br/>",
+        "<p>", i18n$t("Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích"), "<br/>",
         "<big>", paramstext0, "</big><br/>",
-        "se při doplnění parametrů specifických pro daný jazykový pár<br/>",
+        i18n$t("se při doplnění zadaných parametrů a koeficientů specifických pro vybraný jazykový pár"), "<br/>",
         "<span style='margin-left: 2em'><i>a</i> = ", ngrams.input$a, "</span><br/>",
         "<span style='margin-left: 2em'><i>b</i> = ", ngrams.input$b, "</span><br/>",
-        "změní do konkretizované podoby<br/>",
+        i18n$t("změní do konkretizované podoby"), "<br/>",
         "<big><b>", paramstext2, "</b></big></p>",
         "</div>")
     })
@@ -946,7 +947,7 @@ shinyServer(function(input, output, session) {
     output$NgramsFit <- renderPlot({
       ngrams.input <- Ngrams.params()
       out <- ngrams.transformData(ngrams.input$targetlang, ngrams.input$sourcelang, ngrams.input$fqthresh)
-      # pozor, poradi je zamerne opacne
+      # pozor, poradi je zamerne opacne: transformovany jazyk, empiricky jazyk
       if (is.data.frame(out$trans)) {
         both <- bind_rows(out$orig, out$trans) %>% mutate(type = as.factor(type))
         both$type <- factor(both$type, levels(both$type)[c(2,1)])
@@ -956,11 +957,11 @@ shinyServer(function(input, output, session) {
         ) %>% mutate(lange = as.character(lang), type = as.factor(type))
         both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Interpolovaná"), i18n$t("Původní")))
         
-        ggplot(data = both[ both$type == "trans",], aes(x = n, y = ctypes, color = lang)) +
+        ggplot(data = both[ both$type == "orig",], aes(x = n, y = ctypes, color = lang)) +
           geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE) +
           geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type)) +
           scale_colour_manual(values = cnk_color_vector) +
-          scale_x_continuous(breaks = seq(0,16,4)) +
+          scale_x_continuous(breaks = seq(1,16,2)) +
           labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
           theme_minimal(base_size = graphBaseSizeFont) +
           theme(axis.text.x = element_blank(),
@@ -974,24 +975,24 @@ shinyServer(function(input, output, session) {
       target.n <- round(ngrams.input$a * ngrams.input$size, 2)
       target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 0)
       pomer <- ngrams.najdipomer(target.n)
-      outtext1 <- paste0("Jednotky o velikosti, kterou předpokládá model (", target.n, "-gramy), ",
-        "nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů.<br/>")
+      outtext1 <- paste0(i18n$t("Jednotky o velikosti, kterou předpokládá model"), " (", target.n, i18n$t("-gramy"), "), ",
+        i18n$t("nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů."), "<br/>")
       if (!is.na(pomer$c)){
-        outtext2 <- paste0("Požadované hodnoty <i>n</i> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než ",
-                           target.t, " o velikostech <b>", 
-                           pomer$a, "</b>, <b>", pomer$b, "</b> a <b>", pomer$c, 
-                           "</b> např. v poměru:<br/>",
+        outtext2 <- paste0(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
+                           target.t, " ", i18n$t("o délce"), " <b>", 
+                           pomer$a, "</b>, <b>", pomer$b, "</b> ", i18n$t("a"), " <b>", pomer$c, 
+                           "</b> ", i18n$t("tokeny např. v poměru"), ":<br/>",
                           "<b>", pomer$mostdispersed$a, " % : ", pomer$mostdispersed$b, " % : ", pomer$mostdispersed$c, 
-                          " %</b> (varianta s převahou jednoho typu) nebo<br/>",
+                          " %</b> (", i18n$t("varianta s převahou jednoho typu"), ") ", i18n$t("nebo"), "<br/>",
                           "<b>", pomer$leastdispersed$a, " % : ", pomer$leastdispersed$b, " % : ", pomer$leastdispersed$c, 
-                          " %</b> (varianta s vyrovnaným počtem typů)")
+                          " %</b> (", i18n$t("varianta s vyrovnaným počtem typů"), ")")
       } else if (!is.na(pomer$b)) {
-        outtext2 <- paste("Požadované hodnoty <i>n</i> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než ",
-                          target.t, " o velikostech <b>",
-                          pomer$a, "</b>a<b>", pomer$b, "</b>v poměru<br/>",
+        outtext2 <- paste(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
+                          target.t, " ", i18n$t("o délce"), " <b>", 
+                          pomer$a, "</b>", i18n$t("a"), "<b>", pomer$b, "</b>", i18n$t("tokeny v poměru"), "<br/>",
                           "<b>", pomer$mostdispersed$a, "% :", pomer$mostdispersed$b, "%")
       } else {
-        outtext2 <- paste0("V tomto případě stačí vzít 100 % n-garmů o <i>n</i> = ", pomer$a, " s minimální frekvencí ", target.t, ".")
+        outtext2 <- paste0(i18n$t("V tomto případě stačí vzít 100 % n-garmů o <em>n</em> ="), " ", pomer$a, " ", i18n$t("s minimální frekvencí"), " ", target.t, ".")
       }
       paste0("<div id='ngrams' class='alert alert-info'>",
         "<p>", outtext1, "</p>",

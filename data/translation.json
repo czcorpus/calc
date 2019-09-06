@@ -61,10 +61,7 @@
         "cs": "Rozdíl <strong>není</strong> na zvolené hladině významnosti",
         "en": "The difference <strong>is not</strong> statistically significant on the"
       },
-      {
-        "cs": "statisticky signifikantní.",
-        "en": "level of significance."
-      },
+      {"cs": "statisticky signifikantní.","en": "level of significance."},
       {
         "cs": "Rozdíl <strong>je</strong> na zvolené hladině významnosti",
         "en": "The difference <strong>is</strong> statistically significant on the"
@@ -75,6 +72,7 @@
         "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works'><b>DIN</b></a>:"
       },
       {"cs": "bodový odhad", "en": "point estimate"},
+      {"cs": "bodový odhad; konfidenční interval: ", "en": "point estimate; confidence interval: "},
       {
         "cs": "Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od", 
         "en": "Ratio between relative frequency of Word 1 and Word 2 ranges from"
@@ -230,6 +228,7 @@
       {"cs": "Skupina", "en": "Group"},
       {"cs": "Frekvence skupin ve vzorku", "en": "Group frequencies in the sample"},
       {"cs": "Hypergeometrický model", "en": "Hypergeometric model"},
+      {"cs": "Binomický model", "en": "Binomial model"},
       {"cs": "Pravděpodobnost výskytu marginální", "en": "Probability of marginal"},
       {"cs": "skupiny ve vzorku", "en": "group in the sample"},
       {
@@ -242,13 +241,59 @@
       {"cs": "Chyba v zadání", "en": "Invalid input"},
       {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
       {
-        "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít manuální zadání). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit tak, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em>, a to vždy s&nbsp;ohledem na velikost analyzovaného vzorku a celkovou frekevnci jevu. Zároveň modul vypočítá pravděpodobnost výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku a navrhne minimální velikost vzorku, v němž by se s přijatelnou mírou chyby měla hypotetická marginální skupina spolehlivě vyskytnout.", 
+        "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít <em>Manuální zadání</em>). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em> (vždy s&nbsp;ohledem na velikost analyzovaného vzorku). Zároveň modul vypočítá, jaká je pravděpodobnost alespoň jednoho výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku.", 
         "en": "Description: to be translated"
       },
+      {"cs": "Doloženost skupin a jejich pořadí", "en": "Groups attestation and their ranking"},
       {
-        "cs": "Ve vzorku 100 výskytů slova <em>měkký</em> jsme identifikovali 6 významů. Chceme vědět, zda je lze považovat na takovémto vzorku za doložené a jaké je jejich pořadí podle frekvence. S obojím nám pomůžou konfidenční intervaly (viz graf i tabulka), které naznačují, v jakém rozpětí by se výsledky při opakování analýzy vyskytovaly. Máme-li navíc důvodné podezření, že hledané slovo má ještě jeden význam, který se ve vzorku neobjevil, můžeme odhadnout jak pravděpodobné to je. Pokud si stanovíme, že náš význam představuje minimálně 1 % z celkové frekvence slova <em>měkký</em>, je pravděpodobnost, že se objeví ve vzorku o 100 výskytech, 0.637; abychom marginální význam spolehlivě zaregistrovali potřebovali bychom minimálně vzorek o velikosti 291 výskytů (při stanovené přijatelné míře chyby).", 
-        "en": "Example: to be translated"
+        "cs": "Sloupce představují frekvenci skupin ve vzorku, chybová úsečka pak naznačuje konfidenční interval, v němž se frekvence můžou pohybovat (např. v jiném vzorku). Pokud se konfidenční intervaly dvou sloupců překrývají, znamená to, že nelze jednoznačně tvrdit, že jedna skupina je vždy frekventovanější než druhá. Pokud konfidenční interval zahrnuje nulu (sloupec se zbarví do oranžova), nelze vyloučit, že taková skupina by se v jiném vzorku vůbec nevyskytla (jsou tedy oprávněné pochyby o její doloženosti).", 
+        "en": "TBT"
       },
+
+      
+      
+      {"cs": "Korespondence n-gramů", "en": "N-gram correspondence"},
+      {"cs": "Výchozí jazyk (L1)", "en": "Source language (L1)"},
+      {"cs": "Cílový jazyk (L2)", "en": "Target language (L2)"},
+      {"cs": "Délka n-gramu v L1 (n)", "en": "N-gram size in L1 (n)"},
+      {"cs": "Minimální frekvence v L1 (t)", "en": "Frequency threshold in L1 (t)"},
+      {"cs": "Model", "en": "Model"},
+      {"cs": "Jak n-gramy namíchat pro srovnání", "en": "How to mix n-grams for comparison"},
+      {
+        "cs": "Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích", 
+        "en": "The general form of the model assuming equal number of types (T) in both languages"
+      },
+      {"cs": "se při doplnění zadaných parametrů a koeficientů specifických pro vybraný jazykový pár", "en": "can be specified by input parameters and language-pair specific coefficients"},
+      {"cs": "změní do konkretizované podoby", "en": "to this concrete form:"},
+      {"cs": "Interpolovaná", "en": "Interpolated"},
+      {"cs": "Původní", "en": "Original"},
+      {"cs": "Velikost n-gramu", "en": "N-gram size"},
+      {"cs": "Počet typů (T)", "en": "Number of types (T)"},
+      {"cs": "Jazyk", "en": "Language"},
+      {"cs": "Data", "en": "Data"},
+      {"cs": "Jednotky o velikosti, kterou předpokládá model", "en": "Units expected by the model"},
+      {"cs": "-gramy", "en": "-grams"},
+      {
+        "cs": "nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů.", 
+        "en": "may not exist in the real world, however, we may conceptualize them as an average size in the set of differently large n-grams."
+      },
+      {"cs": "Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než", "en": "Required value of <em>n</em> can be achieved in this particular case by mixing n-grams with frequency above"},
+      {"cs": "o délce", "en": "with sizes of"},
+      {"cs": "tokeny v poměru", "en": "tokens in following ratio"},
+      {"cs": "tokeny např. v poměru", "en": "tokens e.g. in following ratio"},
+      {"cs": "varianta s převahou jednoho typu", "en": "most dispersed variant"},
+      {"cs": "nebo", "en": "or"},
+      {"cs": "varianta s vyrovnaným počtem typů", "en": "evenly dispersed variant"},
+      {
+        "cs": "Při mezijazykovém srovnávání víceslovných jednotek narážíme na problém, že si jednotky stejné délky (2-gram, 3-gramy atp.) nemusí z důvodu typologické odlišnosti přesně odpovídat. Pro vyrovnání tohoto rozdílu lze vytvořit kvantitativní model, který je založen na ekvivalenci počtu typů (T) mezi srovnávanými jazyky (podrobnosti viz Milička – Cvrček – Lukešová, připravuje se). Jeho vstupními parametry jsou <em>n</em> (=délka n-gramu) a <em>t</em> (=frekvenční minimum), protože to jsou hlavní faktory, které počet typů můžou ovlivnit. Tyto parametry lze pro každý jazykový pár modifikovat koeficienty <em>a</em> a <em>b</em>. Aplikací těchto koeficientů v modelu zjistíme pro daný pár jazyků, jaké hodnoty <em>n</em> a <em>t</em> si odpovídají (viz schématické znázornění pomocí interpolace v grafu).<br/> Zvýšení či snížení frekvenčí hladiny <em>t</em> je většinou při extrakci dat z korpusu jednoduché a poměrně intuitivní, problémy může činit hodnota <em>n</em>, která po transformaci nemusí být celé číslo (např. 2.37-gram). Pokud ovšem hodnotu <em>n</em> chápame jako průměr v nějakém vzorku, lze desetinné hodnoty tohoto parametru dosáhnout smícháním n-gramů různé délky (viz box pod grafem).", 
+        "en": "Description: to be translated"
+      },
+      {"cs": "Počty n-gramů podle velikosti", "en": "Number of n-grams by their size"},
+      {
+        "cs": "Přerušované čáry reprezentují počet různých n-gramů (typů) v závislosti na jejich délce ve zvolených jazycích. Plná čára vznikla interpolací dat cílového jazyka na základě kvantitativního modelu a naznačuje, jak se oba jazyky aplikací vyrovnávacích koeficientů vzájemně přibližují.", 
+        "en": "TBT"
+      },
+      
       
       
       {"cs": "O aplikaci", "en": "About"},
@@ -313,6 +358,14 @@
       {
         "cs": "Beletristický text o celkové délce 10000 tokenů obsahuje 1500 různých lemmat (typů). Porovnáváme ho s jinými texty o stejné délce a zjišťujeme, že je v tomto srovnání podprůměrný, což reflektuje i záporná hodnota zTTR (příp. zqTTR).", 
         "en": "TBS"
+      },
+      {
+        "cs": "Ve vzorku 100 výskytů slova <em>měkký</em> jsme identifikovali 6 významů. Chceme vědět, zda je lze považovat na takovémto vzorku za doložené a jaké je jejich pořadí podle frekvence. S obojím nám pomůžou konfidenční intervaly (viz graf i tabulka), které naznačují, v jakém rozpětí by se výsledky při opakování analýzy mohly vyskytnout. Máme-li navíc důvodné podezření, že hledané slovo má ještě jeden význam, který se ve vzorku neobjevil, můžeme odhadnout, jak pravděpodobné to je. Pokud si stanovíme, že náš význam představuje minimálně 1 % z celkové frekvence slova <em>měkký</em>, je pravděpodobnost, že se objeví ve vzorku o 100 výskytech, zhruba 63 %.", 
+        "en": "Example: to be translated"
+      },
+      {
+        "cs": "Chceme-li najít korespondenci mezi bigramy v češtině s minimální frekvencí 10 a n-gramy v němčině, musíme použít příslušné předpočítané koeficienty <em>a</em> a <em>b</em>. S jejich pomocí zjistíme, že českým bigramům odpovídají německé 2.34-gramy s minimální frekvencí 10.3. Tuto korespondenci schématicky zachycuje graf počtu typů (T) v obou jazycích, naznačující zároveň, jak vypadala originální data pro němčinu a jak vypadají po transformaci. Box pod grafem pak ukazuje, v jakém poměru namíchat 2-gramy a 3-gramy, abychom ve výsledku dostali průměrnou délku rovnající se transformovanému <em>n</em>.", 
+        "en": "Example: to be translated"
       },
       {"cs": "Český národní korpus", "en": "Czech National Corpus"}
     ]
