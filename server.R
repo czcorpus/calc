@@ -49,12 +49,13 @@ shinyServer(function(input, output, session) {
        "3" = 1e9,
        "4" = 1e10)
      if (input$OwOcFq >= n) {
-       showModal(
-         modalDialog(
-           title = i18n$t("Problém v zadání?"),
-           i18n$t("Zadaná frekvence přesahuje velikost korpusu."),
-           easyClose = TRUE
-       ))
+       # showModal(
+       #   modalDialog(
+       #     title = i18n$t("Problém v zadání?"),
+       #     i18n$t("Zadaná frekvence přesahuje velikost korpusu."),
+       #     easyClose = TRUE
+       # ))
+       showNotification(i18n$t("Zadaná frekvence přesahuje velikost korpusu."), type = "error")
      }
      c("Fq" = input$OwOcFq, "N" = n, "Alpha" = input$OwOcAlpha)
    })
@@ -155,12 +156,13 @@ shinyServer(function(input, output, session) {
    TwOc.data <- reactive({
      data <- c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
      if ((data["F1"] + data["F2"]) >= data["N"]) {
-       showModal(
-         modalDialog(
-           title = i18n$t("Problém v zadání?"),
-           i18n$t("Zadané frekvence přesahujou velikost korpusu."),
-           easyClose = TRUE
-         ))
+       # showModal(
+       #   modalDialog(
+       #     title = i18n$t("Problém v zadání?"),
+       #     i18n$t("Zadané frekvence přesahujou velikost korpusu."),
+       #     easyClose = TRUE
+       #   ))
+       showNotification(i18n$t("Zadané frekvence přesahujou velikost korpusu."), type = "error")
      }
      data
    })
@@ -265,13 +267,14 @@ shinyServer(function(input, output, session) {
          theme_minimal(base_size = graphBaseSizeFont)
        barchart
      } else {
-       showModal(
-         modalDialog(
-           title = i18n$t("Nekorektní zadání"),
-           i18n$t("Velikost korpusu nemůže být nulová."),
-           easyClose = TRUE
-           )
-       )
+       # showModal(
+       #   modalDialog(
+       #     title = i18n$t("Nekorektní zadání"),
+       #     i18n$t("Velikost korpusu nemůže být nulová."),
+       #     easyClose = TRUE
+       #     )
+       # )
+       showNotification( i18n$t("Velikost korpusu nemůže být nulová."), type = "warning")
      }
    })
 
@@ -279,12 +282,13 @@ shinyServer(function(input, output, session) {
    TwTc.data <- reactive({
      data <- c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
      if ((data["F1"] >= data["N1"]) || (data["F2"] >= data["N2"])) {
-       showModal(
-         modalDialog(
-           title = i18n$t("Problém v zadání?"),
-           i18n$t("Zadané frekvence přesahujou velikost korpusu."),
-           easyClose = TRUE
-        ))
+       # showModal(
+       #   modalDialog(
+       #     title = i18n$t("Problém v zadání?"),
+       #     i18n$t("Zadané frekvence přesahujou velikost korpusu."),
+       #     easyClose = TRUE
+       #  ))
+       showNotification(i18n$t("Zadané frekvence přesahujou velikost korpusu."), type = "error")
       }
      data 
    })
@@ -370,10 +374,11 @@ shinyServer(function(input, output, session) {
           labs(x = "", y = "i.p.m.") +
           theme_minimal(base_size = graphBaseSizeFont)
       } else {
-        showModal(modalDialog(title = i18n$t("Nekorektní zadání"),
-          i18n$t("Velikost korpusu nemůže být nulová."),
-          easyClose = TRUE
-        ))
+        # showModal(modalDialog(title = i18n$t("Nekorektní zadání"),
+        #   i18n$t("Velikost korpusu nemůže být nulová."),
+        #   easyClose = TRUE
+        # ))
+        showNotification(i18n$t("Velikost korpusu nemůže být nulová."), type = "warning")
       }
     })
 
@@ -382,16 +387,18 @@ shinyServer(function(input, output, session) {
       vec <- unlist(strsplit(input$SaReMereni, split = "[,; ]+"))
       vec <- as.numeric(vec)
       if (sum(is.na(vec)) > 0) {
-        showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
-                              i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
-                              easyClose = TRUE
-        ))
+        # showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
+        #                       i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
+        #                       easyClose = TRUE
+        # ))
+        showNotification(i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."), type = "warning")
       }
       if (length(vec) * input$SaReVzorek > input$SaRePopulace) {
-        showModal(modalDialog(title = i18n$t("Problém v zadání?"),
-                              i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."),
-                              easyClose = TRUE
-        ))
+        # showModal(modalDialog(title = i18n$t("Problém v zadání?"),
+        #                       i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."),
+        #                       easyClose = TRUE
+        # ))
+        showNotification(i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."), type = "error")
       }
       vec
     })
@@ -686,6 +693,7 @@ shinyServer(function(input, output, session) {
           outlist <- NULL
         } else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
           outlist <- list(valid = FALSE, message = i18n$t("Neplatná URL"))
+          showNotification(i18n$t("Neplatná URL"), type = "error")
         } else {
           origurl.list <- httr::parse_url(input$GrUrl)
           origurl.list$query <- list(
@@ -721,6 +729,7 @@ shinyServer(function(input, output, session) {
             )
           } else {
             outlist = list(valid = FALSE, message = i18n$t("V konkordanci nejsou označené skupiny"))
+            showNotification(i18n$t("V konkordanci nejsou označené skupiny"), type = "error")
           }
         }
       } else { # manualni zadani
@@ -751,10 +760,11 @@ shinyServer(function(input, output, session) {
       gr.vals <- as.numeric(gr.vals)
       gr.fq <- input$GrFq
       if (sum(is.na(gr.vals)) > 0) {
-        showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
-                              i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
-                              easyClose = TRUE
-        ))
+        # showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
+        #                       i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
+        #                       easyClose = TRUE
+        # ))
+        showNotification(i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."), type = "error")
       }
       list(Groups = gr.vals, Fq = gr.fq)
     })
@@ -920,6 +930,9 @@ shinyServer(function(input, output, session) {
         if (!exists("ngram.fit.parameters")) { load("data/ngram-parameters_2019-08-06.RData") }
         a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
         b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
+      }
+      if (size < 1 || size > 12) {
+        showNotification(i18n$t("Neplatný rozsah délky n-gramu (1–12)."), type = "warning")
       }
       list(sourcelang = sourcelang, targetlang = targetlang, size = size, fqthresh = fqthresh, a = round(a, 2), b = round(b,2))
     })
