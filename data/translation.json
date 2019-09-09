@@ -265,7 +265,7 @@
       },
       {"cs": "se při doplnění zadaných parametrů a koeficientů specifických pro vybraný jazykový pár", "en": "can be specified by input parameters and language-pair specific coefficients"},
       {"cs": "změní do konkretizované podoby", "en": "to this concrete form:"},
-      {"cs": "Interpolovaná", "en": "Interpolated"},
+      {"cs": "Modelovaná", "en": "Model"},
       {"cs": "Původní", "en": "Original"},
       {"cs": "Velikost n-gramu", "en": "N-gram size"},
       {"cs": "Počet typů (T)", "en": "Number of types (T)"},
@@ -327,9 +327,25 @@
         "cs": "je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky.", 
         "en": "compares the lexical richness (the length of the text in relation to the number of lexical units it contains) of texts. Its advantage is that the resulting <em>zTTR</em> index is comparable even between texts of different length."
       },
+      {"cs": "Modul", "en": "Module"},
+      {"cs": "frekvence skupin", "en": "frequency of groups"},
+      {
+        "cs": "slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou.", 
+        "en": "tbt"
+      },
+      {
+        "cs": "Při srovnávání víceslovných jednotek mezi dvěma jazyky narážíme často na otázku, zda si odpovídají n-gramy stejné délky. K zjištění", 
+        "en": "tbt"
+      },
+      {"cs": "korespondence n-gramů", "en": "N-grams correspondence"},
+      {
+        "cs": "slouží sedmý modul, který ukazuje, čemu ideálně odpovídá např. soupis nejfrekventovanějších bigramů v jednom jazyce při porovnání s jazykem druhým.", 
+        "en": "TBT"
+      },
       {
         "cs": "Poděkování za pomoc při přípravě této aplikace patří D. Lukešovi, O. Tichému, J. Kockovi, D. Kováříkové a J. Miličkovi.",
         "en": "Thanks to D. Lukeš, O. Tichý, J. Kocek, D. Kováříková and J. Milička for their help and assistance."},
+      
       
       
       

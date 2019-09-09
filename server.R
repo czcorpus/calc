@@ -968,12 +968,15 @@ shinyServer(function(input, output, session) {
           mutate(out$orig.sp, lang = as.character(lang), type = as.character(type)), 
           mutate(out$trans.sp, lang = as.character(lang), type = as.character(type))
         ) %>% mutate(lange = as.character(lang), type = as.factor(type))
-        both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Interpolovaná"), i18n$t("Původní")))
+        both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Modelovaná"), i18n$t("Původní")))
+        #both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(1,2)], labels = c(i18n$t("Původní"), i18n$t("Modelovaná")))
         
         ggplot(data = both[ both$type == "orig",], aes(x = n, y = ctypes, color = lang)) +
-          geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE) +
-          geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type)) +
+          geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE, size = 6) +
+          geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type, size = type), alpha = 0.8) +
           scale_colour_manual(values = cnk_color_vector) +
+          scale_linetype_manual(values = c("longdash", "solid")) +
+          scale_size_manual("", name = NULL, values = c(1.4, 0.7)) +
           scale_x_continuous(breaks = seq(1,16,2)) +
           labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
           theme_minimal(base_size = graphBaseSizeFont) +
@@ -1037,6 +1040,14 @@ shinyServer(function(input, output, session) {
           tags$li(i18n$t("Pátý modul nazvaný"),
             actionLink("linkTozTTR", "zTTR"),
             HTML(i18n$t("je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky."))
+          ),
+          tags$li(i18n$t("Modul"),
+            actionLink("linkToGr", i18n$t("frekvence skupin")),
+            HTML(i18n$t("slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou."))
+          ),
+          tags$li(i18n$t("Při srovnávání víceslovných jednotek mezi dvěma jazyky narážíme často na otázku, zda si odpovídají n-gramy stejné délky. K zjištění"),
+                  actionLink("linkToNgrams", i18n$t("korespondence n-gramů")),
+                  HTML(i18n$t("slouží sedmý modul, který ukazuje, čemu ideálně odpovídá např. soupis nejfrekventovanějších bigramů v jednom jazyce při porovnání s jazykem druhým."))
           )
         ),
         tags$br(),
@@ -1064,6 +1075,12 @@ shinyServer(function(input, output, session) {
     })
     observeEvent(input$linkTozTTR, {
       updateNavlistPanel(session, "navigace", selected = "zTTR")
+    })
+    observeEvent(input$linkToGr, {
+      updateNavlistPanel(session, "navigace", selected = "Gr")
+    })
+    observeEvent(input$linkToNgrams, {
+      updateNavlistPanel(session, "navigace", selected = "Ngrams")
     })
     
     observeEvent(input$LinkToSaReStudPanel, {
