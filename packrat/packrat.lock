@@ -73,17 +73,6 @@ Source: CRAN
 Version: 0.1-3
 Hash: c590d29e555926af053055e23ee79efb
 
-Package: bindr
-Source: CRAN
-Version: 0.1.1
-Hash: 76578c5f543a6ecbc1365d6445f9ebf7
-
-Package: bindrcpp
-Source: CRAN
-Version: 0.2.2
-Hash: f420583a2d4e7eefbd65b3eec4fcaea6
-Requires: Rcpp, bindr, plogr
-
 Package: broom
 Source: CRAN
 Version: 0.5.2
