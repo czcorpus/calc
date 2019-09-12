@@ -691,7 +691,8 @@ shinyServer(function(input, output, session) {
       if (input$GrInputType == "GrUrlInput") { # zadani pomoci URL
         if (input$GrUrl == "") {
           outlist <- NULL
-        } else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
+        #} else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
+        } else if (!(grepl("^https?://", input$GrUrl))) {  
           outlist <- list(valid = FALSE, message = i18n$t("Neplatná URL"))
           showNotification(i18n$t("Neplatná URL"), type = "error")
         } else {
