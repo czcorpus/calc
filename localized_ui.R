@@ -427,7 +427,8 @@ localizedUI <- function(i18n) {
   # ========================== FOOTER ==================================
   tags$hr(),
   tags$p(
-    tags$small( HTML("&copy; <a href='https://www.korpus.cz'>"), i18n$t("Český národní korpus"), HTML("</a> 2019, Václav Cvrček") )
+    tags$small( appName, appVer[1], HTML("&copy; <a href='https://www.korpus.cz'>"), i18n$t("Český národní korpus"), HTML("</a>"), 
+                HTML("Václav Cvrček"), names(appVer[1]) )
     )
   )
   )
