@@ -153,7 +153,7 @@ localizedUI <- function(i18n) {
         )
       ),
     # ====================================================== SaRe ===
-    tabPanel(i18n$t("Spolehlivost vzorků"), value = "SaRe",
+    tabPanel(i18n$t("1 jev – víc vzorků"), value = "SaRe", # spolehlivost vzorku (sample reliability)
       fluidRow(
         column(5,
           h3(i18n$t("Zadání")),
@@ -208,6 +208,43 @@ localizedUI <- function(i18n) {
               plotOutput("SaReNormalplot")
               )
             )
+          )
+        )
+      ),
+    # ====================================================== Gr ====
+    tabPanel(i18n$t("Víc jevů – 1 vzorek"), value = "Gr", # Frekvence skupin (Frequency of groups)
+      fluidRow(
+        column(width = 5,
+          h3(i18n$t("Zadání")),
+          wellPanel(
+            tabsetPanel(id = "GrInputType", type = "pills",
+              tabPanel(id = "GrUrlInput", title = i18n$t("Zadání pomocí URL"), value = "GrUrlInput",
+                textAreaInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"), rows = 4,
+                              placeholder = i18n$t("např. https://kontext.korpus.cz/..."))
+                ),
+              tabPanel(id = "GrTextInput", title = i18n$t("Manuální zadání"), value = "GrTextInput",
+                numericInput("GrFq", label = paste0(i18n$t("Celková frekvence jevu"), ":"), value = 0),
+                textInput("GrSkupiny", label = i18n$t("Frekvence skupin (minimálně dvě hodnoty):")),
+                helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") ),
+                actionButton("GrGo", i18n$t("Spočti!"))
+                )
+              ),
+            hr(),
+            numericInput("GrMinProp", label = i18n$t("Podíl marginální skupiny na celkové frekvenci jevu (v %):"), value = 1),
+            sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"),
+                        min = 0.0001,
+                        max = 0.05,
+                        value = 0.05
+                        )
+            ),
+          tags$p(HTML(i18n$t(helpGr))),
+          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpGr_ex)) ) )
+          ),
+        column(width = 5, offset = 1,
+          uiOutput("GrTitle"),
+          plotOutput("GrChart"),
+          htmlOutput("GrGeom"),
+          DT::dataTableOutput("GrValues")
           )
         )
       ),
@@ -274,44 +311,6 @@ localizedUI <- function(i18n) {
               tableOutput("zTTRvalueRefs")
               )
             )
-          )
-        )
-      ),
-    # ====================================================== Gr ====
-    tabPanel(i18n$t("Frekvence skupin"), value = "Gr",
-      fluidRow(
-        column(width = 5,
-          h3(i18n$t("Zadání")),
-          wellPanel(
-            tabsetPanel(id = "GrInputType", type = "pills", 
-              tabPanel(id = "GrUrlInput", title = i18n$t("Zadání pomocí URL"), value = "GrUrlInput",
-                textAreaInput("GrUrl", label = i18n$t("URL konkordance (s vyznačením skupin):"), rows = 4, 
-                              placeholder = i18n$t("např. https://kontext.korpus.cz/..."))
-                ),
-              tabPanel(id = "GrTextInput", title = i18n$t("Manuální zadání"), value = "GrTextInput",
-                numericInput("GrFq", label = paste0(i18n$t("Celková frekvence jevu"), ":"), value = 0),
-                textInput("GrSkupiny", label = i18n$t("Frekvence skupin (minimálně dvě hodnoty):")),
-                helpText( i18n$t("Hodnoty zadávejte jako celá čísla oddělená čárkou.") ),
-                actionButton("GrGo", i18n$t("Spočti!"))
-                )
-            ),
-            hr(),
-            numericInput("GrMinProp", label = i18n$t("Podíl marginální skupiny na celkové frekvenci jevu (v %):"), value = 1),
-            sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"), 
-              min = 0.0001,
-              max = 0.05,
-              value = 0.05
-              )
-            ),
-          tags$p(HTML(i18n$t(helpGr))),
-          tags$p(class = "example", tags$span(class="label label-info", i18n$t("Příklad")), span(class="example-text text-muted", HTML(i18n$t(helpGr_ex)) ) )
-          ),
-        column(width = 5, offset = 1,
-          uiOutput("GrTitle"),
-          plotOutput("GrChart"),
-          htmlOutput("GrGeom"),
-          #textOutput("debug"),
-          DT::dataTableOutput("GrValues")
           )
         )
       ),

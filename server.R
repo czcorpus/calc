@@ -919,7 +919,9 @@ shinyServer(function(input, output, session) {
     })
 # ================= Korespondence ngramů (Ngrams) =====================
     
+    #Ngrams.params.undebounced <- reactive({
     Ngrams.params <- reactive({
+      req(input$NgramsSource,input$NgramsTarget, input$NgramsN, input$NgramsFq)
       sourcelang <- input$NgramsSource
       targetlang <- input$NgramsTarget
       size <- input$NgramsN
@@ -936,6 +938,8 @@ shinyServer(function(input, output, session) {
       }
       list(sourcelang = sourcelang, targetlang = targetlang, size = size, fqthresh = fqthresh, a = round(a, 2), b = round(b,2))
     })
+    
+    #Ngrams.params <- Ngrams.params.undebounced %>% debounce(100)
     
     output$NgramsParams <- renderText({
       ngrams.input <- Ngrams.params()
@@ -975,7 +979,7 @@ shinyServer(function(input, output, session) {
           geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE, size = 6) +
           geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type, size = type), alpha = 0.8) +
           scale_colour_manual(values = cnk_color_vector) +
-          scale_linetype_manual(values = c("longdash", "solid")) +
+          scale_linetype_manual(values = c("dashed", "solid")) +
           scale_size_manual("", name = NULL, values = c(1.4, 0.7)) +
           scale_x_continuous(breaks = seq(1,16,2)) +
           labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
@@ -1037,14 +1041,15 @@ shinyServer(function(input, output, session) {
           tags$li(actionLink("linkToSaRe", i18n$t("Čtvrtý modul")),
             i18n$t("pomáhá s určením míry přesnosti a spolehlivosti analýzy provedené na náhodných vzorcích. Pokud v něm vychází rozpětí pro hledaný jev jako příliš velké, bude nejspíš třeba pro zpřesnění přidat další vzorky.")
           ),
-          tags$li(i18n$t("Pátý modul nazvaný"),
+          tags$li(i18n$t("Modul"),
+                  actionLink("linkToGr", i18n$t("Víc jevů – 1 vzorek")),
+                  HTML(i18n$t("slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou."))
+          ),
+          tags$li(i18n$t("Šestý modul nazvaný"),
             actionLink("linkTozTTR", "zTTR"),
             HTML(i18n$t("je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky."))
           ),
-          tags$li(i18n$t("Modul"),
-            actionLink("linkToGr", i18n$t("frekvence skupin")),
-            HTML(i18n$t("slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou."))
-          ),
+          
           tags$li(i18n$t("Při srovnávání víceslovných jednotek mezi dvěma jazyky narážíme často na otázku, zda si odpovídají n-gramy stejné délky. K zjištění"),
                   actionLink("linkToNgrams", i18n$t("korespondence n-gramů")),
                   HTML(i18n$t("slouží sedmý modul, který ukazuje, čemu ideálně odpovídá např. soupis nejfrekventovanějších bigramů v jednom jazyce při porovnání s jazykem druhým."))

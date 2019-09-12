@@ -107,6 +107,7 @@
       },
       
       
+      {"cs": "1 jev – víc vzorků", "en": "1 feature – many samples"},
       {"cs": "Spolehlivost vzorků", "en": "Samples reliability"},
       {"cs": "Velikost základního souboru (populace)", "en": "Source sample (population) size"},
       {"cs": "Velikost vzorku", "en": "Sample size"},
@@ -139,8 +140,8 @@
         "en": "Reading the graph from left to right, you will notice that by adding samples, the frequency estimate changes and with it, the confidence interval decreases (the precision of the estimate increases)."
       },
       {
-        "cs": "Modul <em>Spolehlivost vzorků</em> je určen k vyhodnocování výsledků získaných manuální analýzou různého počtu náhodných vzorků (typicky z rozsáhlé konkordance, kterou nelze celou detailně prozkoumat). Obvyklým problémem takové analýzy je to, že nejsme schopni určit, kolik dílčích vzorků a s jakou velikostí je třeba ručně prozkoumat, aby byl náš odhad spolehlivý. Univerzální odpověď na tuto otázku dát nelze, protože to závisí na mnoha okolnostech (zejm. na frekvenci a rozpýtelnosti analyzovaného jevu), můžeme nicméně na základě tzv. <em>centrálního limitního teorému</em> odhadnout, v jakém intervalu se daný jev v celé konkordanci vyskytuje.<br/> Modul nabízí informaci o tom, jak se s postupným přidáváním vzorků zpřesňuje náš odhad (zužuje se <em>konfidenční interval</em>) frekvence sledovaného jevu. Na základě tohoto intervalu můžeme rozhodnout, zda nám taková přesnost stačí, či zda raději prozkoumáme další vzorky, abychom odhad ještě víc zpřesnili. Aplikace nabízí dva způsoby jak výpočet provádět: pomocí", 
-        "en": "The <em>Sample reliability</em> module is intended to evaluate the results of manual analysis of a number of random samples (typically from an extensive concordance that is impossible to examine in detail). The usual problem of such analysis stems from our inability to determine the number and size of the individual samples necessary for a reliable estimate. There is no universal answer to this problem, because it depends on a number of factors (esp. on the frequency and dispersion of the feature), however, based on the <em>Central limit theorem</em>, we can estimate in what interval the feature in question appears in the whole concordance.<br/>  This module shows that by adding samples, the frequency estimate precision increases (the <em>confidence interval</em> narrows). It is then possible to decide, based on this interval, if a given precision is satisfactory enough, or if more samples should be analysed to increase the precision of the estimate. The app provides two ways to calculate this: using the" 
+        "cs": "Tento modul je určen k vyhodnocování spolehlivosti výsledků získaných manuální analýzou jevu v různém počtu náhodných vzorků (typicky z rozsáhlé konkordance, kterou nelze celou detailně prozkoumat). Obvyklým problémem takové analýzy je to, že nejsme schopni určit, kolik dílčích vzorků a s jakou velikostí je třeba ručně prozkoumat, aby byl náš odhad spolehlivý. Univerzální odpověď na tuto otázku dát nelze, protože to závisí na mnoha okolnostech (zejm. na frekvenci a rozpýtelnosti analyzovaného jevu), můžeme nicméně na základě tzv. <em>centrálního limitního teorému</em> odhadnout, v jakém intervalu se daný jev v celé konkordanci vyskytuje.<br/> Modul nabízí informaci o tom, jak se s postupným přidáváním vzorků zpřesňuje náš odhad (zužuje se <em>konfidenční interval</em>) frekvence sledovaného jevu. Na základě tohoto intervalu můžeme rozhodnout, zda nám taková přesnost stačí, či zda raději prozkoumáme další vzorky, abychom odhad ještě víc zpřesnili. Aplikace nabízí dva způsoby jak výpočet provádět: pomocí", 
+        "en": "This module is intended to evaluate the reliability of results of manual analysis of a number of random samples (typically from an extensive concordance that is impossible to examine in detail). The usual problem of such analysis stems from our inability to determine the number and size of the individual samples necessary for a reliable estimate. There is no universal answer to this problem, because it depends on a number of factors (esp. on the frequency and dispersion of the feature), however, based on the <em>Central limit theorem</em>, we can estimate in what interval the feature in question appears in the whole concordance.<br/>  This module shows that by adding samples, the frequency estimate precision increases (the <em>confidence interval</em> narrows). It is then possible to decide, based on this interval, if a given precision is satisfactory enough, or if more samples should be analysed to increase the precision of the estimate. The app provides two ways to calculate this: using the" 
       },
       {"cs": "studentova", "en": "Student's"},
       {"cs": "a", "en": "and"},
@@ -153,6 +154,50 @@
       {"cs": "Nejspíš jste v hodnotách měření udělali nějakou botu...", "en": "You may have an error in your input."},
       {"cs": "Problém v zadání?", "en": "Input error?"},
       {"cs": "Součet velikostí vzorků přesahuje velikost základního souboru...", "en": "The sum of the samples is larger than the source sample (population) size..."},
+      
+      
+      
+      {"cs": "Víc jevů – 1 vzorek", "en": "Many features – 1 sample"},
+      {"cs": "Frekvence skupin", "en": "Frequency of groups"},
+      {"cs": "Zadání pomocí URL", "en": "Input via URL"},
+      {"cs": "např. https://kontext.korpus.cz/...", "en": "e.g. https://kontext.korpus.cz/..."},
+      {"cs": "Manuální zadání", "en": "Manual input"},
+      {"cs": "Celková frekvence jevu", "en": "Total frequency"},
+      {"cs": "Velikost analyzovaného vzorku", "en": "Sample size"},
+      {"cs": "Frekvence skupin (minimálně dvě hodnoty):", "en": "Frequency of groups (at least two values):"},
+      {"cs": "URL konkordance (s vyznačením skupin):", "en": "Concordance URL (with marked groups):"},
+      {"cs": "Spočti!", "en": "Go!"},
+      {"cs": "Podíl marginální skupiny na celkové frekvenci jevu (v %):", "en": "Share of marginal group on total frequency (in %):"},
+      {"cs": "Provádím bootstrap", "en": "Bootstrapping"},
+      {"cs": "Hotovo ", "en": "Done "},
+      {"cs": "spodní limit", "en": "lower limit"},
+      {"cs": "horní limit", "en": "upper limit"},
+      {"cs": "Podíl", "en": "Proportion"},
+      {"cs": "Skupiny", "en": "Groups"},
+      {"cs": "Skupina", "en": "Group"},
+      {"cs": "Frekvence skupin ve vzorku", "en": "Group frequencies in the sample"},
+      {"cs": "Hypergeometrický model", "en": "Hypergeometric model"},
+      {"cs": "Binomický model", "en": "Binomial model"},
+      {"cs": "Pravděpodobnost výskytu marginální", "en": "Probability of marginal"},
+      {"cs": "skupiny ve vzorku", "en": "group in the sample"},
+      {
+        "cs": "Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při ", 
+        "en": "Minimal sample size for reliable detecting an occurence from marginal group (with "
+      },
+      {"cs": "% hladině chyby", "en": "% error rate"},
+      {"cs": "Konfidenční intervaly skupin", "en": "Confidence intervals for groups"},
+      {"cs": "Neplatná URL", "en": "Invalid URL"},
+      {"cs": "Chyba v zadání", "en": "Invalid input"},
+      {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
+      {
+        "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít <em>Manuální zadání</em>). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em> (vždy s&nbsp;ohledem na velikost analyzovaného vzorku). Zároveň modul vypočítá, jaká je pravděpodobnost alespoň jednoho výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku.", 
+        "en": "Description: to be translated"
+      },
+      {"cs": "Doloženost skupin a jejich pořadí", "en": "Groups attestation and their ranking"},
+      {
+        "cs": "Sloupce představují frekvenci skupin ve vzorku, chybová úsečka pak naznačuje konfidenční interval, v němž se frekvence můžou pohybovat (např. v jiném vzorku). Pokud se konfidenční intervaly dvou sloupců překrývají, znamená to, že nelze jednoznačně tvrdit, že jedna skupina je vždy frekventovanější než druhá. Pokud konfidenční interval zahrnuje nulu (sloupec se zbarví do oranžova), nelze vyloučit, že taková skupina by se v jiném vzorku vůbec nevyskytla (jsou tedy oprávněné pochyby o její doloženosti).", 
+        "en": "TBT"
+      },
       
       
       
@@ -209,46 +254,7 @@
       },
       
       
-      {"cs": "Frekvence skupin", "en": "Frequency of groups"},
-      {"cs": "Zadání pomocí URL", "en": "Input via URL"},
-      {"cs": "např. https://kontext.korpus.cz/...", "en": "e.g. https://kontext.korpus.cz/..."},
-      {"cs": "Manuální zadání", "en": "Manual input"},
-      {"cs": "Celková frekvence jevu", "en": "Total frequency"},
-      {"cs": "Velikost analyzovaného vzorku", "en": "Sample size"},
-      {"cs": "Frekvence skupin (minimálně dvě hodnoty):", "en": "Frequency of groups (at least two values):"},
-      {"cs": "URL konkordance (s vyznačením skupin):", "en": "Concordance URL (with marked groups):"},
-      {"cs": "Spočti!", "en": "Go!"},
-      {"cs": "Podíl marginální skupiny na celkové frekvenci jevu (v %):", "en": "Share of marginal group on total frequency (in %):"},
-      {"cs": "Provádím bootstrap", "en": "Bootstrapping"},
-      {"cs": "Hotovo ", "en": "Done "},
-      {"cs": "spodní limit", "en": "lower limit"},
-      {"cs": "horní limit", "en": "upper limit"},
-      {"cs": "Podíl", "en": "Proportion"},
-      {"cs": "Skupiny", "en": "Groups"},
-      {"cs": "Skupina", "en": "Group"},
-      {"cs": "Frekvence skupin ve vzorku", "en": "Group frequencies in the sample"},
-      {"cs": "Hypergeometrický model", "en": "Hypergeometric model"},
-      {"cs": "Binomický model", "en": "Binomial model"},
-      {"cs": "Pravděpodobnost výskytu marginální", "en": "Probability of marginal"},
-      {"cs": "skupiny ve vzorku", "en": "group in the sample"},
-      {
-        "cs": "Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při ", 
-        "en": "Minimal sample size for reliable detecting an occurence from marginal group (with "
-      },
-      {"cs": "% hladině chyby", "en": "% error rate"},
-      {"cs": "Konfidenční intervaly skupin", "en": "Confidence intervals for groups"},
-      {"cs": "Neplatná URL", "en": "Invalid URL"},
-      {"cs": "Chyba v zadání", "en": "Invalid input"},
-      {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
-      {
-        "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít <em>Manuální zadání</em>). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em> (vždy s&nbsp;ohledem na velikost analyzovaného vzorku). Zároveň modul vypočítá, jaká je pravděpodobnost alespoň jednoho výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku.", 
-        "en": "Description: to be translated"
-      },
-      {"cs": "Doloženost skupin a jejich pořadí", "en": "Groups attestation and their ranking"},
-      {
-        "cs": "Sloupce představují frekvenci skupin ve vzorku, chybová úsečka pak naznačuje konfidenční interval, v němž se frekvence můžou pohybovat (např. v jiném vzorku). Pokud se konfidenční intervaly dvou sloupců překrývají, znamená to, že nelze jednoznačně tvrdit, že jedna skupina je vždy frekventovanější než druhá. Pokud konfidenční interval zahrnuje nulu (sloupec se zbarví do oranžova), nelze vyloučit, že taková skupina by se v jiném vzorku vůbec nevyskytla (jsou tedy oprávněné pochyby o její doloženosti).", 
-        "en": "TBT"
-      },
+      
 
       
       
@@ -322,7 +328,7 @@
         "cs": "pomáhá s určením míry přesnosti a spolehlivosti analýzy provedené na náhodných vzorcích. Pokud v něm vychází rozpětí pro hledaný jev jako příliš velké, bude nejspíš třeba pro zpřesnění přidat další vzorky.", 
         "en": "helps in establishing the level of precision and reliability of a random sample analysis. If the resulting span (for the feature under scrutiny) is too broad, it might be advisable to improve the precision by adding more samples."
       },
-      {"cs": "Pátý modul nazvaný", "en": "The fifth module"},
+      {"cs": "Šestý modul nazvaný", "en": "The sixth module"},
       {
         "cs": "je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky.", 
         "en": "compares the lexical richness (the length of the text in relation to the number of lexical units it contains) of texts. Its advantage is that the resulting <em>zTTR</em> index is comparable even between texts of different length."
