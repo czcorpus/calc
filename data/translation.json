@@ -44,6 +44,7 @@
       },
       {"cs": "Zadaná frekvence přesahuje velikost korpusu.", "en": "Observed frequency is larger than the corpus size."},
 
+
       
       {"cs": "2 slova v 1 korpusu", "en": "2 words in 1 corpus"},
       {"cs": "Frekvence slova 1", "en": "Word 1 frequency"},
@@ -68,8 +69,8 @@
       },
       {"cs": "Effect size", "en": "Effect size"},
       {
-        "cs": "<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani'><b>DIN</b></a>:", 
-        "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works'><b>DIN</b></a>:"
+        "cs": "<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank'><b>DIN</b></a>:", 
+        "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works' target='_blank'><b>DIN</b></a>:"
       },
       {"cs": "bodový odhad", "en": "point estimate"},
       {"cs": "bodový odhad; konfidenční interval: ", "en": "point estimate; confidence interval: "},
@@ -105,6 +106,7 @@
         "cs": "představeným výše. Sdílí s&nbsp;ním nejen způsob vyhodnocení (testy statistické signifikance i způsoby výpočtu effect size), ale i grafické znázornění.", 
         "en": "introduced above. It shares with it not only the means of evaluating the data (statistical significance tests and means of effect size calculation), but also the visualisation."
       },
+      
       
       
       {"cs": "1 jev – víc vzorků", "en": "1 feature – many samples"},
@@ -154,6 +156,7 @@
       {"cs": "Nejspíš jste v hodnotách měření udělali nějakou botu...", "en": "You may have an error in your input."},
       {"cs": "Problém v zadání?", "en": "Input error?"},
       {"cs": "Součet velikostí vzorků přesahuje velikost základního souboru...", "en": "The sum of the samples is larger than the source sample (population) size..."},
+      
       
       
       
@@ -328,16 +331,16 @@
         "cs": "pomáhá s určením míry přesnosti a spolehlivosti analýzy provedené na náhodných vzorcích. Pokud v něm vychází rozpětí pro hledaný jev jako příliš velké, bude nejspíš třeba pro zpřesnění přidat další vzorky.", 
         "en": "helps in establishing the level of precision and reliability of a random sample analysis. If the resulting span (for the feature under scrutiny) is too broad, it might be advisable to improve the precision by adding more samples."
       },
-      {"cs": "Šestý modul nazvaný", "en": "The sixth module"},
-      {
-        "cs": "je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky.", 
-        "en": "compares the lexical richness (the length of the text in relation to the number of lexical units it contains) of texts. Its advantage is that the resulting <em>zTTR</em> index is comparable even between texts of different length."
-      },
       {"cs": "Modul", "en": "Module"},
       {"cs": "frekvence skupin", "en": "frequency of groups"},
       {
         "cs": "slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou.", 
         "en": "tbt"
+      },
+      {"cs": "Šestý modul nazvaný", "en": "The sixth module"},
+      {
+        "cs": "je pro poměřování textů z hlediska jejich lexikální bohatosti (poměr počtu různých slov k délce textu). Jeho předností je, že výsledná hodnota indexu <em>zTTR</em> je porovnatelná i mezi texty nestejné délky.", 
+        "en": "compares the lexical richness (the length of the text in relation to the number of lexical units it contains) of texts. Its advantage is that the resulting <em>zTTR</em> index is comparable even between texts of different length."
       },
       {
         "cs": "Při srovnávání víceslovných jednotek mezi dvěma jazyky narážíme často na otázku, zda si odpovídají n-gramy stejné délky. K zjištění", 
