@@ -89,7 +89,6 @@
         "cs": "Sloupce naznačují frekvence jevů (převedené na ipm), chybová úsečka pak ukazuje konfidenční interval, v němž se frekvence v jazyce mohou pohybovat. Pokud se konfidenční intervaly překrývají, může jít (navzdory naměřeným hodnotám) ve skutečnosti o stejně frekventované jevy.", 
         "en": "Bars indicate feature frequencies (in ipm) while the error bar indicates the confidence interval which delimits the range of frequencies in the whole lamgauge. Despite the difference in input frequencies, overlapping confidence intervals may indicate the sameness of frequencies."
       },
-      {"cs": "Kliknutím na oblast grafu provedete zoom in/out.", "en": "Zoom in/out by clicking in the graph."},
       {"cs": "Zadané frekvence přesahujou velikost korpusu.", "en": "Observed frequencies are larger than the corpus size."},
       
       

@@ -101,6 +101,7 @@ shinyServer(function(input, output, session) {
     chartlimits$MAX <- limrange$MAX
     chartlimits$MIN <- limrange$MIN
     chartlimits$onclick <- TRUE
+    shinyjs::toggleClass("OwOcChart", "zoomed")
   })
 
    output$OwOcChart <- renderPlot({
@@ -247,6 +248,7 @@ shinyServer(function(input, output, session) {
      graphlimits$MAX <- limrange$MAX
      graphlimits$MIN <- limrange$MIN
      graphlimits$onclick <- TRUE
+     shinyjs::toggleClass("TwOcIpmCI", "zoomed")
    })
 
    output$TwOcIpmCI <- renderPlot({
@@ -355,6 +357,7 @@ shinyServer(function(input, output, session) {
      graphlimits$MAX <- limrange$MAX
      graphlimits$MIN <- limrange$MIN
      graphlimits$onclick <- TRUE
+     shinyjs::toggleClass("TwTcIpmCI", "zoomed")
    })
    
     output$TwTcIpmCI <- renderPlot({

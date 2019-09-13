@@ -1,5 +1,14 @@
 library(shinyBS)
 
+add_zoom_cursor <- function(el, start_zoomed = FALSE) {
+  classes <- c(el$attribs$class, "zoomable")
+  if (start_zoomed) {
+    classes <- c(classes, "zoomed")
+  }
+  el$attribs$class <- paste(classes, collapse = " ")
+  el
+}
+
 localizedUI <- function(i18n) {
   fluidPage(tagList(
   
@@ -41,8 +50,7 @@ localizedUI <- function(i18n) {
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
-          plotOutput("OwOcChart", click = "OwOcChartclick"),
+          add_zoom_cursor(plotOutput("OwOcChart", click = "OwOcChartclick"), start_zoomed = TRUE),
           htmlOutput("OwOcCIs"),
           h3(i18n$t("Pravděpodobnostní funkce")),
           plotOutput("OwOcHist")
@@ -80,8 +88,7 @@ localizedUI <- function(i18n) {
           ),
         column(width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
-          plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick"),
+          add_zoom_cursor(plotOutput("TwOcIpmCI", click = "TwOcIpmCIclick")),
           htmlOutput("TwOcIpm"),
           h3(i18n$t("Effect size")),
           htmlOutput("TwOcEffectsize"),
@@ -133,8 +140,7 @@ localizedUI <- function(i18n) {
         column(
           width = 5, offset = 1,
           h3(i18n$t("Konfidenční intervaly")),
-          helpText(i18n$t("Kliknutím na oblast grafu provedete zoom in/out.")),
-          plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick"),
+          add_zoom_cursor(plotOutput("TwTcIpmCI", click = "TwTcIpmCIclick")),
           htmlOutput("TwTcIpm"),
           h3(i18n$t("Effect size")),
           htmlOutput("TwTcEffectsize"),

@@ -106,3 +106,12 @@ a:hover {
 #\._bookmark_ {
   margin-top: 4em;
 }
+
+/* signal zoom possibilities with mouse cursor */
+.zoomable {
+  cursor: zoom-in;
+}
+
+.zoomable.zoomed {
+  cursor: zoom-out;
+}
