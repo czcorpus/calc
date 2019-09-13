@@ -15,11 +15,12 @@ User=nobody
 # Group=www-data
 # pick a unique port which is not in conflict with ports used by other services
 # on the same server
-Environment=SHINY_APP_PORT=9001
+Environment=SHINY_APP_PORT=10001
+Environment=PATH=/opt/R/versions/3.6.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # write out absolute path to your run.R wrapper...
-ExecStart=/home/cvrcek/other/kalkulačka/calc/run.R
+ExecStart=/opt/web/calc/run.R
 # ... and your app's parent dir
-WorkingDirectory=/home/cvrcek/other/kalkulačka/calc
+WorkingDirectory=/opt/web/calc
 Restart=on-failure
 RestartSec=3
 

@@ -4,4 +4,4 @@
 # be used
 port <- as.numeric(Sys.getenv("SHINY_APP_PORT"))
 port <- if (is.na(port)) NULL else port
-shiny::runApp(port = port)
+shiny::runApp(host = "0.0.0.0", port = port)
