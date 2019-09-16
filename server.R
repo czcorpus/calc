@@ -221,8 +221,8 @@ shinyServer(function(input, output, session) {
    
    getgraphlimits <- function(graphdata, zoomin) {
      if (zoomin == TRUE) {   # mam zazoomovat?
-       if ( min(graphdata$ipm) - 2 * max(graphdata$ci) > 0 ) {      # ma smysl provadet zoom
-         MIN = min(graphdata$ipm) - 2 * max(graphdata$ci)
+       if ( min(graphdata$ipm) - 1.05 * max(graphdata$ci) > 0 ) {      # ma smysl provadet zoom
+         MIN = min(graphdata$ipm) - 1.05 * max(graphdata$ci)
          MAX = max(graphdata$ipm) + max(graphdata$ci)
        } else {   # nema smysl provádět zoom
          MIN = NULL
