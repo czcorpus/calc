@@ -5,7 +5,7 @@ library(shinyCNC)
 
 shinyUI(
   bootstrapPage(
-    tags$head( tags$link(rel = "stylesheet", type = "text/css", href = "calc.css?v=3") ),
+    tags$head( tags$link(rel = "stylesheet", type = "text/css", href = "calc.css?v=4") ),
     shiny_cnc_UI(),
     #shinythemes::themeSelector(),
     theme = shinytheme("yeti"),
