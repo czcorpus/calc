@@ -74,7 +74,7 @@ helpSaRe_beza1 <- "Tento modul je určen k vyhodnocování spolehlivosti výsled
 # actionLink("LinkToSaReNormPanel", "normálního"),
 helpSaRe_beza2 <- "rozdělení, přičemž první z nich poskytuje většinou menší rozsah konfidenčního intervalu, zatímco druhý odhad bývá konzervativnější."
 
-helpSaRe_ex <- "Potřebujeme zjistit podíl gen. sg. ve výskytech tvaru <em>hřiště</em> (může to být i nom. či ak.), který se celkově v korpusu SYN2015 s frekvencí 3890. Pokud nechceme použít morfologické značkování, musíme se uchýlit k ruční analýze po náhodných vzorcích. Zvolíme si jejich velikost (např. 100 výskytů) a do formuláře zadáváme počet nalezených genitivů v každém ze vzorků (35, 39, 38...). S přidáváním vzorků odhad zpřesňujeme, což se projevuje zužováním konfidenčního intervalu, v němž je (se stanovenou mírou chyby) reálný výsledek v celé konkordanci. Pokud nám přesnost odhadu nevyhovuje, musíme přidat další vzorek."
+helpSaRe_ex <- "Potřebujeme zjistit podíl gen. sg. ve výskytech tvaru <em>hřiště</em> (může to být i nom. či ak.), který se celkově v korpusu SYN2015 vyskytuje s frekvencí 3890. Pokud nechceme použít morfologické značkování, musíme se uchýlit k ruční analýze po náhodných vzorcích. Zvolíme si jejich velikost (např. 100 výskytů) a do formuláře zadáváme počet nalezených genitivů v každém ze vzorků (35, 39, 38...). S přidáváním vzorků odhad zpřesňujeme, což se projevuje zužováním konfidenčního intervalu, v němž je (se stanovenou mírou chyby) reálný výsledek v celé konkordanci. Pokud nám přesnost odhadu nevyhovuje, musíme přidat další vzorek."
 
 # helpzTTR <- tags$p(
 #   "Poslední modul nazvaný",
