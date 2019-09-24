@@ -1026,7 +1026,7 @@ shinyServer(function(input, output, session) {
             HTML(i18n$t("vlastně nepočítá žádný statistický test a slouží jako pomůcka pro adekvátní interpretaci frekevencí. Měl by pomoct s odpovědí na otázku: <em>Co to přesně znamená, když jev, který mě zajímá, má v korpusu frekvenci X výskytů?</em>"))
           ),
           tags$li(actionLink("linkToTwOc2", i18n$t("Druhý modul")),
-            i18n$t("porovnává dvě frekvence (např. dvě konkurenční varianty v jednom korpusu) a zjišťuje, jak významný je jejich rozdíl a jestli třeba za tím není jenom náhodná variabilita.")
+            i18n$t("porovnává dvě frekvence (např. dvě konkurenční varianty v jednom korpusu) a zjišťuje, jak významný je jejich rozdíl a jestli třeba není výsledkem náhodné variability.")
           ),
           tags$li(i18n$t("Typickým příkladem využití modulu"),
             actionLink("linkToTwTc", i18n$t("2 slova ve 2 korpusech")),
@@ -1037,7 +1037,7 @@ shinyServer(function(input, output, session) {
           ),
           tags$li(i18n$t("Modul"),
                   actionLink("linkToGr", i18n$t("Víc jevů – 1 vzorek")),
-                  HTML(i18n$t("slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat skutečně za doloženou."))
+                  HTML(i18n$t("slouží k posouzení toho, jak jsou zastoupeny skupiny jevů (např. významů slova) v analyzovaném vzorku či konkordanci. Můžeme s jeho pomocí odpovědět na otázku, jestli je skutečně jedna skupina častější než druhá nebo zda lze určitou skupinu považovat za přesvědčivě doloženou."))
           ),
           tags$li(i18n$t("Šestý modul nazvaný"),
             actionLink("linkTozTTR", "zTTR"),

@@ -237,7 +237,7 @@ localizedUI <- function(i18n) {
                 )
               ),
             hr(),
-            numericInput("GrMinProp", label = i18n$t("Podíl marginální skupiny na celkové frekvenci jevu (v %):"), value = 1),
+            numericInput("GrMinProp", label = i18n$t("Podíl marginální skupiny na celkové frekvenci jevu (v %):"), value = 1, min = 0),
             sliderInput("GrAlpha", label = i18n$t("Hladina významnosti (α):"),
                         min = 0.0001,
                         max = 0.05,
@@ -422,7 +422,7 @@ localizedUI <- function(i18n) {
   bsPopover(
     "NgramsFit",
     i18n$t("Počty n-gramů podle velikosti"),
-    i18n$t("Přerušované čáry reprezentují počet různých n-gramů (typů) v závislosti na jejich délce ve zvolených jazycích. Plná čára vznikla interpolací dat cílového jazyka na základě kvantitativního modelu a naznačuje, jak se oba jazyky aplikací vyrovnávacích koeficientů vzájemně přibližují."),
+    i18n$t("Plné čáry reprezentují počet různých n-gramů (typů) v závislosti na jejich délce ve zvolených jazycích. Přerušovaná čára vznikla interpolací dat cílového jazyka na základě kvantitativního modelu a naznačuje, jak se oba jazyky aplikací vyrovnávacích koeficientů vzájemně přibližují."),
     placement = "left"
   ),
   bsTooltip("SaReMereni", i18n$t("Frekvence zkoumaného jevu v jednotlivých vzorcích")),
