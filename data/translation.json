@@ -2,7 +2,7 @@
   "cultural_date_format": "%d-%m-%Y",
   "languages": ["cs", "en"],
   "translation": [
-      {"cs": "ČNK: Korpusová kalkulačka", "en": "CNC: Corpus calculator"},
+      {"cs": "Calc: Korpusová kalkulačka", "en": "Calc: Corpus calculator"},
       {"cs": "Trvalý odkaz", "en": "Bookmark"},
       {"cs": "URL ke sdílení", "en": "URL for sharing"},
       {"cs": "1 slovo v 1 korpusu", "en": "1 word in 1 corpus"},
@@ -393,6 +393,7 @@
         "cs": "Chceme-li najít korespondenci mezi bigramy v češtině s minimální frekvencí 10 a n-gramy v němčině, musíme použít příslušné předpočítané koeficienty <em>a</em> a <em>b</em>. S jejich pomocí zjistíme, že českým bigramům odpovídají německé 2.34-gramy s minimální frekvencí 10.3. Tuto korespondenci schématicky zachycuje graf počtu typů (T) v obou jazycích, naznačující zároveň, jak vypadala originální data pro němčinu a jak vypadají po transformaci. Box pod grafem pak ukazuje, v jakém poměru namíchat 2-gramy a 3-gramy, abychom ve výsledku dostali průměrnou délku rovnající se transformovanému <em>n</em>.", 
         "en": "If we want to find a correspondence between bigrams in Czech (with a minimum frequency of 10) and comparable n-grams in German, we have to use corresponding pre-calculated coefficients <em>a</em> and <em>b</em>. With their help we see that the comparable German n-grams are 2.34-grams with a minimum frequency of 10.3. This correspondence is represented schematically by the graph of the number of types (T) for both languages that also shows what the original data for German looked like and what they look like after the transformation. The box under the graph shows in what ratio to mix 2-grams and 3-grams to arrive at the average length equal to the transformed <em>n</em>."
       },
-      {"cs": "Český národní korpus", "en": "Czech National Corpus"}
+      {"cs": "Český národní korpus", "en": "Czech National Corpus"},
+      {"cs": "Ohlásit chybu", "en": "Report an error"}
     ]
 }

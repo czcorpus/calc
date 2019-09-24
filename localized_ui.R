@@ -12,8 +12,8 @@ add_zoom_cursor <- function(el, start_zoomed = FALSE) {
 localizedUI <- function(i18n) {
   fluidPage(tagList(
   
-  titlePanel(title=div(img(src="diamant.svg", height=35, style="vertical-align: middle;"), i18n$t("ČNK: Korpusová kalkulačka")),
-             windowTitle = i18n$t("ČNK: Korpusová kalkulačka")),
+  titlePanel(title=div(img(src="diamant.svg", height=35, style="vertical-align: middle;"), i18n$t("Calc: Korpusová kalkulačka")),
+             windowTitle = i18n$t("Calc: Korpusová kalkulačka")),
   
   navlistPanel(id = "navigace", selected = "about",
     widths = c(2, 10),
@@ -435,7 +435,7 @@ localizedUI <- function(i18n) {
   tags$hr(),
   tags$p(
     tags$small( appName, appVer[1], HTML("&copy; <a href='https://www.korpus.cz'>"), i18n$t("Český národní korpus"), HTML("</a>"), 
-                HTML("Václav Cvrček"), names(appVer[1]) )
+                HTML("Václav Cvrček"), names(appVer[1]), HTML(paste0("&bull; <a href='"), bugReportUrl, "' target='_blank'>"), i18n$t("Ohlásit chybu"), HTML("</a>") )
     )
   )
   )
