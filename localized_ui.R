@@ -12,7 +12,8 @@ add_zoom_cursor <- function(el, start_zoomed = FALSE) {
 localizedUI <- function(i18n) {
   fluidPage(tagList(
   
-  titlePanel(title=div(img(src="diamant.svg", height=35, style="vertical-align: middle;"), i18n$t("Calc: Korpusová kalkulačka")),
+  titlePanel(title=div(img(src="diamant.svg", height=44, style="margin: 0px 6px 7px 15px;"), 
+                       i18n$t("Calc: Korpusová kalkulačka")),
              windowTitle = i18n$t("Calc: Korpusová kalkulačka")),
   
   navlistPanel(id = "navigace", selected = "about",
