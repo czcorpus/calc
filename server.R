@@ -48,31 +48,31 @@ shinyServer(function(input, output, session) {
        "2" = 1e8,
        "3" = 1e9,
        "4" = 1e10)
-     if (input$OwOcFq >= n) {
-       # showModal(
-       #   modalDialog(
-       #     title = i18n$t("Problém v zadání?"),
-       #     i18n$t("Zadaná frekvence přesahuje velikost korpusu."),
-       #     easyClose = TRUE
-       # ))
-       showNotification(i18n$t("Zadaná frekvence přesahuje velikost korpusu."), type = "error")
+     out <- c("Fq" = input$OwOcFq, "N" = n, "Alpha" = input$OwOcAlpha)
+     out.v <- validator(out, module = "OwOc")
+     if (length(out.v$message) > 0) {
+       for (i in 1:length(out.v$message)) {
+         showNotification(i18n$t(out.v$message[i]), type = "error") 
+       }
      }
-     c("Fq" = input$OwOcFq, "N" = n, "Alpha" = input$OwOcAlpha)
+     return(c(out, "Valid" = out.v$valid))
    })
   
   getchartdata <- reactive({
     data <- OwOc.data()
-    sloupce = 2
-    multiplikator = 1
-    if (data["Fq"] > 999) { multiplikator = 10^(floor(log10(data["Fq"]) - 2)) }
-    freqs = seq(data["Fq"] - sloupce * multiplikator, data["Fq"] + sloupce * multiplikator, by = multiplikator)
-    if (data["Fq"] < (sloupce + 1)) { freqs = seq(1, (2 * sloupce) + 1, by = 1) }
-    cis <- data.frame(fq = freqs)
-    lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"]) )
-    upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
-    cis$lower <- lower
-    cis$upper <- upper
-    cis
+    if (data["Valid"]) {
+      sloupce = 2
+      multiplikator = 1
+      if (data["Fq"] > 999) { multiplikator = 10^(floor(log10(data["Fq"]) - 2)) }
+      freqs = seq(data["Fq"] - sloupce * multiplikator, data["Fq"] + sloupce * multiplikator, by = multiplikator)
+      if (data["Fq"] < (sloupce + 1)) { freqs = seq(1, (2 * sloupce) + 1, by = 1) }
+      cis <- data.frame(fq = freqs)
+      lower <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"]) )
+      upper <- apply(cis, 1, function (x) round(binconf(x, data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"]) )
+      cis$lower <- lower
+      cis$upper <- upper
+      cis
+    }
   })
   
   chartlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = TRUE, onclick = FALSE)
@@ -106,109 +106,119 @@ shinyServer(function(input, output, session) {
 
    output$OwOcChart <- renderPlot({
      data <- OwOc.data()
-     cis <- getchartdata()
-     #browser()
-     if (chartlimits$onclick == FALSE) {
-       limrange <- getchartlimits(cis, chartlimits$zoomed)
-       chartlimits$MAX <- limrange$MAX
-       chartlimits$MIN <- limrange$MIN
-     } else {
-       chartlimits$onclick <- FALSE
+     if (data["Valid"]) {
+       cis <- getchartdata()
+       if (chartlimits$onclick == FALSE) {
+         limrange <- getchartlimits(cis, chartlimits$zoomed)
+         chartlimits$MAX <- limrange$MAX
+         chartlimits$MIN <- limrange$MIN
+       } else {
+         chartlimits$onclick <- FALSE
+       }
+       ggplot(data = cis, aes(x = as.factor(fq), y = fq, ymin = lower, ymax = upper)) +
+         geom_point(shape = 1, size = 3, alpha = 0.7) +
+         geom_errorbar(color = cnk_color_vector[6], width=0.5) +
+         geom_point(data = filter(cis, fq == data["Fq"]),
+                    aes(x = as.factor(fq), y = fq), shape = 1, size = 3, color = cnk_color_vector[2]) +
+         geom_errorbar(data = filter(cis, fq == data["Fq"]),
+                       aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.1, width=0.5) +
+         labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
+         coord_cartesian(ylim = c(chartlimits$MIN, chartlimits$MAX)) +
+         theme_minimal(base_size = graphBaseSizeFont)
      }
-     ggplot(data = cis, aes(x = as.factor(fq), y = fq, ymin = lower, ymax = upper)) +
-       geom_point(shape = 1, size = 3, alpha = 0.7) +
-       geom_errorbar(color = cnk_color_vector[6], width=0.5) +
-       geom_point(data = filter(cis, fq == data["Fq"]),
-                  aes(x = as.factor(fq), y = fq), shape = 1, size = 3, color = cnk_color_vector[2]) +
-       geom_errorbar(data = filter(cis, fq == data["Fq"]),
-                     aes(ymin = lower, ymax = upper), color = cnk_color_vector[2], size = 1.1, width=0.5) +
-       labs(x = i18n$t("Frekvence"), y = i18n$t("Konfidenční interval")) +
-       coord_cartesian(ylim = c(chartlimits$MIN, chartlimits$MAX)) +
-       theme_minimal(base_size = graphBaseSizeFont)
    })
 
    output$OwOcCIs <- renderText({
      data <- OwOc.data()
-     ci.l = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[2] * data["N"])
-     ci.u = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[3] * data["N"])
-     paste0(i18n$t("Spodní mez konfidenčního intervalu"), ": ", strong(ci.l), br(), i18n$t("Horní mez konfidenčního intervalu"), ": ", strong(ci.u))
+     if (data["Valid"]) {
+       ci.l = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[2] * data["N"])
+       ci.u = round(binconf(data["Fq"], data["N"], alpha = data["Alpha"], method=binomMethod)[3] * data["N"])
+       paste0(i18n$t("Spodní mez konfidenčního intervalu"), ": ", strong(ci.l), br(), 
+              i18n$t("Horní mez konfidenčního intervalu"), ": ", strong(ci.u))
+     }
    })
 
    output$OwOcHist = renderPlot({
      data <- OwOc.data()
-     min = qbinom(0.0001, data["N"], data["Fq"] / data["N"])
-     max = qbinom(0.9999, data["N"], data["Fq"] / data["N"])
-     ci.l = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"])
-     ci.u = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"])
-     graphdata <- data.frame(fq = min:max, p = dbinom(min:max, data["N"], data["Fq"]/data["N"]))
-
-     gh <- ggplot(data = graphdata, aes(x = fq, y = p)) +
-       geom_col(fill = cnk_color_vector[7]) +
-       labs(x = i18n$t("Frekvence"), y = i18n$t("Pravděpodobnost")) +
-       theme_minimal(base_size = graphBaseSizeFont)
-     gh <- gh + geom_col(data = filter(graphdata, fq < (ci.l - 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
-     gh <- gh + geom_col(data = filter(graphdata, fq > (ci.u + 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
-     gh <- gh + geom_col(data = filter(graphdata, fq == data["Fq"]), aes(x = fq, y = p), fill = cnk_color_vector[2])
-     gh
+     if (data["Valid"]) {
+       min = qbinom(0.0001, data["N"], data["Fq"] / data["N"])
+       max = qbinom(0.9999, data["N"], data["Fq"] / data["N"])
+       ci.l = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[2] * data["N"])
+       ci.u = round(binconf(data["Fq"], data["N"], alpha=data["Alpha"], method=binomMethod)[3] * data["N"])
+       graphdata <- data.frame(fq = min:max, p = dbinom(min:max, data["N"], data["Fq"]/data["N"]))
+       
+       gh <- ggplot(data = graphdata, aes(x = fq, y = p)) +
+         geom_col(fill = cnk_color_vector[7]) +
+         labs(x = i18n$t("Frekvence"), y = i18n$t("Pravděpodobnost")) +
+         theme_minimal(base_size = graphBaseSizeFont)
+       gh <- gh + geom_col(data = filter(graphdata, fq < (ci.l - 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
+       gh <- gh + geom_col(data = filter(graphdata, fq > (ci.u + 1)), aes(x = fq, y = p), fill = cnk_color_vector[4])
+       gh <- gh + geom_col(data = filter(graphdata, fq == data["Fq"]), aes(x = fq, y = p), fill = cnk_color_vector[2])
+       gh
+     }
    })
 
 # ================= 2 slova 1 korpus (TwOc) ==========
 
    TwOc.data <- reactive({
      data <- c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
-     if ((data["F1"] + data["F2"]) >= data["N"]) {
-       # showModal(
-       #   modalDialog(
-       #     title = i18n$t("Problém v zadání?"),
-       #     i18n$t("Zadané frekvence přesahujou velikost korpusu."),
-       #     easyClose = TRUE
-       #   ))
-       showNotification(i18n$t("Zadané frekvence přesahujou velikost korpusu."), type = "error")
+     out.v <- validator(data, module = "TwOc")
+     if (length(out.v$message) > 0) {
+       for (i in 1:length(out.v$message)) {
+         showNotification(i18n$t(out.v$message[i]), type = "error") 
+       }
      }
-     data
+     return(c(data, "Valid" = out.v$valid))
    })
    
    output$TwOcIpm <- renderText({
      data <- TwOc.data()
-     f1ipm <- toipm(data["F1"], data["N"])
-     f2ipm <- toipm(data["F2"], data["N"])
-     dm1 = 3
-     if (f1ipm < 10) { dm1 = 4 }
-     dm2 = 3
-     if (f2ipm < 10) { dm2 = 4 }
-     paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
-           round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
-           "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
-           round(f2ipm, digits=dm2), 
-           "&nbsp;ipm</td></tr></table>")
+     if (data["Valid"]) {
+       f1ipm <- toipm(data["F1"], data["N"])
+       f2ipm <- toipm(data["F2"], data["N"])
+       dm1 = 3
+       if (f1ipm < 10) { dm1 = 4 }
+       dm2 = 3
+       if (f2ipm < 10) { dm2 = 4 }
+       paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
+              round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
+              "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
+              round(f2ipm, digits=dm2), 
+              "&nbsp;ipm</td></tr></table>")
+     }
    })
 
    output$TwOcTest <- renderText({
      data <- TwOc.data()
-     interpretace = ""
-     mat <- matrix(c(data["F1"], data["F2"], data["N"] - data["F1"], data["N"] - data["F2"]), nrow = 2)
-     test.out <- sigtests(mat, testtype = input$TwOcTesttype, Alpha = data["Alpha"], i18n)
-     test.out$interpretace
+     if (data["Valid"]) {
+       interpretace = ""
+       mat <- matrix(c(data["F1"], data["F2"], data["N"] - data["F1"], data["N"] - data["F2"]), nrow = 2)
+       test.out <- sigtests(mat, testtype = input$TwOcTesttype, Alpha = data["Alpha"], i18n)
+       test.out$interpretace
+     }
    })
 
    output$TwOcEffectsize <- renderText({
      data <- TwOc.data()
-     din <- countdin(data["F1"], data["F2"], data["N"], data["N"])
-     rrci <- RRCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
-     #orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
-     paste0("<div id='din' class='alert alert-info'>",
-       "<table>",
-       "<tr><td style='min-width: 6.3em;'>", 
-       i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), "</td>",
-       "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
-       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "),  
-       round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
-       "<tr><td></td><td>", 
-       i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
-       round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
-       ".</td></tr></table>",
-       "</div>")
+     if (data["Valid"]) {
+       din <- countdin(data["F1"], data["F2"], data["N"], data["N"])
+       rrci <- RRCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
+       #orci <- ORCI(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"])
+       paste0("<div id='din' class='alert alert-info'>",
+              "<table>",
+              "<tr><td style='min-width: 6.4em;'>", 
+              i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), 
+              "</td>",
+              "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+              "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
+              "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "),  
+              round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
+              "<tr><td></td><td>", 
+              i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
+              round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
+              ".</td></tr></table>",
+              "</div>")
+     }
    })
    
    graphlimits <- reactiveValues(MIN = NULL, MAX = NULL, zoomed = FALSE, onclick = FALSE)
@@ -231,23 +241,25 @@ shinyServer(function(input, output, session) {
    
    observeEvent(input$TwOcIpmCIclick, {
      data <- TwOc.data()
-     graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
-     if (graphlimits$zoomed == TRUE) {
-       limrange <- getgraphlimits(graphdata, FALSE)
-       graphlimits$zoomed <- FALSE
-     } else {
-       limrange <- getgraphlimits(graphdata, TRUE)
-       graphlimits$zoomed <- TRUE
+     if (data["Valid"]) {
+       graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
+       if (graphlimits$zoomed == TRUE) {
+         limrange <- getgraphlimits(graphdata, FALSE)
+         graphlimits$zoomed <- FALSE
+       } else {
+         limrange <- getgraphlimits(graphdata, TRUE)
+         graphlimits$zoomed <- TRUE
+       }
+       graphlimits$MAX <- limrange$MAX
+       graphlimits$MIN <- limrange$MIN
+       graphlimits$onclick <- TRUE
+       shinyjs::toggleClass("TwOcIpmCI", "zoomed")
      }
-     graphlimits$MAX <- limrange$MAX
-     graphlimits$MIN <- limrange$MIN
-     graphlimits$onclick <- TRUE
-     shinyjs::toggleClass("TwOcIpmCI", "zoomed")
    })
 
    output$TwOcIpmCI <- renderPlot({
      data <- TwOc.data()
-     if (data["N"] != 0) {
+     if (data["Valid"]) {
        graphdata <- getgraphdata(data["F1"], data["F2"], data["N"], data["N"], data["Alpha"], i18n)
        if (graphlimits$onclick == FALSE) {
          limrange <- getgraphlimits(graphdata, graphlimits$zoomed)
@@ -263,95 +275,92 @@ shinyServer(function(input, output, session) {
          labs(x = "", y = "i.p.m.") +
          theme_minimal(base_size = graphBaseSizeFont)
        barchart
-     } else {
-       # showModal(
-       #   modalDialog(
-       #     title = i18n$t("Nekorektní zadání"),
-       #     i18n$t("Velikost korpusu nemůže být nulová."),
-       #     easyClose = TRUE
-       #     )
-       # )
-       showNotification( i18n$t("Velikost korpusu nemůže být nulová."), type = "warning")
      }
    })
 
 # ================= 2 slova 2 korpusy (TwTc) ==========
    TwTc.data <- reactive({
      data <- c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
-     if ((data["F1"] >= data["N1"]) || (data["F2"] >= data["N2"])) {
-       # showModal(
-       #   modalDialog(
-       #     title = i18n$t("Problém v zadání?"),
-       #     i18n$t("Zadané frekvence přesahujou velikost korpusu."),
-       #     easyClose = TRUE
-       #  ))
-       showNotification(i18n$t("Zadané frekvence přesahujou velikost korpusu."), type = "error")
-      }
-     data 
+     out.v <- validator(data, module = "TwTc")
+     if (length(out.v$message) > 0) {
+       for (i in 1:length(out.v$message)) {
+         showNotification(i18n$t(out.v$message[i]), type = "error") 
+       }
+     }
+     return(c(data, "Valid" = out.v$valid))
    })
    
    output$TwTcIpm <- renderText({
      data <- TwTc.data()
-     f1ipm <- toipm(data["F1"], data["N1"])
-     f2ipm <- toipm(data["F2"], data["N2"])
-     dm1 = 3
-     if (f1ipm < 10) { dm1 = 4 }
-     dm2 = 3
-     if (f2ipm < 10) { dm2 = 4 }
-     paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
-            round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
-            "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
-            round(f2ipm, digits=dm2), 
-            "&nbsp;ipm</td></tr></table>")
+     if (data["Valid"]) {
+       f1ipm <- toipm(data["F1"], data["N1"])
+       f2ipm <- toipm(data["F2"], data["N2"])
+       dm1 = 3
+       if (f1ipm < 10) { dm1 = 4 }
+       dm2 = 3
+       if (f2ipm < 10) { dm2 = 4 }
+       paste0("<table><tr><td>", i18n$t("Slovo 1"), ":&nbsp;</td><td>", 
+              round(f1ipm, digits=dm1), "&nbsp;ipm</td></tr>",
+              "<tr><td>", i18n$t("Slovo 2"), ":&nbsp;</td><td>", 
+              round(f2ipm, digits=dm2), 
+              "&nbsp;ipm</td></tr></table>")
+     }
    })
 
    output$TwTcTest <- renderText({
      data <- TwTc.data()
-     interpretace = ""
-     mat <- matrix(c(data["F1"], data["F2"], data["N1"] - data["F1"], data["N2"] - data["F2"]), nrow = 2)
-      test.out <- sigtests(mat, testtype = input$TwTcTesttype, Alpha = data["Alpha"], i18n)
-      test.out$interpretace
+     if (data["Valid"]) {
+       interpretace = ""
+       mat <- matrix(c(data["F1"], data["F2"], data["N1"] - data["F1"], data["N2"] - data["F2"]), nrow = 2)
+       test.out <- sigtests(mat, testtype = input$TwTcTesttype, Alpha = data["Alpha"], i18n)
+       test.out$interpretace
+     }
     })
    
    output$TwTcEffectsize <- renderText({
      data <- TwTc.data()
-     din <- countdin(data["F1"], data["F2"], data["N1"], data["N2"])
-     rrci <- RRCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
-     #orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
-     paste0("<div id='din' class='alert alert-info'>",
-       "<table><tr>",
-       "<td style='min-width: 6.3em;'>", 
-       i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), "</td>",
-       "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
-       "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
-       "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "), 
-       round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
-       "<tr><td></td><td>", 
-       i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
-       round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
-       ".</td></tr></table>",
-       "</div>")
+     if (data["Valid"]) {
+       din <- countdin(data["F1"], data["F2"], data["N1"], data["N2"])
+       rrci <- RRCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
+       #orci <- ORCI(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"])
+       paste0("<div id='din' class='alert alert-info'>",
+              "<table><tr>",
+              "<td style='min-width: 6.4em;'>", 
+              i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), 
+              "</td>",
+              "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
+              "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
+              "<td>", round(rrci$rr, digits = 3), "&nbsp;(", i18n$t("bodový odhad; konfidenční interval: "), 
+              round(rrci$lci, digits = 3), "–", round(rrci$uci, digits = 3), ")</td></tr>",
+              "<tr><td></td><td>", 
+              i18n$t("Poměr relativní frekvence Slova 1 k relativní frekvenci Slova 2 se nachází v&nbsp;rozmezí od"), "&nbsp;", 
+              round(rrci$lci, digits = 3), "&nbsp;", i18n$t("do"), "&nbsp;", round(rrci$uci, digits = 3), 
+              ".</td></tr></table>",
+              "</div>")
+     }
     })
    
    observeEvent(input$TwTcIpmCIclick, {
      data <- TwTc.data()
-     graphdata <- getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
-     if (graphlimits$zoomed == TRUE) {
-       limrange <- getgraphlimits(graphdata, FALSE)
-       graphlimits$zoomed <- FALSE
-     } else {
-       limrange <- getgraphlimits(graphdata, TRUE)
-       graphlimits$zoomed <- TRUE
+     if (data["Valid"]) {
+       graphdata <- getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
+       if (graphlimits$zoomed == TRUE) {
+         limrange <- getgraphlimits(graphdata, FALSE)
+         graphlimits$zoomed <- FALSE
+       } else {
+         limrange <- getgraphlimits(graphdata, TRUE)
+         graphlimits$zoomed <- TRUE
+       }
+       graphlimits$MAX <- limrange$MAX
+       graphlimits$MIN <- limrange$MIN
+       graphlimits$onclick <- TRUE
+       shinyjs::toggleClass("TwTcIpmCI", "zoomed")
      }
-     graphlimits$MAX <- limrange$MAX
-     graphlimits$MIN <- limrange$MIN
-     graphlimits$onclick <- TRUE
-     shinyjs::toggleClass("TwTcIpmCI", "zoomed")
    })
    
     output$TwTcIpmCI <- renderPlot({
       data <- TwTc.data()
-      if (data["N1"] != 0 & data["N2"] != 0) {
+      if (data["Valid"]) {
         graphdata <-  getgraphdata(data["F1"], data["F2"], data["N1"], data["N2"], data["Alpha"], i18n)
         if (graphlimits$onclick == FALSE) {
           limrange <- getgraphlimits(graphdata, graphlimits$zoomed)
@@ -366,12 +375,6 @@ shinyServer(function(input, output, session) {
           coord_cartesian(ylim = c(graphlimits$MIN, graphlimits$MAX)) +
           labs(x = "", y = "i.p.m.") +
           theme_minimal(base_size = graphBaseSizeFont)
-      } else {
-        # showModal(modalDialog(title = i18n$t("Nekorektní zadání"),
-        #   i18n$t("Velikost korpusu nemůže být nulová."),
-        #   easyClose = TRUE
-        # ))
-        showNotification(i18n$t("Velikost korpusu nemůže být nulová."), type = "warning")
       }
     })
 
@@ -379,28 +382,23 @@ shinyServer(function(input, output, session) {
     nacti <- reactive({
       vec <- unlist(strsplit(input$SaReMereni, split = "[,; ]+"))
       vec <- as.numeric(vec)
-      if (sum(is.na(vec)) > 0) {
-        # showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
-        #                       i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
-        #                       easyClose = TRUE
-        # ))
-        showNotification(i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."), type = "warning")
+      out <- list(vec = vec, SaReVzorek = input$SaReVzorek, SaRePopulace = input$SaRePopulace, SaReAlpha = input$SaReAlpha)
+      out.v <- validator(out, module = "SaRe")
+      if (length(out.v$message) > 0) {
+        for (i in 1:length(out.v$message)) {
+          showNotification(i18n$t(out.v$message[i]), type = "error") 
+        }
       }
-      if (length(vec) * input$SaReVzorek > input$SaRePopulace) {
-        # showModal(modalDialog(title = i18n$t("Problém v zadání?"),
-        #                       i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."),
-        #                       easyClose = TRUE
-        # ))
-        showNotification(i18n$t("Součet velikostí vzorků přesahuje velikost základního souboru..."), type = "error")
-      }
-      vec
+      return(c(out, Valid = out.v$valid))
     })
 
     sumar <- reactive({
-      vec <- nacti()
-      sumar.text <- paste0(i18n$t("Průměr hodnot"), ": ", round(mean(vec), digits = 2),
-                     "<br/>", i18n$t("Standardní odchylka"), ": ", round(sd(vec), digits = 3))
-      sumar.text
+      data <- nacti()
+      if (data$Valid) {
+        sumar.text <- paste0(i18n$t("Průměr hodnot"), ": ", round(mean(data$vec), digits = 2),
+                             "<br/>", i18n$t("Standardní odchylka"), ": ", round(sd(data$vec), digits = 3))
+        sumar.text
+      }
     })
 
     output$SaReRekaps <- renderText({
@@ -411,94 +409,95 @@ shinyServer(function(input, output, session) {
     })
 
     output$SaReStudent <- renderText({
-      vec <- nacti()
-      vzorek.tci <- tci(vec, input$SaReAlpha) # prumer, lower-ci, upper-ci
-      #browser()
-      pop.est <- ( vzorek.tci[1] / input$SaReVzorek ) * input$SaRePopulace
-      pop.lci <- ( vzorek.tci[2] / input$SaReVzorek ) * input$SaRePopulace
-      pop.uci <- ( vzorek.tci[3] / input$SaReVzorek ) * input$SaRePopulace
-
-      panel.vzorek <- paste0("<p><span class='label label-success'>", i18n$t("Vzorek"), "</span> ",
-                            i18n$t("Průměrně se sledovaný jev ve vzorcích vyskytuje s frekvencí"), " ",
-                            round(vzorek.tci[1], digits = 2), " ",
-                            i18n$t("s konfidenčním intervalem od"), " ", round(vzorek.tci[2], digits = 3), " ",
-                            i18n$t("do"), " ", round(vzorek.tci[3], digits = 3), ".</p>")
-      panel.populace <- paste0("<p><span class='label label-danger'>", i18n$t("Populace"), "</span> ",
-                              i18n$t("Průměrně se sledovaný jev v základním souboru vyskytuje s frekvencí"), " ",
-                              round(pop.est, digits = 2), " ",
-                              i18n$t("s konfidenčním intervalem od"), " ", round(pop.lci, digits = 3), " ",
-                              i18n$t("do"), " ", round(pop.uci, digits = 3), ".</p>")
-      out.text <- paste(panel.populace, panel.vzorek)
-      out.text
+      data <- nacti()
+      if (data$Valid) {
+        vzorek.tci <- tci(data$vec, data$SaReAlpha) # prumer, lower-ci, upper-ci
+        pop.est <- ( vzorek.tci[1] / data$SaReVzorek ) * data$SaRePopulace
+        pop.lci <- ( vzorek.tci[2] / data$SaReVzorek ) * data$SaRePopulace
+        pop.uci <- ( vzorek.tci[3] / data$SaReVzorek ) * data$SaRePopulace
+        panel.vzorek <- paste0("<p><span class='label label-success'>", i18n$t("Vzorek"), "</span> ",
+                               i18n$t("Průměrně se sledovaný jev ve vzorcích vyskytuje s frekvencí"), " ",
+                               round(vzorek.tci[1], digits = 2), " ",
+                               i18n$t("s konfidenčním intervalem od"), " ", round(vzorek.tci[2], digits = 3), " ",
+                               i18n$t("do"), " ", round(vzorek.tci[3], digits = 3), ".</p>")
+        panel.populace <- paste0("<p><span class='label label-danger'>", i18n$t("Populace"), "</span> ",
+                                 i18n$t("Průměrně se sledovaný jev v základním souboru vyskytuje s frekvencí"), " ",
+                                 round(pop.est, digits = 2), " ",
+                                 i18n$t("s konfidenčním intervalem od"), " ", round(pop.lci, digits = 3), " ",
+                                 i18n$t("do"), " ", round(pop.uci, digits = 3), ".</p>")
+        out.text <- paste(panel.populace, panel.vzorek)
+        out.text
+      }
     })
 
     output$SaReNormalni <- renderText({
-      vec <- nacti()
-      vzorek.nci <- nci(vec, input$SaReVzorek, input$SaReAlpha) # prumer, lower-ci, upper-ci
-      pop.est <- ( vzorek.nci[1] / input$SaReVzorek ) * input$SaRePopulace
-      pop.lci <- ( vzorek.nci[2] / input$SaReVzorek ) * input$SaRePopulace
-      pop.uci <- ( vzorek.nci[3] / input$SaReVzorek ) * input$SaRePopulace
-
-      panel.vzorek <- paste0("<p><span class='label label-success'>", i18n$t("Vzorek"), "</span> ",
-                             i18n$t("Průměrně se sledovaný jev ve vzorcích vyskytuje s frekvencí"), " ",
-                             round(vzorek.nci[1], digits = 2), " ",
-                             i18n$t("s konfidenčním intervalem od"), " ", round(vzorek.nci[2], digits = 3), " ",
-                             i18n$t("do"), " ", round(vzorek.nci[3], digits = 3), ".</p>")
-      panel.populace <- paste0("<p><span class='label label-danger'>", i18n$t("Populace"), "</span> ",
-                               i18n$t("Průměrně se sledovaný jev v základním souboru vyskytuje s frekvencí"), " ",
-                               round(pop.est, digits = 2), " ",
-                               i18n$t("s konfidenčním intervalem od"), " ", round(pop.lci, digits = 3), " ",
-                               i18n$t("do"), " ", round(pop.uci, digits = 3), ".</p>")
-      out.text <- paste(panel.populace, panel.vzorek)
-      out.text
+      data <- nacti()
+      if (data$Valid) {
+        vzorek.nci <- nci(data$vec, data$SaReVzorek, data$SaReAlpha) # prumer, lower-ci, upper-ci
+        pop.est <- ( vzorek.nci[1] / data$SaReVzorek ) * data$SaRePopulace
+        pop.lci <- ( vzorek.nci[2] / data$SaReVzorek ) * data$SaRePopulace
+        pop.uci <- ( vzorek.nci[3] / data$SaReVzorek ) * data$SaRePopulace
+        panel.vzorek <- paste0("<p><span class='label label-success'>", i18n$t("Vzorek"), "</span> ",
+                               i18n$t("Průměrně se sledovaný jev ve vzorcích vyskytuje s frekvencí"), " ",
+                               round(vzorek.nci[1], digits = 2), " ",
+                               i18n$t("s konfidenčním intervalem od"), " ", round(vzorek.nci[2], digits = 3), " ",
+                               i18n$t("do"), " ", round(vzorek.nci[3], digits = 3), ".</p>")
+        panel.populace <- paste0("<p><span class='label label-danger'>", i18n$t("Populace"), "</span> ",
+                                 i18n$t("Průměrně se sledovaný jev v základním souboru vyskytuje s frekvencí"), " ",
+                                 round(pop.est, digits = 2), " ",
+                                 i18n$t("s konfidenčním intervalem od"), " ", round(pop.lci, digits = 3), " ",
+                                 i18n$t("do"), " ", round(pop.uci, digits = 3), ".</p>")
+        out.text <- paste(panel.populace, panel.vzorek)
+        out.text
+      }
     })
 
     output$SaReStudentplot <- renderPlot({
-      vec <- nacti()
-      cidata <- cumulCI(vec, input$SaReVzorek, input$SaReAlpha)
-      ggplot(data = rownames_to_column(cidata, var="Vzorky") %>%
-               select(-nlci, -nuci) %>%
-               rename(lower = tlci, upper = tuci) %>%
-               gather("Variable", "Value", -Vzorky) %>%
-               mutate(Type = "CI") %>%
-               mutate(Type = replace(Type, Variable == "prumer" | Variable == "mereni", "Data")),
-             aes(x = as.numeric(Vzorky), y = Value, colour = Variable, group = Variable, linetype = Type)) +
-        geom_line(na.rm=TRUE) +
-        scale_x_continuous(breaks = seq(from = 1, to = nrow(cidata), by = 1)) +
-        scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
-        scale_linetype_manual("", values = c(2,1), guide = FALSE) +
-        labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
-        theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(1,0.8), legend.position=c(1,1))
+      data <- nacti()
+      if (data$Valid) {
+        cidata <- cumulCI(data$vec, data$SaReVzorek, data$SaReAlpha)
+        ggplot(data = rownames_to_column(cidata, var="Vzorky") %>%
+                 select(-nlci, -nuci) %>%
+                 rename(lower = tlci, upper = tuci) %>%
+                 gather("Variable", "Value", -Vzorky) %>%
+                 mutate(Type = "CI") %>%
+                 mutate(Type = replace(Type, Variable == "prumer" | Variable == "mereni", "Data")),
+               aes(x = as.numeric(Vzorky), y = Value, colour = Variable, group = Variable, linetype = Type)) +
+          geom_line(na.rm=TRUE) +
+          scale_x_continuous(breaks = seq(from = 1, to = nrow(cidata), by = 1)) +
+          scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
+          scale_linetype_manual("", values = c(2,1), guide = FALSE) +
+          labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
+          theme_minimal(base_size = graphBaseSizeFont) +
+          theme(legend.justification=c(1,0.8), legend.position=c(1,1))
+      }
     })
 
     output$SaReNormalplot <- renderPlot({
-      vec <- nacti()
-      cidata <- cumulCI(vec, input$SaReVzorek, input$SaReAlpha)
-
-      ggplot(data = rownames_to_column(cidata, var="Vzorky") %>%
-               select(-tlci, -tuci) %>%
-               rename(lower = nlci, upper = nuci) %>%
-               gather("Variable", "Value", -Vzorky) %>%
-               mutate(Type = "CI") %>%
-               mutate(Type = replace(Type, Variable == "prumer" | Variable == "mereni", "Data")),
-             aes(x = as.numeric(Vzorky), y = Value, colour = Variable, group = Variable, linetype = Type)) +
-        geom_line(na.rm=TRUE) +
-        scale_x_continuous(breaks = seq(from = 1, to = nrow(cidata), by = 1)) +
-        scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
-        scale_linetype_manual("", values = c(2,1), guide = FALSE) +
-        labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
-        theme_minimal(base_size = graphBaseSizeFont) +
-        theme(legend.justification=c(1,0.8), legend.position=c(1,1))
+      data <- nacti()
+      if (data$Valid) {
+        cidata <- cumulCI(data$vec, data$SaReVzorek, data$SaReAlpha)
+        ggplot(data = rownames_to_column(cidata, var="Vzorky") %>%
+                 select(-tlci, -tuci) %>%
+                 rename(lower = nlci, upper = nuci) %>%
+                 gather("Variable", "Value", -Vzorky) %>%
+                 mutate(Type = "CI") %>%
+                 mutate(Type = replace(Type, Variable == "prumer" | Variable == "mereni", "Data")),
+               aes(x = as.numeric(Vzorky), y = Value, colour = Variable, group = Variable, linetype = Type)) +
+          geom_line(na.rm=TRUE) +
+          scale_x_continuous(breaks = seq(from = 1, to = nrow(cidata), by = 1)) +
+          scale_colour_manual("", values = cnk_color_vector, labels = as_labeller(legend_labels(i18n))) +
+          scale_linetype_manual("", values = c(2,1), guide = FALSE) +
+          labs(x = i18n$t("Počet vzorků"), y = i18n$t("Hodnota")) +
+          theme_minimal(base_size = graphBaseSizeFont) +
+          theme(legend.justification=c(1,0.8), legend.position=c(1,1))
+      }
     })
 
 # ================= Lexikální bohatost (zTTR) =====================
+    
     zTTRregister <- reactiveValues(value = NULL, flag = FALSE)
     observeEvent(input$zTTRregister, {
-      #reg <- try(input$zTTRregister, silent = TRUE)
-      #if (class(reg) != "try-error") {
-      #cat(zTTRregister$flag, "\t", zTTRregister$value, "\n")
-      #browser()
       if (!zTTRregister$flag) { # pokud nedoslo ke zmene jazyka, zmen registr
         zTTRregister$value <- as.numeric(input$zTTRregister)
       }
@@ -528,14 +527,20 @@ shinyServer(function(input, output, session) {
       regnum <- zTTRregister$value
       reg <- zTTRmenuitems[regnum, 1]
       corp <- zTTRmenuitems[regnum, 2]
-      # browser()
-      list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
-        "corpus" = corp, "register" = reg, "attribute" = att, "case" = case, "language" = lang, "regnum" = regnum)
+      out <- list("tokens" = input$zTTRtokens, "types" = input$zTTRtypes,
+                  "corpus" = corp, "register" = reg, "attribute" = att, "case" = case, "language" = lang, "regnum" = regnum)
+      out.v <- validator(out, module = "zTTR")
+      if (length(out.v$message) > 0) {
+        for (i in 1:length(out.v$message)) {
+          showNotification(i18n$t(out.v$message[i]), type = "error") 
+        }
+      }
+      return(c(out, Valid = out.v$valid))
     })
     
     output$zTTRvalue <- renderText({
       data <- zTTRdata()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "mean-sd")
         paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
                i18n$t("Vypočítané zTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
@@ -544,7 +549,7 @@ shinyServer(function(input, output, session) {
 
     output$zTTRvalueRefs <- renderTable({
       data <- zTTRdata()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "mean-sd")
         tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), 
                                             i18n$t("Disperze TTR")),
@@ -556,7 +561,7 @@ shinyServer(function(input, output, session) {
     
     output$zqTTRvalue <- renderText({
       data <- zTTRdata()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "median-iqr")
         paste0("<p class='zTTRvalue'><span class='label label-success'>", i18n$t("Výsledek"), "</span> ", 
                i18n$t("Vypočítané zqTTR"), ": ", round(out["zttr"], digits = 4), "</p>")
@@ -565,7 +570,7 @@ shinyServer(function(input, output, session) {
 
     output$zqTTRvalueRefs <- renderTable({
       data <- zTTRdata()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "median-iqr")
         tabout <- data.frame("Veličina" = c(i18n$t("Naměřené TTR"), i18n$t("Referenční hodnota TTR"), 
                                             i18n$t("Disperze TTR")),
@@ -577,7 +582,7 @@ shinyServer(function(input, output, session) {
 
     output$zTTRscheme <- renderPlot({
       data <- zTTRdata()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "mean-sd")
         cinitel = 3
         if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
@@ -606,8 +611,7 @@ shinyServer(function(input, output, session) {
 
     output$zqTTRscheme <- renderPlot({
       data <- zTTRdata()
-      #browser()
-      if (!is.na(data$register)) {
+      if (!is.na(data$register) & data$Valid == TRUE) {
         out <- countzttr(data, model = "median-iqr")
         cinitel = 3
         if (ceiling(abs(out["zttr"])) > 3) { cinitel =  ceiling(abs(out["zttr"])) }
@@ -633,7 +637,6 @@ shinyServer(function(input, output, session) {
           theme(legend.justification=c(0,1), legend.position=c(0,1))
       }
     })
-    
     
     observe({
       #shinyjs::disable("zTTRlangsel")
@@ -681,13 +684,12 @@ shinyServer(function(input, output, session) {
 # ================= Frekvence skupin (Gr) =====================    
 
     Gr.data <- reactive({
+      out.v <- list()
+      outlist <- NULL
       if (input$GrInputType == "GrUrlInput") { # zadani pomoci URL
         if (input$GrUrl == "") {
-          outlist <- NULL
-        #} else if (is.na(str_extract(input$GrUrl, "^https?://"))) {
-        } else if (!(grepl("^https?://", input$GrUrl))) {  
-          outlist <- list(valid = FALSE, message = i18n$t("Neplatná URL"))
-          showNotification(i18n$t("Neplatná URL"), type = "error")
+        } else if (!(grepl("^https?://kontext.korpus.cz/", input$GrUrl))) { 
+          out.v <- list(valid = FALSE, message = "Neplatná URL")
         } else {
           origurl.list <- httr::parse_url(input$GrUrl)
           origurl.list$query <- list(
@@ -702,36 +704,38 @@ shinyServer(function(input, output, session) {
           )
           newurl <- httr::build_url(origurl.list)
           urlresp <- httr::GET(newurl)
-          #browser()
-          validate(need(try(
-            !httr::http_error(urlresp)
-          ), jsonlite::fromJSON(httr::content(urlresp,as="text", encoding="UTF-8"))$messages))
-          jsonlist <- jsonlite::fromJSON(newurl)
-          if (jsonlist$num_lines_in_groups > 0) {
-            origurl.list$query$pagesize = jsonlist$num_lines_in_groups
-            newurl <- httr::build_url(origurl.list)
-            jsonlist <- jsonlite::fromJSON(newurl)
-            outlist <- list(
-              valid = TRUE,
-              message = "",
-              fq = jsonlist$fullsize,
-              ipm = jsonlist$relconcsize,
-              arf = jsonlist$result_arf,
-              groups = jsonlist$lines_groups_numbers,
-              grouplines = jsonlist$num_lines_in_groups,
-              groupfreqs = table(jsonlist$Lines$linegroup)
-            )
+          if (urlresp$status_code != 200 | urlresp$headers$`content-type` != "application/json") {
+            out.v = list(valid = FALSE, message = "Neplatná URL")
           } else {
-            outlist = list(valid = FALSE, message = i18n$t("V konkordanci nejsou označené skupiny"))
-            showNotification(i18n$t("V konkordanci nejsou označené skupiny"), type = "error")
+            validate(need(try(
+              !httr::http_error(urlresp)
+            ), jsonlite::fromJSON(httr::content(urlresp,as="text", encoding="UTF-8"))$messages))
+            jsonlist <- jsonlite::fromJSON(newurl)
+            if (jsonlist$num_lines_in_groups > 0) {
+              origurl.list$query$pagesize = jsonlist$num_lines_in_groups
+              newurl <- httr::build_url(origurl.list)
+              jsonlist <- jsonlite::fromJSON(newurl)
+              outlist <- list(
+                valid = TRUE,
+                message = "",
+                fq = jsonlist$fullsize,
+                ipm = jsonlist$relconcsize,
+                arf = jsonlist$result_arf,
+                groups = jsonlist$lines_groups_numbers,
+                grouplines = jsonlist$num_lines_in_groups,
+                groupfreqs = table(jsonlist$Lines$linegroup)
+              )
+            } else {
+              out.v = list(valid = FALSE, message = "V konkordanci nejsou označené skupiny")
+            }
           }
         }
       } else { # manualni zadani
-        #fq <- isolate(input$GrFq)
         vals <- ParseManualInput()
         gr.vals <- vals$Groups
         fq <- vals$Fq
-        if (fq > 0 & length(gr.vals) > 1) {
+        out.v <- validator(list(fq = fq, groups = 1:length(gr.vals), gr.vals = gr.vals), module = "Gr")
+        if (out.v$valid) {
           outlist <- list(
             valid = TRUE,
             message = "",
@@ -746,6 +750,11 @@ shinyServer(function(input, output, session) {
           outlist <- NULL
         }
       }
+      if (length(out.v$message) > 0) {
+        for (i in 1:length(out.v$message)) {
+          showNotification(i18n$t(out.v$message[i]), type = "error") 
+        }
+      }
       outlist
     })
     
@@ -753,13 +762,6 @@ shinyServer(function(input, output, session) {
       gr.vals <- unlist(strsplit(input$GrSkupiny, split = "[,; ]+"))
       gr.vals <- as.numeric(gr.vals)
       gr.fq <- input$GrFq
-      if (sum(is.na(gr.vals)) > 0) {
-        # showModal(modalDialog(title = i18n$t("Je zadání v pořádku?"),
-        #                       i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."),
-        #                       easyClose = TRUE
-        # ))
-        showNotification(i18n$t("Nejspíš jste v hodnotách měření udělali nějakou botu..."), type = "error")
-      }
       list(Groups = gr.vals, Fq = gr.fq)
     })
     
@@ -882,22 +884,10 @@ shinyServer(function(input, output, session) {
     
     output$GrGeom <- renderText({
       grfq <- Gr.data()
-      if (!is.null(grfq)) {
+      if (!is.null(grfq) & !is.na(input$GrMinProp) & input$GrMinProp > 0) {
         if (grfq$valid == TRUE) {
           p.lim <- input$GrMinProp / 100
           gr.prob <- 1 - pbinom(0, grfq$grouplines, p.lim)
-          # gr.m = round(grfq$fq * p.lim, digits = 0)
-          # if (gr.m < 1) { gr.m <- 1 }
-          # gr.l = grfq$fq - gr.m
-          # gr.prob <- 1 - dhyper(0, gr.m, gr.l, grfq$grouplines)
-          # gr.min <- NULL
-          # for(gr.n in 2:grfq$fq) {
-          #   p.tmp <- dhyper(0, gr.m, gr.l, gr.n)
-          #   if (p.tmp < input$GrAlpha) {
-          #     gr.min <- gr.n
-          #     break
-          #   }
-          # }
           paste0(
             "<p>", i18n$t("Celková frekvence jevu"), ": ", grfq$fq, "<br/>",
             i18n$t("Velikost analyzovaného vzorku"), ": ", grfq$grouplines, "</p>",
@@ -905,8 +895,6 @@ shinyServer(function(input, output, session) {
             "<p><b>", i18n$t("Binomický model"), ":</b></p>",
             "<p>", i18n$t("Pravděpodobnost výskytu marginální"), " (", input$GrMinProp, "%) ", 
             i18n$t("skupiny ve vzorku"),": ", round(gr.prob, digits=3), # "<br/>",
-            #i18n$t("Minimální velikost vzorku pro spolehlivé zachycení zástupce marginální skupiny (při "), 
-            #input$GrAlpha * 100, i18n$t("% hladině chyby"), "): ", gr.min, 
             "</p>", "</div>")
         }
       }
@@ -927,91 +915,104 @@ shinyServer(function(input, output, session) {
         a <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$a
         b <- ngram.fit.parameters[ ngram.fit.parameters$Lang1 == sourcelang & ngram.fit.parameters$Lang2 == targetlang,]$b
       }
-      if (size < 1 || size > 12) {
-        showNotification(i18n$t("Neplatný rozsah délky n-gramu (1–12)."), type = "warning")
+      out <- list(sourcelang = sourcelang, targetlang = targetlang, size = size, fqthresh = fqthresh, 
+                  a = round(a, 2), b = round(b,2))
+      out.v <- validator(out, module = "Ngrams")
+      if (length(out.v$message) > 0) {
+        for (i in 1:length(out.v$message)) {
+          showNotification(i18n$t(out.v$message[i]), type = "error") 
+        }
       }
-      list(sourcelang = sourcelang, targetlang = targetlang, size = size, fqthresh = fqthresh, a = round(a, 2), b = round(b,2))
+      return(c(out, Valid = out.v$valid))
     })
     
     #Ngrams.params <- Ngrams.params.undebounced %>% debounce(100)
     
     output$NgramsParams <- renderText({
       ngrams.input <- Ngrams.params()
-      target.n <- round(ngrams.input$a * ngrams.input$size, 2)
-      target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 2)
-      paramstext0 <- paste0("T<sub>L1</sub> (n, t) = T<sub>L2</sub> (<i>a</i> n, <i>b</i> t)")
-      paramstext1 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (n, t) = ", 
-                            "T<sub>", ngrams.input$targetlang, "</sub> (", ngrams.input$a, " <i>n</i>, ", ngrams.input$b, " <i>t</i>)")
-      paramstext2 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (", ngrams.input$size, ", ", ngrams.input$fqthresh, ") = ", 
-                            "T<sub>", ngrams.input$targetlang, "</sub> (", target.n, ", ", target.t, ")")
-      paste0("<div id='ngrams-model' class='alert alert-success'>",
-        "<p>", i18n$t("Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích"), "<br/>",
-        "<big>", paramstext0, "</big><br/>",
-        i18n$t("se při doplnění zadaných parametrů a koeficientů specifických pro vybraný jazykový pár"), "<br/>",
-        "<span style='margin-left: 2em'><i>a</i> = ", ngrams.input$a, "</span><br/>",
-        "<span style='margin-left: 2em'><i>b</i> = ", ngrams.input$b, "</span><br/>",
-        i18n$t("změní do konkretizované podoby"), "<br/>",
-        "<big><b>", paramstext2, "</b></big></p>",
-        "</div>")
+      if (ngrams.input$Valid) {
+        target.n <- round(ngrams.input$a * ngrams.input$size, 2)
+        target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 2)
+        paramstext0 <- paste0("T<sub>L1</sub> (n, t) = T<sub>L2</sub> (<i>a</i> n, <i>b</i> t)")
+        paramstext1 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (n, t) = ", 
+                              "T<sub>", ngrams.input$targetlang, "</sub> (", ngrams.input$a, " <i>n</i>, ", ngrams.input$b, " <i>t</i>)")
+        paramstext2 <- paste0("T<sub>", ngrams.input$sourcelang, "</sub> (", ngrams.input$size, ", ", ngrams.input$fqthresh, ") = ", 
+                              "T<sub>", ngrams.input$targetlang, "</sub> (", target.n, ", ", target.t, ")")
+        paste0("<div id='ngrams-model' class='alert alert-success'>",
+               "<p>", i18n$t("Obecná podoba modelu vycházející z rovnosti počtu typů (T) v obou jazycích"), "<br/>",
+               "<big>", paramstext0, "</big><br/>",
+               i18n$t("se při doplnění zadaných parametrů a koeficientů specifických pro vybraný jazykový pár"), "<br/>",
+               "<span style='margin-left: 2em'><i>a</i> = ", ngrams.input$a, "</span><br/>",
+               "<span style='margin-left: 2em'><i>b</i> = ", ngrams.input$b, "</span><br/>",
+               i18n$t("změní do konkretizované podoby"), "<br/>",
+               "<big><b>", paramstext2, "</b></big></p>",
+               "</div>")
+      }
     })
     
     output$NgramsFit <- renderPlot({
       ngrams.input <- Ngrams.params()
-      out <- ngrams.transformData(ngrams.input$targetlang, ngrams.input$sourcelang, ngrams.input$fqthresh)
-      # pozor, poradi je zamerne opacne: transformovany jazyk, empiricky jazyk
-      if (is.data.frame(out$trans)) {
-        both <- bind_rows(out$orig, out$trans) %>% mutate(type = as.factor(type))
-        both$type <- factor(both$type, levels(both$type)[c(2,1)])
-        both.sp <- bind_rows(
-          mutate(out$orig.sp, lang = as.character(lang), type = as.character(type)), 
-          mutate(out$trans.sp, lang = as.character(lang), type = as.character(type))
-        ) %>% mutate(lange = as.character(lang), type = as.factor(type))
-        both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Modelovaná"), i18n$t("Původní")))
-        #both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(1,2)], labels = c(i18n$t("Původní"), i18n$t("Modelovaná")))
-        
-        ggplot(data = both[ both$type == "orig",], aes(x = n, y = ctypes, color = lang)) +
-          geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE, size = 6) +
-          geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type, size = type), alpha = 0.8) +
-          scale_colour_manual(values = cnk_color_vector) +
-          scale_linetype_manual(values = c("dashed", "solid")) +
-          scale_size_manual("", name = NULL, values = c(1.4, 0.7)) +
-          scale_x_continuous(breaks = seq(1,16,2)) +
-          labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
-          theme_minimal(base_size = graphBaseSizeFont) +
-          theme(axis.text.x = element_blank(),
-                axis.ticks = element_blank(),
-                legend.justification=c(1,1), legend.position=c(1,1))
+      if (ngrams.input$Valid) {
+        out <- ngrams.transformData(ngrams.input$targetlang, ngrams.input$sourcelang, ngrams.input$fqthresh)
+        # pozor, poradi je zamerne opacne: transformovany jazyk, empiricky jazyk
+        if (is.data.frame(out$trans)) {
+          both <- bind_rows(out$orig, out$trans) %>% mutate(type = as.factor(type))
+          both$type <- factor(both$type, levels(both$type)[c(2,1)])
+          both.sp <- bind_rows(
+            mutate(out$orig.sp, lang = as.character(lang), type = as.character(type)), 
+            mutate(out$trans.sp, lang = as.character(lang), type = as.character(type))
+          ) %>% mutate(lange = as.character(lang), type = as.factor(type))
+          both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(2,1)], labels = c(i18n$t("Modelovaná"), i18n$t("Původní")))
+          #both.sp$type <- factor(both.sp$type, levels(both.sp$type)[c(1,2)], labels = c(i18n$t("Původní"), i18n$t("Modelovaná")))
+          
+          ggplot(data = both[ both$type == "orig",], aes(x = n, y = ctypes, color = lang)) +
+            geom_text(aes(label = rep(1:12, 2)), show.legend = FALSE, size = 6) +
+            geom_line(data = both.sp, aes(x = x, y = y, color = lang, linetype = type, size = type), alpha = 0.8) +
+            scale_colour_manual(values = cnk_color_vector) +
+            scale_linetype_manual(values = c("dashed", "solid")) +
+            scale_size_manual("", name = NULL, values = c(1.4, 0.7)) +
+            scale_x_continuous(breaks = seq(1,16,2)) +
+            labs(x = i18n$t("Velikost n-gramu"), y = i18n$t("Počet typů (T)"), color = i18n$t("Jazyk"), linetype = i18n$t("Data")) +
+            theme_minimal(base_size = graphBaseSizeFont) +
+            theme(axis.text.x = element_blank(),
+                  axis.ticks = element_blank(),
+                  legend.justification=c(1,1), legend.position=c(1,1))
+        }
       }
     })
     
     output$NgramsMix <- renderText({
       ngrams.input <- Ngrams.params()
-      target.n <- round(ngrams.input$a * ngrams.input$size, 2)
-      target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 0)
-      pomer <- ngrams.najdipomer(target.n)
-      outtext1 <- paste0(i18n$t("Jednotky o velikosti, kterou předpokládá model"), " (", target.n, i18n$t("-gramy"), "), ",
-        i18n$t("nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů."), "<br/>")
-      if (!is.na(pomer$c)){
-        outtext2 <- paste0(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
-                           target.t, " ", i18n$t("o délce"), " <b>", 
-                           pomer$a, "</b>, <b>", pomer$b, "</b> ", i18n$t("a"), " <b>", pomer$c, 
-                           "</b> ", i18n$t("tokeny např. v poměru"), ":<br/>",
-                          "<b>", pomer$mostdispersed$a, " % : ", pomer$mostdispersed$b, " % : ", pomer$mostdispersed$c, 
-                          " %</b> (", i18n$t("varianta s převahou jednoho typu"), ") ", i18n$t("nebo"), "<br/>",
-                          "<b>", pomer$leastdispersed$a, " % : ", pomer$leastdispersed$b, " % : ", pomer$leastdispersed$c, 
-                          " %</b> (", i18n$t("varianta s vyrovnaným počtem typů"), ")")
-      } else if (!is.na(pomer$b)) {
-        outtext2 <- paste(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
-                          target.t, " ", i18n$t("o délce"), " <b>", 
-                          pomer$a, "</b>", i18n$t("a"), "<b>", pomer$b, "</b>", i18n$t("tokeny v poměru"), "<br/>",
-                          "<b>", pomer$mostdispersed$a, "% :", pomer$mostdispersed$b, "%")
-      } else {
-        outtext2 <- paste0(i18n$t("V tomto případě stačí vzít 100 % n-garmů o <em>n</em> ="), " ", pomer$a, " ", i18n$t("s minimální frekvencí"), " ", target.t, ".")
+      if (ngrams.input$Valid) {
+        target.n <- round(ngrams.input$a * ngrams.input$size, 2)
+        target.t <- round(ngrams.input$b * ngrams.input$fqthresh, 0)
+        pomer <- ngrams.najdipomer(target.n)
+        outtext1 <- paste0(i18n$t("Jednotky o velikosti, kterou předpokládá model"), " (", target.n, i18n$t("-gramy"), "), ",
+                           i18n$t("nemusí reálně existovat, lze si ovšem takovou velikost n-gramu konceptualizovat jako průměr délek různě rozsáhlých n-gramů."), 
+                           "<br/>")
+        if (!is.na(pomer$c)){
+          outtext2 <- paste0(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
+                             target.t, " ", i18n$t("o délce"), " <b>", 
+                             pomer$a, "</b>, <b>", pomer$b, "</b> ", i18n$t("a"), " <b>", pomer$c, 
+                             "</b> ", i18n$t("tokeny např. v poměru"), ":<br/>",
+                             "<b>", pomer$mostdispersed$a, " % : ", pomer$mostdispersed$b, " % : ", pomer$mostdispersed$c, 
+                             " %</b> (", i18n$t("varianta s převahou jednoho typu"), ") ", i18n$t("nebo"), "<br/>",
+                             "<b>", pomer$leastdispersed$a, " % : ", pomer$leastdispersed$b, " % : ", pomer$leastdispersed$c, 
+                             " %</b> (", i18n$t("varianta s vyrovnaným počtem typů"), ")")
+        } else if (!is.na(pomer$b)) {
+          outtext2 <- paste(i18n$t("Požadované hodnoty <em>n</em> v tomto případě dosáhneme, pokud namícháme n-gramy s frekvencí vyšší než"), " ",
+                            target.t, " ", i18n$t("o délce"), " <b>", 
+                            pomer$a, "</b>", i18n$t("a"), "<b>", pomer$b, "</b>", i18n$t("tokeny v poměru"), "<br/>",
+                            "<b>", pomer$mostdispersed$a, "% :", pomer$mostdispersed$b, "%")
+        } else {
+          outtext2 <- paste0(i18n$t("V tomto případě stačí vzít 100 % n-garmů o <em>n</em> ="), " ", pomer$a, " ", 
+                             i18n$t("s minimální frekvencí"), " ", target.t, ".")
+        }
+        paste0("<div id='ngrams' class='alert alert-info'>",
+               "<p>", outtext1, "</p>",
+               "<p>", outtext2,"</p>",
+               "</div>")
       }
-      paste0("<div id='ngrams' class='alert alert-info'>",
-        "<p>", outtext1, "</p>",
-        "<p>", outtext2,"</p>",
-        "</div>")
     })
     
 # ================= Napoveda (about) =====================

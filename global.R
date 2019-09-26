@@ -447,5 +447,165 @@ ngrams.transformData <- function(transformlang, empircallang, fqthresh) {
   list(trans = trans, trans.sp = trans.sp, orig = orig, orig.sp = orig.sp)
 }
 
+# ============================== Validator ==========================
 
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) { abs(x - round(x)) < tol }
+
+validator <- function(indata, module) {
+  valid = TRUE
+  message = c()
+  # === OwOc ===
+  if (module == "OwOc") {
+    if (!is.numeric(indata["Fq"]) | is.na(indata["Fq"])) { valid = FALSE; message <- c(message, "Frekvence musí být číslo.") }
+    else {
+      if (indata["Fq"] < 0) { valid = FALSE; message <- c(message, "Frekvence musí být kladné číslo.") }
+      if (!is.wholenumber(indata["Fq"])) { message <- c(message, "Frekvence musí být celé číslo.") }
+      if (indata["Fq"] > indata["N"]) { valid = FALSE; message <- c(message, "Zadaná frekvence přesahuje velikost korpusu.") }
+    }
+  }
+  # === TwOc ===
+  else if (module == "TwOc") {
+    if (!is.numeric(indata["F1"]) | is.na(indata["F1"])) { valid = FALSE; message <- c(message, "Frekvence 1 musí být číslo.") }
+    else {
+      if (indata["F1"] < 0) { valid = FALSE; message <- c(message, "Frekvence 1 musí být kladné číslo.") }
+      if (!is.wholenumber(indata["F1"])) { message <- c(message, "Frekvence 1 musí být celé číslo.") }
+    }
+    if (!is.numeric(indata["F2"]) | is.na(indata["F2"])) { valid = FALSE; message <- c(message, "Frekvence 2 musí být číslo.") }
+    else {
+      if (indata["F2"] < 0) { valid = FALSE; message <- c(message, "Frekvence 2 musí být kladné číslo.") }
+      if (!is.wholenumber(indata["F2"])) { message <- c(message, "Frekvence 2 musí být celé číslo.") }
+    }
+    if (!is.numeric(indata["N"]) | is.na(indata["N"])) { valid = FALSE; message <- c(message, "Velikost korpusu musí být číslo.") }
+    else {
+      if (indata["N"] <= 0) { valid = FALSE; message <- c(message, "Velikost korpusu musí být větší než nula.") }
+      if (!is.wholenumber(indata["N"])) { message <- c(message, "Velikost korpusu musí být celé číslo.") }
+    }
+    if (!is.na(indata["F1"]) & !is.na(indata["F2"]) & !is.na(indata["N"])) {
+      if ((indata["F1"] + indata["F2"]) >= indata["N"]) { 
+        valid = FALSE; message <- c(message,"Zadané frekvence přesahujou velikost korpusu.") 
+      }
+    }
+  }
+  # === TwTc ===
+  else if (module == "TwTc") {
+    if (!is.numeric(indata["F1"]) | is.na(indata["F1"])) { valid = FALSE; message <- c(message, "Frekvence 1 musí být číslo.") }
+    else {
+      if (indata["F1"] < 0) { valid = FALSE; message <- c(message, "Frekvence 1 musí být kladné číslo.") }
+      if (!is.wholenumber(indata["F1"])) { message <- c(message, "Frekvence 1 musí být celé číslo.") }
+    }
+    if (!is.numeric(indata["F2"]) | is.na(indata["F2"])) { valid = FALSE; message <- c(message, "Frekvence 2 musí být číslo.") }
+    else {
+      if (indata["F2"] < 0) { valid = FALSE; message <- c(message, "Frekvence 2 musí být kladné číslo.") }
+      if (!is.wholenumber(indata["F2"])) { message <- c(message, "Frekvence 2 musí být celé číslo.") }
+    }
+    if (!is.numeric(indata["N1"]) | is.na(indata["N1"])) { valid = FALSE; message <- c(message, "Velikost korpusu musí být číslo.") }
+    else {
+      if (indata["N1"] <= 0) { valid = FALSE; message <- c(message, "Velikost korpusu musí být větší než nula.") }
+      if (!is.wholenumber(indata["N1"])) { message <- c(message, "Velikost korpusu musí být celé číslo.") }
+    }
+    if (!is.numeric(indata["N2"]) | is.na(indata["N2"])) { valid = FALSE; message <- c(message, "Velikost korpusu musí být číslo.") }
+    else {
+      if (indata["N2"] <= 0) { valid = FALSE; message <- c(message, "Velikost korpusu musí být větší než nula.") }
+      if (!is.wholenumber(indata["N2"])) { message <- c(message, "Velikost korpusu musí být celé číslo.") }
+    }
+    if (!is.na(indata["F1"]) & !is.na(indata["F2"]) & !is.na(indata["N1"]) & !is.na(indata["N2"])) {
+      if (indata["F1"] >= indata["N1"] | indata["F2"] >= indata["N2"]) {
+        valid = FALSE; message <- c(message,"Zadané frekvence přesahujou velikost korpusu.") 
+      }
+    }
+  }
+  # === SaRe ===
+  else if (module == "SaRe") {
+    if (sum(is.na(indata$vec)) > 0) { 
+      valid = FALSE; vec.OK = FALSE 
+      message <- c(message, "Nejspíš jste v hodnotách měření udělali nějakou botu...")
+    } else { 
+      vec.OK =TRUE
+      if (length(indata$vec) <= 1) { valid = FALSE; message <- c(message,"Je třeba zadat alespoň dvě hodnoty měření.") }
+      if (sum(is.wholenumber(indata$vec)) != length(indata$vec)) { message <- c(message,"Výsledky by měly být celá čísla.") }
+      if (sum(indata$vec >= 0) != length(indata$vec)) { valid = FALSE; vec.OK = FALSE; message <- c(message,"Výsledky musí být kladné hodnoty.") }
+    }
+    if (!is.numeric(indata$SaReVzorek) | is.na(indata$SaReVzorek)) {
+      valid = FALSE; vzorek.OK = FALSE
+      message <- c(message, "Velikost vzorku musí být číslo.")
+    } else { 
+      vzorek.OK = TRUE
+      if(!is.wholenumber(indata$SaReVzorek)) { message <- c(message, "Velikost vzorku by mělo být celé číslo.") }
+      if (indata$SaReVzorek <= 0) { valid = FALSE; vzorek.OK = FALSE; message <- c(message, "Velikost vzorku musí být nenulová.") }
+    }
+    if (!is.numeric(indata$SaRePopulace) | is.na(indata$SaRePopulace)) {
+      valid = FALSE; populace.OK = FALSE
+      message <- c(message, "Velikost populace musí být číslo.")
+    } else { 
+      populace.OK = TRUE 
+      if(!is.wholenumber(indata$SaRePopulace)) { message <- c(message, "Velikost populace by měla být celé číslo.") }
+      if (indata$SaRePopulace <= 0) { valid = FALSE; populace.OK = FALSE; message <- c(message, "Velikost populace musí být nenulová.") }
+    }
+    if (vzorek.OK == TRUE & populace.OK == TRUE) {
+      if (indata$SaReVzorek > indata$SaRePopulace) { valid = FALSE; message <- c(message, "Vzorek nemůže být větší než populace.") }
+    }
+    if (vec.OK == TRUE & vzorek.OK == TRUE & populace.OK == TRUE) {
+      if (length(indata$vec) * indata$SaReVzorek > indata$SaRePopulace) {
+        valid = FALSE; message <- c(message, "Součet velikostí vzorků přesahuje velikost základního souboru...") 
+      }
+    }
+  }
+  # === Gr ===
+  else if (module == "Gr") {
+    if (length(indata$groups) <= 1) { valid = FALSE; message <- c(message, "Pro analýzu je třeba alespoň dvou skupin.") }
+    if (sum(is.na(indata$gr.vals)) > 0) { 
+      valid = FALSE; gr.vals.OK = FALSE; message <- c(message, "Frekvence skupin není korektně zadaná.") 
+    } else {
+      gr.vals.OK = TRUE
+      if (sum(is.wholenumber(indata$gr.vals)) != length(indata$gr.vals)) { message <- c(message,"Frekvence skupin by měly být celá čísla.") }
+      if (sum(indata$gr.vals >= 0) != length(indata$gr.vals)) { valid = FALSE; gr.vals.OK = FALSE; message <- c(message,"Frekvence skupin musí být kladné hodnoty.") }
+    }
+    if (!is.numeric(indata$fq) | is.na(indata$fq)) {
+      valid = FALSE; message <- c(message, "Celková frekvence musí být číslo.")
+    } else {
+      if (indata$fq < 1) { valid = FALSE; message <- c(message, "Celková frekvence musí být kladné číslo.") }
+      if (gr.vals.OK == TRUE) {
+        if (sum(indata$gr.vals) > indata$fq) { valid = FALSE; message <- c(message, "Součet skupin nemůže být větší než celková frekvence jevu.") }
+      }
+    }
+  }
+  # === zTTR ===
+  else if (module == "zTTR") {
+    if (!is.numeric(indata$tokens) | is.na(indata$tokens)) {
+      valid = FALSE; tokens.OK = FALSE; message <- c(message, "Počet tokenů musí být číslo.")
+    } else {
+      tokens.OK = TRUE
+      if(!is.wholenumber(indata$tokens)) { message <- c(message, "Počet tokenů by mělo být celé číslo.") }
+      if (indata$tokens <= 0) { valid = FALSE; tokens.OK = FALSE; message <- c(message, "Počet tokenů musí být kladné číslo") }
+    }
+    if (!is.numeric(indata$types) | is.na(indata$types)) {
+      valid = FALSE; types.OK = FALSE; message <- c(message, "Počet typů musí být číslo.")
+    } else {
+      types.OK = TRUE
+      if(!is.wholenumber(indata$types)) { message <- c(message, "Počet typů by mělo být celé číslo.") }
+      if (indata$types <= 0) { valid = FALSE; types.OK = FALSE; message <- c(message, "Počet typů musí být kladné číslo") }
+    }
+    if (tokens.OK == TRUE & types.OK == TRUE & indata$types >= indata$tokens) {
+      valid = FALSE; message <- c(message, "V textu nemůže být víc typů než tokenů.")
+    }
+  }
+  else if (module == "Ngrams") {
+    if (!is.numeric(indata$size) | is.na(indata$size)) {
+      valid = FALSE; message <- c(message, "Velikost n-gramu musí být číslo.")
+    } else {
+      if(!is.wholenumber(indata$size)) { valid = FALSE; message <- c(message, "Velikost n-gramu musí být celé číslo.") }
+      if (indata$size < 1) { valid = FALSE; message <- c(message, "Velikost n-gramu musí být alespoň 1.") }
+      if (indata$size > 12) { message <- c(message, "Neplatný rozsah délky n-gramu (1–12).") }
+    }
+    if (!is.numeric(indata$fqthresh) | is.na(indata$fqthresh)) {
+      valid = FALSE; message <- c(message, "Minimální frekvence musí být číslo.")
+    } else {
+      if(!is.wholenumber(indata$fqthresh)) { valid = FALSE; message <- c(message, "Minimální frekvence musí být celé číslo.") }
+      if (indata$fqthresh <= 0) { valid = FALSE; message <- c(message, "Minimální frekvence musí být kladné číslo.") }
+    }
+  } else {
+    valid = FALSE; message <- c(message, "Unknown module.")
+  }
+  list(valid = valid, message = message)
+}
 

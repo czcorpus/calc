@@ -42,7 +42,7 @@
         "cs": "Pravděpodobnostní funkce ukazuje binomické rozložení pravděpodobnosti v konfidenčním intervalu. Modře zvýrazněná hodnota odpovídá zadané frekvenci, oranžově zvýrazněné jsou frekvence ležící za hranicí konfidenčního intervalu (extrémy).", 
         "en": "The probability function shows binomial probability distribution inside the confidence interval. The value highlighted in blue corresponds to the input frequency, the frequencies highlighted in orange lie outside the confidence interval (extremes)."
       },
-      {"cs": "Zadaná frekvence přesahuje velikost korpusu.", "en": "Observed frequency is larger than the corpus size."},
+      
 
 
       
@@ -90,7 +90,6 @@
         "en": "Bars indicate feature frequencies (in ipm) while the error bar indicates the confidence interval which delimits the range of frequencies in the whole lamgauge. Despite the difference in input frequencies, overlapping confidence intervals may indicate the sameness of frequencies."
       },
       {"cs": "Kliknutím na oblast grafu provedete zoom in/out.", "en": "Zoom in/out by clicking in the graph."},
-      {"cs": "Zadané frekvence přesahujou velikost korpusu.", "en": "Observed frequencies are larger than the corpus size."},
       
       
       {"cs": "2 slova ve 2 korpusech", "en": "2 words in 2 corpora"},
@@ -153,9 +152,8 @@
         "en": "distribution. While the former usually returns a narrower confidence interval, the latter returns a more conservative estimate."
       },
       {"cs": "Je zadání v pořádku?", "en": "Is the input correct?"},
-      {"cs": "Nejspíš jste v hodnotách měření udělali nějakou botu...", "en": "You may have an error in your input."},
       {"cs": "Problém v zadání?", "en": "Input error?"},
-      {"cs": "Součet velikostí vzorků přesahuje velikost základního souboru...", "en": "The sum of the samples is larger than the source sample (population) size..."},
+      
       
       
       
@@ -189,9 +187,7 @@
       },
       {"cs": "% hladině chyby", "en": "% error rate"},
       {"cs": "Konfidenční intervaly skupin", "en": "Confidence intervals for groups"},
-      {"cs": "Neplatná URL", "en": "Invalid URL"},
       {"cs": "Chyba v zadání", "en": "Invalid input"},
-      {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
       {
         "cs": "Při zkoumání náhodného vzorku rozsáhlé konkordance můžeme rozdělit výskyty na různý počet skupin (např. významů hledaného slova). Rozhraní <a href='https://kontext.korpus.cz' target='_blank' class='external'>KonText</a> umožňuje tyto skupiny <a href='http://wiki.korpus.cz/doku.php/manualy:kontext:konkordance#prace_s_konkordanci' target='_blank' class='external'>označit čísly</a>, uložit a informaci o rozdělení do skupin zakódovat do URL konkordance, která slouží jako vstup pro tento modul (pokud KonText nepoužíváte, můžete použít <em>Manuální zadání</em>). <br/>Ze zadaných informací můžeme pomocí tzv. <em>bootstrappingu</em> zjistit konfidenční intervaly pro každou nalezenou skupinu a vyhodnotit, do jaké míry jsou spolehlivé údaje jednak o <em>existenci jednotlivých skupin</em> a jednak o <em>jejich pořadí</em> (vždy s&nbsp;ohledem na velikost analyzovaného vzorku). Zároveň modul vypočítá, jaká je pravděpodobnost alespoň jednoho výskytu skupiny, kterou bysme označili jako marginální (např. menšinového významu), ve zkoumaném vzorku.", 
         "en": "While researching a random sample of a large concordance, the occurrences can be divided into a number of groups (e.g. by senses of the word examined). The <a href='https://kontext.korpus.cz' target='_blank' class='external'>KonText</a> interface allows the groups to be <a href='https://wiki.korpus.cz/doku.php/en:manualy:kontext:konkordance#working_with_concordance' target='_blank' class='external'>marked by numbers</a>, saved and the division can be encoded into an URL of the concordance. The URL is the input for this module, but if you don't use KonText, you can enter the data <em>Manually</em>. <br/> From this input, it is possible to derive the confidence intervals for each group using the so called <em>bootstrapping</em> and then evaluate how reliable the information about the <em>existence of the individual groups</em> actually is and also about the <em>ordering</em> of the groups (always taking into account the sample size). At the same time, the module calculates the probability of at least one occurrence from a marginal group (e.g. of a minor importance) in the examined sample."
@@ -293,7 +289,6 @@
       {"cs": "varianta s převahou jednoho typu", "en": "most dispersed variant"},
       {"cs": "nebo", "en": "or"},
       {"cs": "varianta s vyrovnaným počtem typů", "en": "evenly dispersed variant"},
-      {"cs": "Neplatný rozsah délky n-gramu (1–12).", "en": "Invalid range of n-gram size (1–12)."},
       {
         "cs": "Při mezijazykovém srovnávání víceslovných jednotek narážíme na problém, že si jednotky stejné délky (2-gramy, 3-gramy atp.) nemusí z důvodu typologické odlišnosti přesně odpovídat. Pro vyrovnání tohoto rozdílu lze vytvořit kvantitativní model, který je založen na ekvivalenci počtu typů (T) mezi srovnávanými jazyky (podrobnosti viz Milička – Cvrček – Lukešová, připravuje se). Jeho vstupními parametry jsou <em>n</em> (=délka n-gramu) a <em>t</em> (=frekvenční minimum), protože to jsou hlavní faktory, které počet typů můžou ovlivnit. Tyto parametry lze pro každý jazykový pár modifikovat koeficienty <em>a</em> a <em>b</em>. Aplikací těchto koeficientů v modelu zjistíme pro daný pár jazyků, jaké hodnoty <em>n</em> a <em>t</em> si odpovídají (viz schématické znázornění pomocí interpolace v grafu).<br/> Zvýšení či snížení frekvenčí hladiny <em>t</em> je většinou při extrakci dat z korpusu jednoduché a poměrně intuitivní, problémy může činit hodnota <em>n</em>, která po transformaci nemusí být celé číslo (např. 2.34-gram). Pokud ovšem hodnotu <em>n</em> chápame jako průměr v nějakém vzorku, lze desetinné hodnoty tohoto parametru dosáhnout smícháním n-gramů různé délky (viz box pod grafem).", 
         "en": "When comparing multiword units across languages, the units of the same length (2-grams, 3-grams etc.) may not correspond between those languages due to the difference in language typology. To accomodate this difference, we can create a quantitative model based on the equivalent number of types (T) in the languages compared (for more details, see Milička – Cvrček – Lukešová, in preparation). Its input parameters are <em>n</em> (=n-gram length) and <em>t</em> (=frequency minimum), since these are the main factors influencing the number of types. These parameters can be modified for each pair of languages by the coefficients <em>a</em> and <em>b</em>. Using these coefficients, the model shows us corresponding <em>n</em> and <em>t</em> values in a given language pair (see the schematic representation by interpolation in the graph).<br/> During the data extraction, increasing or decreasing the frequency level <em>t</em> is usually simple and quite intuitive. More problematic is the <em>n</em> value which may not, after the transformation, result in an integer (but rather in e.g. an 2.34-gram). However, if we understand the <em>n</em> value to be an average of a sample, the decimal value of this parameter can be achieved by mixing n-grams of different lengths (see the box under the graph)."
@@ -393,6 +388,58 @@
         "cs": "Chceme-li najít korespondenci mezi bigramy v češtině s minimální frekvencí 10 a n-gramy v němčině, musíme použít příslušné předpočítané koeficienty <em>a</em> a <em>b</em>. S jejich pomocí zjistíme, že českým bigramům odpovídají německé 2.34-gramy s minimální frekvencí 10.3. Tuto korespondenci schématicky zachycuje graf počtu typů (T) v obou jazycích, naznačující zároveň, jak vypadala originální data pro němčinu a jak vypadají po transformaci. Box pod grafem pak ukazuje, v jakém poměru namíchat 2-gramy a 3-gramy, abychom ve výsledku dostali průměrnou délku rovnající se transformovanému <em>n</em>.", 
         "en": "If we want to find a correspondence between bigrams in Czech (with a minimum frequency of 10) and comparable n-grams in German, we have to use corresponding pre-calculated coefficients <em>a</em> and <em>b</em>. With their help we see that the comparable German n-grams are 2.34-grams with a minimum frequency of 10.3. This correspondence is represented schematically by the graph of the number of types (T) for both languages that also shows what the original data for German looked like and what they look like after the transformation. The box under the graph shows in what ratio to mix 2-grams and 3-grams to arrive at the average length equal to the transformed <em>n</em>."
       },
+      
+      {"cs": "Celková frekvence musí být kladné číslo.", "en": "Total frequency has to be a positive number."},
+      {"cs": "Celková frekvence musí být číslo.", "en": "Total frequency has to be a number."},
+      {"cs": "Frekvence 1 musí být celé číslo.", "en": "Frequency 1 has to be an integer."},
+      {"cs": "Frekvence 1 musí být kladné číslo.", "en": "Frequency 1 has to be a positive number."},
+      {"cs": "Frekvence 1 musí být číslo.", "en": "Frequency 1 has to be a number."}, 
+      {"cs": "Frekvence 2 musí být celé číslo.", "en": "Frequency 2 has to be an integer."},
+      {"cs": "Frekvence 2 musí být kladné číslo.", "en": "Frequency 2 has to be a positive number."},
+      {"cs": "Frekvence 2 musí být číslo.", "en": "Frequency 2 has to be a number."},
+      {"cs": "Frekvence musí být celé číslo.", "en": "Frequency has to be an integer."},
+      {"cs": "Frekvence musí být kladné číslo.", "en": "Frequency has to be a positive number."},
+      {"cs": "Frekvence musí být číslo.", "en": "Frequency has to be a number."},
+      {"cs": "Frekvence skupin by měly být celá čísla.", "en": "Frequencies of groups should be integers."},
+      {"cs": "Frekvence skupin musí být kladné hodnoty.", "en": "Frequencies of groups have to be positive numbers."},
+      {"cs": "Frekvence skupin není korektně zadaná.", "en": "Frequencies of groups are incorrect."},
+      {"cs": "Je třeba zadat alespoň dvě hodnoty měření.", "en": "At least two values are needed."},
+      {"cs": "Minimální frekvence musí být celé číslo.", "en": "Frequency threshold has to be an integer."},
+      {"cs": "Minimální frekvence musí být kladné číslo.", "en": "Frequency threshold has to be a positive number."},
+      {"cs": "Minimální frekvence musí být číslo.", "en": "Frequency threshold has to be a number."},
+      {"cs": "Nejspíš jste v hodnotách měření udělali nějakou botu...", "en": "You may have an error in your input."},
+      {"cs": "Neplatný rozsah délky n-gramu (1–12).", "en": "Invalid range of n-gram size (1–12)."},
+      {"cs": "Neplatná URL", "en": "Invalid URL"},
+      {"cs": "Počet tokenů by mělo být celé číslo.", "en": "Number of tokens has to be an integer."},
+      {"cs": "Počet tokenů musí být kladné číslo", "en": "Number of tokens has to be a positive number."},
+      {"cs": "Počet tokenů musí být číslo.", "en": "Number of tokens has to be a number."},
+      {"cs": "Počet typů by mělo být celé číslo.", "en": "Number of types has to be an integer."},
+      {"cs": "Počet typů musí být kladné číslo", "en": "Number of types has to be a positive number."},
+      {"cs": "Počet typů musí být číslo.", "en": "Number of types has to be a number."},
+      {"cs": "Pro analýzu je třeba alespoň dvou skupin.", "en": "At least two groups are needed."},
+      {"cs": "Součet skupin nemůže být větší než celková frekvence jevu.", "en": "The sum of groups cannot exceed the total frequency."},
+      {"cs": "Součet velikostí vzorků přesahuje velikost základního souboru...", "en": "The sum of the samples is larger than the source sample (population) size..."},
+      {"cs": "Unknown module.", "en": "Unknown module."},
+      {"cs": "V konkordanci nejsou označené skupiny", "en": "There are no groups in the concordance"},
+      {"cs": "V textu nemůže být víc typů než tokenů.", "en": "It is impossible to have more types than tokens in a text."},
+      {"cs": "Velikost korpusu musí být celé číslo.", "en": "Corpus size has to be an integer."},
+      {"cs": "Velikost korpusu musí být větší než nula.", "en": "Corpus size has to be greater than zero."},
+      {"cs": "Velikost korpusu musí být číslo.", "en": "Corpus size has to be a number."},
+      {"cs": "Velikost n-gramu musí být alespoň 1.", "en": "N-gram size has to be at least 1."},
+      {"cs": "Velikost n-gramu musí být celé číslo.", "en": "N-gram size has to be an integer."},
+      {"cs": "Velikost n-gramu musí být číslo.", "en": "N-gram size has to be a number."},
+      {"cs": "Velikost populace by měla být celé číslo.", "en": "Population size has to be an integer."},
+      {"cs": "Velikost populace musí být nenulová.", "en": "Population size has to be greater than zero."},
+      {"cs": "Velikost populace musí být číslo.", "en": "Population size has to be a number."},
+      {"cs": "Velikost vzorku by mělo být celé číslo.", "en": "Sample size has to be an integer."},
+      {"cs": "Velikost vzorku musí být nenulová.", "en": "Sample size has to be greater than zero."},
+      {"cs": "Velikost vzorku musí být číslo.", "en": "Sample size has to be a number."},
+      {"cs": "Vzorek nemůže být větší než populace.", "en": "Sample cannot be greater than population."},
+      {"cs": "Výsledky by měly být celá čísla.", "en": "Results should be integers."},
+      {"cs": "Výsledky musí být kladné hodnoty.", "en": "Results have to be positive numbers."},
+      {"cs": "Zadaná frekvence přesahuje velikost korpusu.", "en": "Observed frequency is larger than the corpus size."},
+      {"cs": "Zadané frekvence přesahujou velikost korpusu.", "en": "Observed frequencies are larger than the corpus size."},
+      
       {"cs": "Český národní korpus", "en": "Czech National Corpus"},
       {"cs": "Ohlásit chybu", "en": "Report an error"}
     ]
