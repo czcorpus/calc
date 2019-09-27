@@ -43,6 +43,7 @@ shinyServer(function(input, output, session) {
   
 # ================= 1 slovo 1 korpus (OwOc) =====================
    OwOc.data <- reactive({
+     req(input$OwOcCorpus, input$OwOcFq, input$OwOcAlpha)
      n <- switch(input$OwOcCorpus,
        "1" = 1e6,
        "2" = 1e8,
@@ -161,6 +162,7 @@ shinyServer(function(input, output, session) {
 # ================= 2 slova 1 korpus (TwOc) ==========
 
    TwOc.data <- reactive({
+     req(input$TwOcF1, input$TwOcF2, input$TwOcN, input$TwOcAlpha)
      data <- c("F1" = input$TwOcF1, "F2" = input$TwOcF2, "N" = input$TwOcN, "Alpha" = input$TwOcAlpha)
      out.v <- validator(data, module = "TwOc")
      if (length(out.v$message) > 0) {
@@ -207,7 +209,7 @@ shinyServer(function(input, output, session) {
        paste0("<div id='din' class='alert alert-info'>",
               "<table>",
               "<tr><td style='min-width: 6.4em;'>", 
-              i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), 
+              i18n$t("<a href='https://wiki.korpus.cz/doku.php/pojmy:din' target='_blank' class='extern'><b>DIN</b></a>:"), 
               "</td>",
               "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
               "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
@@ -280,6 +282,7 @@ shinyServer(function(input, output, session) {
 
 # ================= 2 slova 2 korpusy (TwTc) ==========
    TwTc.data <- reactive({
+     req(input$TwTcF1, input$TwTcF2, input$TwTcN1, input$TwTcN2, input$TwTcAlpha)
      data <- c("F1" = input$TwTcF1, "F2" = input$TwTcF2, "N1" = input$TwTcN1, "N2" = input$TwTcN2, "Alpha" = input$TwTcAlpha)
      out.v <- validator(data, module = "TwTc")
      if (length(out.v$message) > 0) {
@@ -326,7 +329,7 @@ shinyServer(function(input, output, session) {
        paste0("<div id='din' class='alert alert-info'>",
               "<table><tr>",
               "<td style='min-width: 6.4em;'>", 
-              i18n$t("<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:"), 
+              i18n$t("<a href='https://wiki.korpus.cz/doku.php/pojmy:din' target='_blank' class='extern'><b>DIN</b></a>:"), 
               "</td>",
               "<td>", round(din, digits = 3), "&nbsp;(", i18n$t("bodový odhad"), ")</td></tr>",
               "<tr><td>", "<a href='https://en.wikipedia.org/wiki/Risk_ratio' target='_blank' class='extern'><b>Risk ratio</b></a>:", "</td>",
@@ -380,6 +383,7 @@ shinyServer(function(input, output, session) {
 
 # ================= Vzorky (SaRe) =====================
     nacti <- reactive({
+      req(input$SaReMereni, input$SaReVzorek, input$SaRePopulace, input$SaReAlpha)
       vec <- unlist(strsplit(input$SaReMereni, split = "[,; ]+"))
       vec <- as.numeric(vec)
       out <- list(vec = vec, SaReVzorek = input$SaReVzorek, SaRePopulace = input$SaRePopulace, SaReAlpha = input$SaReAlpha)
@@ -505,6 +509,7 @@ shinyServer(function(input, output, session) {
     })
     
     zTTRdata <- reactive({
+      req(input$zTTRattribute, input$zTTRlangsel, input$zTTRtokens, input$zTTRtypes)
       att <- switch(input$zTTRattribute,
         "1" = "lemma",
         "2" = "word",

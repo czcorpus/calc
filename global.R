@@ -548,6 +548,9 @@ validator <- function(indata, module) {
       if (length(indata$vec) * indata$SaReVzorek > indata$SaRePopulace) {
         valid = FALSE; message <- c(message, "Součet velikostí vzorků přesahuje velikost základního souboru...") 
       }
+      if (sum(indata$vec > indata$SaReVzorek) > 0) { 
+        valid = FALSE; message <- c(message, "Nejmíň jedno z měření přesahuje velikost vzorku.") 
+      }
     }
   }
   # === Gr ===

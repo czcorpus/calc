@@ -69,8 +69,8 @@
       },
       {"cs": "Effect size", "en": "Effect size"},
       {
-        "cs": "<a href='https://wiki.korpus.cz/doku.php/manualy:kwords#princip_fungovani' target='_blank' class='extern'><b>DIN</b></a>:", 
-        "en": "<a href='https://wiki.korpus.cz/doku.php/en:manualy:kwords#how_it_works' target='_blank' class='extern'><b>DIN</b></a>:"
+        "cs": "<a href='https://wiki.korpus.cz/doku.php/pojmy:din' target='_blank' class='extern'><b>DIN</b></a>:", 
+        "en": "<a href='https://wiki.korpus.cz/doku.php/en:pojmy:din' target='_blank' class='extern'><b>DIN</b></a>:"
       },
       {"cs": "bodový odhad", "en": "point estimate"},
       {"cs": "bodový odhad; konfidenční interval: ", "en": "point estimate; confidence interval: "},
@@ -407,6 +407,7 @@
       {"cs": "Minimální frekvence musí být celé číslo.", "en": "Frequency threshold has to be an integer."},
       {"cs": "Minimální frekvence musí být kladné číslo.", "en": "Frequency threshold has to be a positive number."},
       {"cs": "Minimální frekvence musí být číslo.", "en": "Frequency threshold has to be a number."},
+      {"cs": "Nejmíň jedno z měření přesahuje velikost vzorku.", "en": "One or more results is greater than the sample size."},
       {"cs": "Nejspíš jste v hodnotách měření udělali nějakou botu...", "en": "You may have an error in your input."},
       {"cs": "Neplatný rozsah délky n-gramu (1–12).", "en": "Invalid range of n-gram size (1–12)."},
       {"cs": "Neplatná URL", "en": "Invalid URL"},
