@@ -1,6 +1,6 @@
 [Unit]
 # change description to match your app
-Description=Restart KOKS: Korpusová kalkulačka spolehlivosti
+Description=Restart Calc: Korpusová kalkulačka
 
 [Service]
 Type=oneshot

@@ -1,6 +1,6 @@
 [Unit]
 # change description to match your app
-Description=KOKS: Korpusová kalkulačka spolehlivosti
+Description=Calc: Korpusová kalkulačka
 After=network-online.target
 # remove the following line if you're not sure a notify-failed@ service is
 # available (or if you don't want to send out notifications when your app

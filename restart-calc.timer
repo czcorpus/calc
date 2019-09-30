@@ -1,6 +1,6 @@
 [Unit]
 # change description to match your app
-Description=Timer for Restart KOKS: Korpusová kalkulačka spolehlivosti
+Description=Timer for Restart Calc: Korpusová kalkulačka
 
 [Timer]
 # pick a suitable time and period for restarting your app, preferably when
