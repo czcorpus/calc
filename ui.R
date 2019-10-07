@@ -1,7 +1,6 @@
 library(shiny)
 library(shiny.i18n)
 library(shinythemes)
-library(shinyCNC)
 
 shinyUI(
   bootstrapPage(

@@ -3,15 +3,13 @@ library(shinyBS)
 library(tidyverse)
 library(Hmisc)
 library(shiny.i18n)
-library(shinyCNC)
 source("data/helptext.R")
 source("localized_ui.R")
 
 shinyServer(function(input, output, session) {
   
-  init_shiny_cnc(appName)
-  
-  lang <- get_lang(session)
+  # Set language here, cf. data/translation.json 
+  lang <- "en"
   i18n <- Translator$new(translation_json_path = "data/translation.json")
   i18n$set_translation_language(lang)
   

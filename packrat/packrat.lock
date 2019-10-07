@@ -1,7 +1,7 @@
 PackratFormat: 1.4
 PackratVersion: 0.5.0
 RVersion: 3.6.1
-Repos: CNCRAN=file:///opt/R/CNCRAN, CRAN=https://cloud.r-project.org
+Repos: CRAN=https://cloud.r-project.org
 
 Package: BH
 Source: CRAN
@@ -481,12 +481,6 @@ Source: CRAN
 Version: 0.61
 Hash: 4644935bd93e62a0b82686b26af7efc2
 Requires: htmltools, shiny
-
-Package: shinyCNC
-Source: CNCRAN
-Version: 0.0.1
-Hash: 10c5b5ac657aac839dde1637c951e518
-Requires: httr, shiny
 
 Package: shinyjs
 Source: CRAN
